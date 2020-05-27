@@ -1,0 +1,8 @@
+<resources>
+    <string name="app_name">Trial Login Page</string>
+    <string name="phone_number">Phone Number</string>
+    <string name="password">Password</string>
+    <string name="login">Login</string>
+    <string name="register">Register</string>
+    <string name="confirm">Confirm</string>
+</resources>

@@ -1,0 +1,2 @@
+rootProject.name='Trial Login Page'
+include ':app'
