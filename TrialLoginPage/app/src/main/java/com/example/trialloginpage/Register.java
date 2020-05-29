@@ -11,6 +11,7 @@ import android.widget.Toast;
 
 public class Register extends AppCompatActivity {
     private static final String LOG_TAG = Register.class.getSimpleName();
+    public static final String EXTRA_PHONE = "com.example.trialloginpage.extra.PHONE";
     private static EditText editPhone;
     private static EditText editPassword;
 
@@ -32,9 +33,11 @@ public class Register extends AppCompatActivity {
         else if(sEditPassword.matches("")){
             Toast.makeText(this, "You did not enter a Password!", Toast.LENGTH_SHORT).show();
         }else{
+            Intent phoneIntent = new Intent();
+            phoneIntent.putExtra(EXTRA_PHONE, sEditPhone);
+            setResult(RESULT_OK, phoneIntent);
             Log.d(LOG_TAG, "Registered!");
-            Intent intent = new Intent(this, MainActivity.class);
-            startActivity(intent);
+            finish();
         }
     }
 }
