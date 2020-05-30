@@ -29,16 +29,23 @@ To allow users to easily track the amount of money payees owe them and remind pa
 Key features:
 
 Bill-split
+
 Equally : Splits the bill equally among each payee
+
 Individual : The user manually types in the individual cost of items and each payee pays whatever they ordered
 
 Link to Telegram Bot
+
 Users can use a telegram bot to send a message with the individual cost of each item to payees
+
 Payees will then tap the item they ordered and the bot will generate a message totalling the amount the payee must pay
+
 The user will also be notified of the amount owed
 
 Reminder feature
+
 Users can set a date or frequency to remind payees to pay the user
+
 The reminder will only be removed if the payee has paid the user
 
 Additional features
