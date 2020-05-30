@@ -46,17 +46,21 @@ public class MainActivity extends AppCompatActivity {
         startActivityForResult(intent,TEXT_REQUEST);
     }
 
+    public void displayToast(String message){
+        Toast.makeText(getApplicationContext(), message, Toast.LENGTH_SHORT).show();
+    }
+
     public void login(View view) {
         Log.d(LOG_TAG, "Logging in!");
         mPassword = findViewById(R.id.editText_Password);
         String sMPhone = mPhone.getText().toString();
         String sMPassword = mPassword.getText().toString();
         if (sMPhone.matches("")){
-            Toast.makeText(this, "You did not enter a Phone Number!", Toast.LENGTH_SHORT).show();
+            displayToast(getString(R.string.error_phone));
             Log.d(LOG_TAG, "No phone number!");
         }
         else if(sMPassword.matches("")) {
-            Toast.makeText(this, "You did not enter a Password!", Toast.LENGTH_SHORT).show();
+            displayToast(getString(R.string.error_password));
         }else{
             Intent intent = new Intent(this, MainPage.class);
             startActivity(intent);

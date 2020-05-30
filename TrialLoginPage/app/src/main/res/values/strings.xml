@@ -5,4 +5,6 @@
     <string name="login">Login</string>
     <string name="register">Register</string>
     <string name="confirm">Confirm</string>
+    <string name="error_password">You did not enter a Password!</string>
+    <string name="error_phone">You did not enter a Phone Number!</string>
 </resources>

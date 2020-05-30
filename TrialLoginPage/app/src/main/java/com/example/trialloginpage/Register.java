@@ -21,17 +21,21 @@ public class Register extends AppCompatActivity {
         setContentView(R.layout.activity_register);
     }
 
+    public void displayToast(String message){
+        Toast.makeText(getApplicationContext(), message, Toast.LENGTH_SHORT).show();
+    }
+
     public void launchLogin(View view) {
         editPhone = (EditText) findViewById(R.id.editText_rPhone);
         editPassword = (EditText) findViewById(R.id.editText_rPassword);
         String sEditPhone = editPhone.getText().toString();
         String sEditPassword = editPassword.getText().toString();
         if (sEditPhone.matches("")){
-            Toast.makeText(this, "You did not enter a Phone Number!", Toast.LENGTH_SHORT).show();
+            displayToast(getString(R.string.error_phone));
             Log.d(LOG_TAG, "No phone number!");
         }
         else if(sEditPassword.matches("")){
-            Toast.makeText(this, "You did not enter a Password!", Toast.LENGTH_SHORT).show();
+            displayToast(getString(R.string.error_password));
         }else{
             Intent phoneIntent = new Intent();
             phoneIntent.putExtra(EXTRA_PHONE, sEditPhone);
