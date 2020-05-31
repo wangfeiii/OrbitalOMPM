@@ -32,14 +32,17 @@ public class MainPage extends AppCompatActivity {
             case R.id.action_notifications:
                 Intent launchNotifications = new Intent(MainPage.this, Notifications.class);
                 startActivity(launchNotifications);
+                return true;
 
             case R.id.action_profile_settings:
                 Intent launchProfileS = new Intent(MainPage.this, ProfileSettings.class);
                 startActivity(launchProfileS);
+                return true;
 
             case R.id.action_app_settings:
                 Intent launchAppS = new Intent(MainPage.this, AppSettings.class);
                 startActivity(launchAppS);
+                return true;
 
             case R.id.action_rate_us:
                 AlertDialog.Builder myAlertBuilder = new AlertDialog.Builder(MainPage.this);
@@ -51,10 +54,15 @@ public class MainPage extends AppCompatActivity {
                                 Toast.LENGTH_SHORT).show();
                     }
                 });
+                myAlertBuilder.show();
+                return true;
 
             case R.id.action_contact_us:
                 Intent launchContactUs = new Intent(MainPage.this, ContactUs.class);
                 startActivity(launchContactUs);
+                return true;
+
+            default:
         }
         return super.onOptionsItemSelected(item);
     }
