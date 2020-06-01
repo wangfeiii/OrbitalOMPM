@@ -2,7 +2,7 @@
 
 Proposed level of achievement : Apollo 11
 
-Motivation
+MOTIVATION
 
 Have you ever wondered why there is so little money left in your bank and yet you do not feel that you spend excessively, so where did all your money go? Probably some are your personal expenditure but you do not keep track of your spending and overspent unknowingly, or maybe some money are owed by friends.
 
@@ -11,7 +11,7 @@ Many have experienced that collecting money from their friends could be an arduo
 
 So, why isn’t there an app that could track personal spending and remind people how much money they owe or is owed to them? Moreover, it would also be easier for people to track their spending, debts all in the same place!
 
-User Stories
+USER STORIES
 
 As someone who wants to collect money from people, I want to be able to remind people to return the money that they owe and also for me to know how much money other people owe me.
 
@@ -21,12 +21,11 @@ As someone who could be too busy at times and lose track of my own spending and 
 
 As a user, I want to make sure that I can confirm every step of the process to ensure that others do not randomly accuse me of owing them money.
 
-
-Scope of Project
+SCOPE OF PROJECT
 
 To allow users to easily track the amount of money payees owe them and remind payees in an easy manner 
 
-Key features:
+KEY FEATURES
 
 Bill-split
 
@@ -51,5 +50,7 @@ The reminder will only be removed if the payee has paid the user
 Additional features
 
 Tracking of personal expenditure
+
 Users will also be able to track their expenditure using the app
+
 Users can input their expenditure either through the app or by interacting with a telegram bot
