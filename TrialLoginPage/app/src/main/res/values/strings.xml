@@ -19,4 +19,17 @@
     <string name="placeholder">Placeholder</string>
     <string name="SplitAmount">Amount</string>
     <string name="get_contacts">GET CONTACTS</string>
+    <string name="verificationC">onVerificationCompleted:</string>
+    <string name="verificationF">onVerificationFailed</string>
+    <string name="e_invalid_phone_number">Invalid phone number</string>
+    <string name="too_many_requests_error">SMS quota has been exceeded</string>
+    <string name="verification_code">Verification Code</string>
+    <string name="e_invalid_code">Invalid Code</string>
+    <string name="code_sent">Verification Code Sent!</string>
+    <string name="resend_code">Resend Code</string>
+    <string name="verify">Verify</string>
+    <string name="verification_failed">Verification failed!</string>
+    <string name="verification_succeeded">Verification Succeeded!</string>
+    <string name="instant_validation">Instant Validation</string>
+    <string name="sign_in_failed">Sign in failed</string>
 </resources>

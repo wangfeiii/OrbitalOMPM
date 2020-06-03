@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "855907281061",
+    "firebase_url": "https://orbitalompm.firebaseio.com",
+    "project_id": "orbitalompm",
+    "storage_bucket": "orbitalompm.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:855907281061:android:ddda0e6e5cbc0fe748c54c",
+        "android_client_info": {
+          "package_name": "com.example.trialloginpage"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "855907281061-r5a7is6hgmgn6kbf820lu1025v97uo7k.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAxg9Eetxk3W-KrBYxf80zqwW6RcP3_xw8"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "855907281061-r5a7is6hgmgn6kbf820lu1025v97uo7k.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
