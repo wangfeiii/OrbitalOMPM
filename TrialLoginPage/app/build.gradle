@@ -6,7 +6,7 @@ android {
     buildToolsVersion "29.0.3"
 
     defaultConfig {
-        applicationId "com.example.trialloginpage"
+        applicationId "com.example.OMPM"
         minSdkVersion 17
         targetSdkVersion 29
         versionCode 1

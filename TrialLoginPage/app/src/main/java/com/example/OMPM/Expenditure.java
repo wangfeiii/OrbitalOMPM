@@ -1,14 +1,14 @@
-package com.example.trialloginpage;
+package com.example.OMPM;
 
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.os.Bundle;
 
-public class Notifications extends AppCompatActivity {
+public class Expenditure extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_notifications);
+        setContentView(R.layout.activity_expenditure);
     }
 }

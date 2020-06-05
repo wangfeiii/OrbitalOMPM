@@ -1,4 +1,4 @@
-package com.example.trialloginpage;
+package com.example.OMPM;
 
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;

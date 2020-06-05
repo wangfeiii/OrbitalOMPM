@@ -1,4 +1,4 @@
-package com.example.trialloginpage;
+package com.example.OMPM;
 
 import org.junit.Test;
 

@@ -1,14 +1,14 @@
-package com.example.trialloginpage;
+package com.example.OMPM;
 
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.os.Bundle;
 
-public class History extends AppCompatActivity {
+public class Notifications extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_history);
+        setContentView(R.layout.activity_notifications);
     }
 }

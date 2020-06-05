@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.example.trialloginpage">
+    package="com.example.OMPM">
 
     <uses-permission android:name="android.permission.READ_CONTACTS"></uses-permission>
 
@@ -11,53 +11,53 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".History"
+        <activity android:name="com.example.OMPM.History"
             android:label="History"
-            android:parentActivityName=".MainPage">
+            android:parentActivityName="com.example.OMPM.MainPage">
             <meta-data android:name="android.support.PARENT_ACTIVITY"
-                android:value=".MainPage"/>
+                android:value="com.example.OMPM.MainPage"/>
         </activity>
-        <activity android:name=".Expenditure"
+        <activity android:name="com.example.OMPM.Expenditure"
             android:label="Expenditure"
-            android:parentActivityName=".MainPage">
+            android:parentActivityName="com.example.OMPM.MainPage">
         <meta-data android:name="android.support.PARENT_ACTIVITY"
-            android:value=".MainPage"/>
+            android:value="com.example.OMPM.MainPage"/>
         </activity>
-        <activity android:name=".SplitBill"
+        <activity android:name="com.example.OMPM.SplitBill"
             android:label="SplitBill"
-            android:parentActivityName=".MainPage">
+            android:parentActivityName="com.example.OMPM.MainPage">
             <meta-data android:name="android.support.PARENT_ACTIVITY"
-            android:value=".MainPage"/>
+            android:value="com.example.OMPM.MainPage"/>
         </activity>
-        <activity android:name=".ContactUs"
+        <activity android:name="com.example.OMPM.ContactUs"
             android:label="ContactUs"
-            android:parentActivityName=".MainPage">
+            android:parentActivityName="com.example.OMPM.MainPage">
             <meta-data android:name="android.support.PARENT_ACTIVITY"
-                android:value=".MainPage"/>
+                android:value="com.example.OMPM.MainPage"/>
         </activity>
-        <activity android:name=".AppSettings"
+        <activity android:name="com.example.OMPM.AppSettings"
             android:label="AppSettings"
-            android:parentActivityName=".MainPage">
+            android:parentActivityName="com.example.OMPM.MainPage">
             <meta-data android:name="android.support.PARENT_ACTIVITY"
-                android:value=".MainPage"/>
+                android:value="com.example.OMPM.MainPage"/>
         </activity>
-        <activity android:name=".ProfileSettings"
+        <activity android:name="com.example.OMPM.ProfileSettings"
             android:label="ProfileSettings"
-            android:parentActivityName=".MainPage">
+            android:parentActivityName="com.example.OMPM.MainPage">
             <meta-data android:name="android.support.PARENT_ACTIVITY"
-                android:value=".MainPage"/>
+                android:value="com.example.OMPM.MainPage"/>
         </activity>
-        <activity android:name=".Notifications"
+        <activity android:name="com.example.OMPM.Notifications"
             android:label="Notifications"
-            android:parentActivityName=".MainPage">
+            android:parentActivityName="com.example.OMPM.MainPage">
             <meta-data android:name="android.support.PARENT_ACTIVITY"
-                android:value=".MainPage"/>
+                android:value="com.example.OMPM.MainPage"/>
         </activity>
         <activity
-            android:name=".MainPage"
+            android:name="com.example.OMPM.MainPage"
             android:label="Main page"
             android:theme="@style/AppTheme" />
-        <activity android:name=".MainActivity">
+        <activity android:name="com.example.OMPM.MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 

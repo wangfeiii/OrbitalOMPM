@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">Trial Login Page</string>
+    <string name="app_name">OMPM</string>
     <string name="phone_number">Phone Number</string>
     <string name="password">Password</string>
     <string name="login">Login</string>
@@ -32,4 +32,6 @@
     <string name="verification_succeeded">Verification Succeeded!</string>
     <string name="instant_validation">Instant Validation</string>
     <string name="sign_in_failed">Sign in failed</string>
+    <string name="split_equally">Split Equally</string>
+    <string name="splitbill_alert">Add Item</string>
 </resources>
