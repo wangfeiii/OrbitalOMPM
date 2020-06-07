@@ -1,8 +1,11 @@
 package com.example.OMPM;
 
+import android.content.Context;
 import android.content.Intent;
+import android.os.Build;
 import android.os.Bundle;
 import android.text.TextUtils;
+import android.util.JsonReader;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
@@ -10,6 +13,7 @@ import android.widget.EditText;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -22,7 +26,23 @@ import com.google.firebase.auth.FirebaseAuthInvalidCredentialsException;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.PhoneAuthCredential;
 import com.google.firebase.auth.PhoneAuthProvider;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+import org.json.simple.parser.JSONParser;
+import org.json.simple.parser.ParseException;
+
+import java.io.BufferedReader;
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileReader;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.concurrent.TimeUnit;
 
 public class MainActivity extends AppCompatActivity implements View.OnClickListener {
@@ -43,12 +63,14 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private String mVerificationId;
     private PhoneAuthProvider.ForceResendingToken mResendToken;
     private PhoneAuthProvider.OnVerificationStateChangedCallbacks mCallbacks;
+    private DatabaseReference mDatabase;
 
     private EditText mPhone;
     private EditText mVerificationCode;
     private Button buttonLogin;
     private Button buttonResend;
     private Button buttonVerify;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -64,7 +86,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         findViewById(R.id.button_verify).setOnClickListener(this);
 
         mAuth = FirebaseAuth.getInstance();
+        mDatabase = FirebaseDatabase.getInstance().getReference();
         mCallbacks = new PhoneAuthProvider.OnVerificationStateChangedCallbacks() {
+
             @Override
             public void onVerificationCompleted(@NonNull PhoneAuthCredential phoneAuthCredential) {
                 Log.d(LOG_TAG, getString(R.string.verificationC) + phoneAuthCredential);
@@ -241,6 +265,12 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             case STATE_SIGNIN_SUCCESS:
                 break;
         }
+    }
+
+    private void writeNewUser(String userId, String phoneNumber) throws JSONException, IOException, ParseException {
+
+        User user = new User(phoneNumber);
+        mDatabase.child("users").child(userId).setValue(user);
     }
 
     private boolean validatePhoneNumber(){

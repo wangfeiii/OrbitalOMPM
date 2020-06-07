@@ -4,4 +4,12 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".Expenditure"/>
+    tools:context=".Expenditure">
+
+    <fragment
+        android:id="@+id/pieChart"
+        android:name="com.example.OMPM.ExpenditurePC"
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"/>
+
+</androidx.constraintlayout.widget.ConstraintLayout>

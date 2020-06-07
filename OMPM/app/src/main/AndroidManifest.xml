@@ -2,7 +2,8 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.example.OMPM">
 
-    <uses-permission android:name="android.permission.READ_CONTACTS"></uses-permission>
+    <uses-permission android:name="android.permission.READ_CONTACTS" />
+    <uses-permission android:name="android.permission.INTERNET" />
 
     <application
         android:allowBackup="true"
@@ -11,53 +12,68 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name="com.example.OMPM.History"
+        <activity android:name=".ExpenditureInput"></activity>
+        <activity
+            android:name=".History"
             android:label="History"
-            android:parentActivityName="com.example.OMPM.MainPage">
-            <meta-data android:name="android.support.PARENT_ACTIVITY"
-                android:value="com.example.OMPM.MainPage"/>
-        </activity>
-        <activity android:name="com.example.OMPM.Expenditure"
-            android:label="Expenditure"
-            android:parentActivityName="com.example.OMPM.MainPage">
-        <meta-data android:name="android.support.PARENT_ACTIVITY"
-            android:value="com.example.OMPM.MainPage"/>
-        </activity>
-        <activity android:name="com.example.OMPM.SplitBill"
-            android:label="SplitBill"
-            android:parentActivityName="com.example.OMPM.MainPage">
-            <meta-data android:name="android.support.PARENT_ACTIVITY"
-            android:value="com.example.OMPM.MainPage"/>
-        </activity>
-        <activity android:name="com.example.OMPM.ContactUs"
-            android:label="ContactUs"
-            android:parentActivityName="com.example.OMPM.MainPage">
-            <meta-data android:name="android.support.PARENT_ACTIVITY"
-                android:value="com.example.OMPM.MainPage"/>
-        </activity>
-        <activity android:name="com.example.OMPM.AppSettings"
-            android:label="AppSettings"
-            android:parentActivityName="com.example.OMPM.MainPage">
-            <meta-data android:name="android.support.PARENT_ACTIVITY"
-                android:value="com.example.OMPM.MainPage"/>
-        </activity>
-        <activity android:name="com.example.OMPM.ProfileSettings"
-            android:label="ProfileSettings"
-            android:parentActivityName="com.example.OMPM.MainPage">
-            <meta-data android:name="android.support.PARENT_ACTIVITY"
-                android:value="com.example.OMPM.MainPage"/>
-        </activity>
-        <activity android:name="com.example.OMPM.Notifications"
-            android:label="Notifications"
-            android:parentActivityName="com.example.OMPM.MainPage">
-            <meta-data android:name="android.support.PARENT_ACTIVITY"
-                android:value="com.example.OMPM.MainPage"/>
+            android:parentActivityName=".MainPage">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.example.OMPM.MainPage" />
         </activity>
         <activity
-            android:name="com.example.OMPM.MainPage"
+            android:name=".Expenditure"
+            android:label="Expenditure"
+            android:parentActivityName=".MainPage">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.example.OMPM.MainPage" />
+        </activity>
+        <activity
+            android:name=".SplitBill"
+            android:label="SplitBill"
+            android:parentActivityName=".MainPage">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.example.OMPM.MainPage" />
+        </activity>
+        <activity
+            android:name=".ContactUs"
+            android:label="ContactUs"
+            android:parentActivityName=".MainPage">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.example.OMPM.MainPage" />
+        </activity>
+        <activity
+            android:name=".AppSettings"
+            android:label="AppSettings"
+            android:parentActivityName=".MainPage">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.example.OMPM.MainPage" />
+        </activity>
+        <activity
+            android:name=".ProfileSettings"
+            android:label="ProfileSettings"
+            android:parentActivityName=".MainPage">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.example.OMPM.MainPage" />
+        </activity>
+        <activity
+            android:name=".Notifications"
+            android:label="Notifications"
+            android:parentActivityName=".MainPage">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.example.OMPM.MainPage" />
+        </activity>
+        <activity
+            android:name=".MainPage"
             android:label="Main page"
             android:theme="@style/AppTheme" />
-        <activity android:name="com.example.OMPM.MainActivity">
+        <activity android:name=".MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
