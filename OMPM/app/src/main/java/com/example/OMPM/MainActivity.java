@@ -182,6 +182,19 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                             Log.d(LOG_TAG,"signInWithCredential:success");
                             FirebaseUser user = task.getResult().getUser();
                             updateUI(STATE_SIGNIN_SUCCESS, user);
+                            long creationTimestamp = user.getMetadata().getCreationTimestamp();
+                            long lastSignInTimeStamp = user.getMetadata().getLastSignInTimestamp();
+                            if (creationTimestamp == lastSignInTimeStamp) {
+                                try {
+                                    writeNewUser(user.getUid(), user.getPhoneNumber());
+                                } catch (JSONException e) {
+                                    e.printStackTrace();
+                                } catch (IOException e) {
+                                    e.printStackTrace();
+                                } catch (ParseException e) {
+                                    e.printStackTrace();
+                                }
+                            }
                             Intent launchNotifications = new Intent(MainActivity.this, MainPage.class);
                             startActivity(launchNotifications);
 
@@ -270,7 +283,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private void writeNewUser(String userId, String phoneNumber) throws JSONException, IOException, ParseException {
 
         User user = new User(phoneNumber);
-        mDatabase.child("users").child(userId).setValue(user);
+        mDatabase.child("users")
+                .child(userId)
+                .setValue(user);
     }
 
     private boolean validatePhoneNumber(){

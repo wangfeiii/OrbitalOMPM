@@ -11,12 +11,26 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.Toast;
 
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+
 public class MainPage extends AppCompatActivity {
+
+    private static final String TAG = "LOG_TAG";
+
+    private FirebaseUser user;
+    private DatabaseReference mDatabase;
+    private String userId;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main_page);
+        mDatabase = FirebaseDatabase.getInstance().getReference();
+        user = FirebaseAuth.getInstance().getCurrentUser();
+        userId = user.getUid();
 
     }
 
@@ -73,7 +87,7 @@ public class MainPage extends AppCompatActivity {
     }
 
     public void launchExpenditure(View view) {
-        Intent iLaunchExpenditure = new Intent(MainPage.this, Expenditure.class);
+        Intent iLaunchExpenditure = new Intent(MainPage.this, ExpenditureInput.class);
         startActivity(iLaunchExpenditure);
     }
 
