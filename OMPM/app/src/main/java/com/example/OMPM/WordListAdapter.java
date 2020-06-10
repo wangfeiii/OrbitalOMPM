@@ -10,11 +10,60 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import java.util.LinkedList;
+import java.util.List;
 
 
-public class WordListAdapter extends RecyclerView.Adapter<WordListAdapter.WordViewHolder> {
+public class WordListAdapter extends RecyclerView.Adapter<WordListAdapter.ListViewHolder> {
+
+    List<String> itemList;
+
+    // Constructor
+    public WordListAdapter(List<String> itemList) {
+        this.itemList = itemList;
+    }
+
+    @NonNull
+    @Override
+    public ListViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+        Context context = parent.getContext();
+        LayoutInflater inflater = LayoutInflater.from(context);
+
+        // Inflate the custom layout
+        View itemView = inflater.inflate(R.layout.wordlist_item, parent, false);
+        // Return a new holder instance
+        ListViewHolder viewHolder = new ListViewHolder(itemView);
+        return viewHolder;
+    }
+
+    // Involves populating data into the item through holder
+    @Override
+    public void onBindViewHolder(@NonNull ListViewHolder holder, int position) {
+        String item = itemList.get(position);
+        holder.Contact.setText(item);
+    }
+
+    @Override
+    public int getItemCount() {
+        return itemList.size();
+    }
+
+    public static class ListViewHolder extends RecyclerView.ViewHolder {
+
+        public TextView Contact;
+
+        public ListViewHolder(View itemView) {
+            super(itemView);
+
+            Contact = itemView.findViewById(R.id.contacts);
+        }
+    }
+
+}
+
+    /*
     private final LinkedList<String> mWordList;
     private LayoutInflater mInflater;
+
     @NonNull
     @Override
     public WordViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
@@ -53,4 +102,5 @@ public class WordListAdapter extends RecyclerView.Adapter<WordListAdapter.WordVi
             
         }
     }
-}
+    */
+
