@@ -7,6 +7,9 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.app.DatePickerDialog;
 import android.content.DialogInterface;
 import android.os.Bundle;
+import android.text.Editable;
+import android.text.TextWatcher;
+import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -29,6 +32,7 @@ import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Locale;
 
+//BIGGEST TO-DO: Make the UI like a messaging app
 public class ExpenditureInput extends AppCompatActivity implements AdapterView.OnItemSelectedListener {
     private static final String TAG = "LOG_TAG";
 
@@ -43,6 +47,8 @@ public class ExpenditureInput extends AppCompatActivity implements AdapterView.O
     private String expenditureChoice;
     private String item;
     private String cost;
+    private String monthDate;
+    private EditText eItem;
 
 
     @Override
@@ -52,6 +58,7 @@ public class ExpenditureInput extends AppCompatActivity implements AdapterView.O
         mDatabase = FirebaseDatabase.getInstance().getReference();
         user = FirebaseAuth.getInstance().getCurrentUser();
         userId = user.getUid();
+
 
         sExpenditureChoices = findViewById(R.id.spinner_ExpenditureChoice);
         ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(this,
@@ -79,11 +86,36 @@ public class ExpenditureInput extends AppCompatActivity implements AdapterView.O
         datePicker.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                new DatePickerDialog(ExpenditureInput.this,
-                        date,
-                        myCalendar.get(Calendar.YEAR),
-                        myCalendar.get(Calendar.MONTH),
-                        myCalendar.get(Calendar.DAY_OF_MONTH)).show();
+                DatePickerDialog dialog = new DatePickerDialog(ExpenditureInput.this,
+                                                                        date,
+                                                                        myCalendar.get(Calendar.YEAR),
+                                                                        myCalendar.get(Calendar.MONTH),
+                                                                        myCalendar.get(Calendar.DAY_OF_MONTH));
+                dialog.getDatePicker().setMaxDate(System.currentTimeMillis());
+                dialog.show();
+
+            }
+        });
+
+        eItem = findViewById(R.id.editText_Item);
+        //TO-DO Figure out how to input currency nicely
+        eItem.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+            private String current ="";
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                if (!s.toString().equals(current)){
+                    eItem.removeTextChangedListener(this);
+
+                }
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+
             }
         });
     }
@@ -91,10 +123,14 @@ public class ExpenditureInput extends AppCompatActivity implements AdapterView.O
     public void updateLabel(Calendar myCalendar){
         TextView tvDate = findViewById(R.id.date);
 
-        String format = "dd/MM/YYYY";
+        String format = "dd/MMM/YYYY";
         SimpleDateFormat sdf = new SimpleDateFormat(format, Locale.ENGLISH);
         tvDate.setText(sdf.format(myCalendar.getTime()));
         date = sdf.format(myCalendar.getTime());
+
+        String monthFormat = "YYYY/MMM/dd";
+        SimpleDateFormat monthSDF = new SimpleDateFormat(monthFormat, Locale.ENGLISH);
+        monthDate = monthSDF.format(myCalendar.getTime());
 
     }
 
@@ -110,7 +146,6 @@ public class ExpenditureInput extends AppCompatActivity implements AdapterView.O
 
     public void confirm(View view) {
 
-        EditText eItem = findViewById(R.id.editText_Item);
         item = eItem.getText().toString();
         EditText eCost = findViewById(R.id.editText_Cost);
         cost = eCost.getText().toString();
@@ -124,8 +159,8 @@ public class ExpenditureInput extends AppCompatActivity implements AdapterView.O
                 item,
                 cost);
 
-        expenditureReference.push().setValue(newTransaction);
-
+        expenditureReference.child(monthDate).push().setValue(newTransaction);
+        Log.i("LOG_TAG", "New Expenditure added");
         finish();
     }
 }

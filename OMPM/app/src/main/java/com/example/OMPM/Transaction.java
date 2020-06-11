@@ -20,4 +20,20 @@ public class Transaction {
         this.item = item;
         this.cost = cost;
     }
+
+    public String getDate(){
+        return this.expenditureDate;
+    }
+
+    public String getType(){
+        return this.expenditureType;
+    }
+
+    public String getItem(){
+        return this.item;
+    }
+
+    public String getCost(){
+        return this.cost;
+    }
 }

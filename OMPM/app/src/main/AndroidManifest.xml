@@ -12,7 +12,8 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".ExpenditureInput"></activity>
+        <activity android:name=".ExpenditureHistory"></activity>
+        <activity android:name=".ExpenditureInput" />
         <activity
             android:name=".History"
             android:label="History"
