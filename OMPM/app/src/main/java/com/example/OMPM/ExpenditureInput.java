@@ -46,7 +46,7 @@ public class ExpenditureInput extends AppCompatActivity implements AdapterView.O
 
     private Expenditure newExpenditure;
     private String date;
-    private String expenditureChoice;
+    private String expenditureType;
     private String item;
     private String cost;
     private String monthDate;
@@ -138,7 +138,7 @@ public class ExpenditureInput extends AppCompatActivity implements AdapterView.O
 
     @Override
     public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-        expenditureChoice = parent.getItemAtPosition(position).toString();
+        expenditureType = parent.getItemAtPosition(position).toString();
     }
 
     @Override
@@ -152,16 +152,22 @@ public class ExpenditureInput extends AppCompatActivity implements AdapterView.O
         EditText eCost = findViewById(R.id.editText_Cost);
         cost = eCost.getText().toString();
 
-        DatabaseReference expenditureReference = mDatabase.child("users").child(userId).child("Expenditures").child(monthDate);
+        DatabaseReference expenditureReference = mDatabase
+                                                .child("users")
+                                                .child(userId)
+                                                .child("Expenditures")
+                                                .child(monthDate)
+                                                .child(expenditureType);
         //Creates new Expenditure;
         newExpenditure = new Expenditure(
                 date,
-                expenditureChoice,
+                expenditureType,
                 item,
                 cost);
 
-        //Creates an Expenditure at /YYYY/MMM/dd/
+        //Puts the expenditure at /user/userID/Expenditures/YYYY/MMM/dd/expenditureType
         expenditureReference.push().setValue(newExpenditure);
+
 
         Log.i("LOG_TAG", "New Expenditure added");
         finish();
