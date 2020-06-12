@@ -9,8 +9,8 @@ import java.util.Map;
 
 public class Expenditure {
 
-    public String expenditureDate;
-    public String expenditureType;
+    public String date;
+    public String type;
     public String item;
     public String cost;
 
@@ -18,19 +18,19 @@ public class Expenditure {
 
     }
 
-    public Expenditure(String expenditureDate, String expenditureType, String item, String cost){
-        this.expenditureDate = expenditureDate;
-        this.expenditureType = expenditureType;
+    public Expenditure(String date, String type, String item, String cost){
+        this.date = date;
+        this.type = type;
         this.item = item;
         this.cost = cost;
     }
 
     public String getDate(){
-        return this.expenditureDate;
+        return this.date;
     }
 
     public String getType(){
-        return this.expenditureType;
+        return this.type;
     }
 
     public String getItem(){
@@ -43,10 +43,10 @@ public class Expenditure {
 
     public Map<String, Object> toMap(){
         HashMap<String, Object> result = new HashMap<>();
-        result.put("Expenditure Date", expenditureDate);
-        result.put("Expenditure Type", expenditureType);
-        result.put("Item", item);
-        result.put("Cost", cost);
+        result.put("date", date);
+        result.put("type", type);
+        result.put("item", item);
+        result.put("cost", cost);
         return result;
     }
 }
