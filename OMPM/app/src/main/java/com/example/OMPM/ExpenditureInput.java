@@ -130,7 +130,7 @@ public class ExpenditureInput extends AppCompatActivity implements AdapterView.O
         tvDate.setText(sdf.format(myCalendar.getTime()));
         date = sdf.format(myCalendar.getTime());
 
-        String monthFormat = "YYYY/MMM/dd";
+        String monthFormat = "YYYY/MMM";
         SimpleDateFormat monthSDF = new SimpleDateFormat(monthFormat, Locale.ENGLISH);
         monthDate = monthSDF.format(myCalendar.getTime());
 
@@ -152,12 +152,12 @@ public class ExpenditureInput extends AppCompatActivity implements AdapterView.O
         EditText eCost = findViewById(R.id.editText_Cost);
         cost = eCost.getText().toString();
 
-        DatabaseReference expenditureReference = mDatabase
+        DatabaseReference expenditureDateReference = mDatabase
                                                 .child("users")
                                                 .child(userId)
                                                 .child("Expenditures")
-                                                .child(monthDate)
-                                                .child(expenditureType);
+                                                .child(monthDate);
+        String key = expenditureDateReference.push().getKey();
         //Creates new Expenditure;
         newExpenditure = new Expenditure(
                 date,
@@ -165,11 +165,16 @@ public class ExpenditureInput extends AppCompatActivity implements AdapterView.O
                 item,
                 cost);
 
-        //Puts the expenditure at /user/userID/Expenditures/YYYY/MMM/dd/expenditureType
-        expenditureReference.push().setValue(newExpenditure);
+        //Puts the expenditure at /user/userID/Expenditures/YYYY/MMM/
+        Map<String, Object> expenditureValues = newExpenditure.toMap();
+
+        Map<String,Object> childUpdates = new HashMap<>();
+        childUpdates.put("/users/" + userId + "/Expenditures/" + monthDate + "/" + key, newExpenditure);
+
+        mDatabase.updateChildren(childUpdates);
 
 
-        Log.i("LOG_TAG", "New Expenditure added");
+        Log.d(TAG, "New Expenditure added");
         finish();
     }
 }
