@@ -24,14 +24,6 @@
                 android:value="com.example.OMPM.MainPage" />
         </activity>
         <activity
-            android:name=".Expenditure"
-            android:label="Expenditure"
-            android:parentActivityName=".MainPage">
-            <meta-data
-                android:name="android.support.PARENT_ACTIVITY"
-                android:value="com.example.OMPM.MainPage" />
-        </activity>
-        <activity
             android:name=".SplitBill"
             android:label="SplitBill"
             android:parentActivityName=".MainPage">
