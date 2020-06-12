@@ -87,7 +87,7 @@ public class MainPage extends AppCompatActivity {
     }
 
     public void launchExpenditure(View view) {
-        Intent iLaunchExpenditure = new Intent(MainPage.this, ExpenditureInput.class);
+        Intent iLaunchExpenditure = new Intent(MainPage.this, ExpenditureLandingPage.class);
         startActivity(iLaunchExpenditure);
     }
 
