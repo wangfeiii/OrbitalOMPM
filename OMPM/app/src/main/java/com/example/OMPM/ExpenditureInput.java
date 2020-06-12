@@ -30,7 +30,9 @@ import com.google.firebase.database.ValueEventListener;
 
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
+import java.util.HashMap;
 import java.util.Locale;
+import java.util.Map;
 
 //BIGGEST TO-DO: Make the UI like a messaging app
 public class ExpenditureInput extends AppCompatActivity implements AdapterView.OnItemSelectedListener {
@@ -42,7 +44,7 @@ public class ExpenditureInput extends AppCompatActivity implements AdapterView.O
 
     private Spinner sExpenditureChoices;
 
-    private Transaction newTransaction;
+    private Expenditure newExpenditure;
     private String date;
     private String expenditureChoice;
     private String item;
@@ -150,16 +152,17 @@ public class ExpenditureInput extends AppCompatActivity implements AdapterView.O
         EditText eCost = findViewById(R.id.editText_Cost);
         cost = eCost.getText().toString();
 
-        final DatabaseReference expenditureReference = mDatabase.child("users").child(userId).child("Expenditures");
-
-        //Record transaction;
-        newTransaction = new Transaction(
+        DatabaseReference expenditureReference = mDatabase.child("users").child(userId).child("Expenditures").child(monthDate);
+        //Creates new Expenditure;
+        newExpenditure = new Expenditure(
                 date,
                 expenditureChoice,
                 item,
                 cost);
 
-        expenditureReference.child(monthDate).push().setValue(newTransaction);
+        //Creates an Expenditure at /YYYY/MMM/dd/
+        expenditureReference.push().setValue(newExpenditure);
+
         Log.i("LOG_TAG", "New Expenditure added");
         finish();
     }

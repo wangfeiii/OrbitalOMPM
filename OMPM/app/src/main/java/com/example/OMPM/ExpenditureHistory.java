@@ -47,7 +47,7 @@ public class ExpenditureHistory extends AppCompatActivity {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 for (DataSnapshot ds: dataSnapshot.getChildren()){
-                    Transaction transaction = ds.getValue(Transaction.class);
+                    Expenditure transaction = ds.getValue(Expenditure.class);
                     String tDate = transaction.getDate();
                     String tType = transaction.getType();
                     String tItem = transaction.getItem();
