@@ -39,8 +39,7 @@ public class SplitBill extends AppCompatActivity {
     private final ArrayList<String> mItemsList = new ArrayList<>();
     private RecyclerView mRecyclerView;
     private WordListAdapter mAdapter;
-    double bill_amount, bil_split;
-    int noOfPeople;
+    double bill_amount, indivBill;
     private Uri contactUri;
     private String contactID;     // contacts unique ID
     private String contactNumber = "";
@@ -58,7 +57,6 @@ public class SplitBill extends AppCompatActivity {
 
         //initialize widgets
         final EditText bill = findViewById(R.id.editText_Amount);
-        final EditText no = findViewById(R.id.editTextNumber);
         final TextView resultView = findViewById(R.id.result);
         Button split = findViewById(R.id.split);
         final CheckBox gst = findViewById(R.id.checkBox_GST);
@@ -69,25 +67,6 @@ public class SplitBill extends AppCompatActivity {
         final WordListAdapter mAdapter = new WordListAdapter(mItemsList);
         mRecyclerView.setAdapter(mAdapter);
         mRecyclerView.setLayoutManager(new LinearLayoutManager(this));
-
-        split.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                double bill_amount = Double.parseDouble(bill.getText().toString());
-
-                if (sc.isChecked())
-                    bill_amount = bill_amount * 1.1;
-                if (gst.isChecked())
-                    bill_amount = bill_amount * 1.07;
-
-                noOfPeople = Integer.parseInt(no.getText().toString());
-                bil_split = bill_amount/noOfPeople;
-                DecimalFormat currency = new DecimalFormat("$###,###.##");
-                resultView.setText("Each: " + currency.format(bil_split));
-                mItemsList.add(contactNumber + ": " + currency.format(bil_split));
-                mAdapter.notifyItemInserted(mItemsList.size()-1);
-            }
-        });
 
         retrieveContactNumber();
         selected = new boolean[contactListArray.length];
@@ -128,6 +107,26 @@ public class SplitBill extends AppCompatActivity {
                  */
                 AlertDialog alertDialog = builder.create();
                 alertDialog.show();
+            }
+        });
+
+        split.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                double bill_amount = Double.parseDouble(bill.getText().toString());
+
+                if (sc.isChecked())
+                    bill_amount = bill_amount * 1.1;
+                if (gst.isChecked())
+                    bill_amount = bill_amount * 1.07;
+
+                indivBill = bill_amount/contact_list.size();
+                DecimalFormat currency = new DecimalFormat("$###,###.##");
+                resultView.setText("Each: " + currency.format(bill_amount));
+                for (int i = 0; i<selected.length; i++)
+                    if (selected[i])
+                        mItemsList.add(contactListArray[i] + ": " + currency.format(indivBill));
+                mAdapter.notifyItemInserted(mItemsList.size()-1);
             }
         });
     }
