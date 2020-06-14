@@ -82,11 +82,6 @@ public class WordListAdapter extends RecyclerView.Adapter<WordListAdapter.ListVi
         this.mWordList = wordList;
     }
 
-    @Override
-    public int getItemCount() {
-        return mWordList.size();
-    }
-
     public class WordViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
         public final TextView wordItemView;
         final WordListAdapter mAdapter;
