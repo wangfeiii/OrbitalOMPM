@@ -71,11 +71,13 @@ public class ExpenditureHistory extends AppCompatActivity {
         myExpenditure.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                for (DataSnapshot ds : dataSnapshot.getChildren()) {
-                    Expenditure newExpenditure = ds.getValue(Expenditure.class);
-                    Processing(newExpenditure);
-                }
-                Listing(monthExpenditureList);
+                if (dataSnapshot.exists()) {
+                    for (DataSnapshot ds : dataSnapshot.getChildren()) {
+                        Expenditure newExpenditure = ds.getValue(Expenditure.class);
+                        Processing(newExpenditure);
+                    }
+                    Listing(monthExpenditureList);
+                } else { mWordList.add("You have not recorded any expenditures this month!"); }
                 //Initialize RecyclerView
                 mRecyclerView = findViewById(R.id.recyclerview);
                 mAdapter = new ExpenditureListAdapter(mWordList);

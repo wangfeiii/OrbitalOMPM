@@ -1,15 +1,12 @@
 package com.example.OMPM;
 
-import androidx.appcompat.app.AppCompatActivity;
-
-import android.os.Bundle;
-
+import java.sql.Timestamp;
 import java.util.HashMap;
 import java.util.Map;
 
 public class Expenditure {
 
-    public String date;
+    public Long timestamp;
     public String type;
     public String item;
     public String cost;
@@ -18,15 +15,15 @@ public class Expenditure {
 
     }
 
-    public Expenditure(String date, String type, String item, String cost){
-        this.date = date;
+    public Expenditure(Long timestamp, String type, String item, String cost){
+        this.timestamp = timestamp;
         this.type = type;
         this.item = item;
         this.cost = cost;
     }
 
-    public String getDate(){
-        return this.date;
+    public Long getTimestamp(){
+        return this.timestamp;
     }
 
     public String getType(){
@@ -43,7 +40,7 @@ public class Expenditure {
 
     public Map<String, Object> toMap(){
         HashMap<String, Object> result = new HashMap<>();
-        result.put("date", date);
+        result.put("date", timestamp);
         result.put("type", type);
         result.put("item", item);
         result.put("cost", cost);
