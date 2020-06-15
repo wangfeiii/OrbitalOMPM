@@ -33,7 +33,6 @@ import java.util.LinkedList;
 import java.util.List;
 
 public class SplitBill extends AppCompatActivity {
-    public static final int PICK_CONTACT = 1;
     private static final int PERMISSIONS_REQUEST = 100;
     private static final String TAG = SplitBill.class.getSimpleName();
 
@@ -47,6 +46,8 @@ public class SplitBill extends AppCompatActivity {
     String [] contactListArray;
     List<String> contact_list = new ArrayList<>();
     boolean[] selected;
+    List<String> selected_list;
+    private int noOfpeople = 0;
 
 
     @Override
@@ -57,11 +58,7 @@ public class SplitBill extends AppCompatActivity {
         getPermissionToReadUserContacts();
 
         //initialize widgets
-        final EditText bill = findViewById(R.id.editText_Amount);
         final TextView resultView = findViewById(R.id.result);
-        Button split = findViewById(R.id.split);
-        final CheckBox gst = findViewById(R.id.checkBox_GST);
-        final CheckBox sc = findViewById(R.id.Service_Charge);
 
         RecyclerView mRecyclerView = findViewById(R.id.item_list);
         mRecyclerView.addItemDecoration(new DividerItemDecoration(this, LinearLayoutManager.VERTICAL));
@@ -70,16 +67,29 @@ public class SplitBill extends AppCompatActivity {
         mRecyclerView.setLayoutManager(new LinearLayoutManager(this));
 
         retrieveContactNumber();
-        selected = new boolean[contactListArray.length];
         (findViewById(R.id.fab_AddItems)).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                View view = LayoutInflater.from(getApplicationContext()).inflate(R.layout.alert_dialog_layout,null);
+                final View view = LayoutInflater.from(getApplicationContext()).inflate(R.layout.alert_dialog_layout,null);
                 AlertDialog.Builder firstBuilder = new AlertDialog.Builder(SplitBill.this);
                 firstBuilder.setTitle("Input Amount");
                 firstBuilder.setPositiveButton("Next", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
+                        CheckBox gst = view.findViewById(R.id.checkBox_GST);
+                        CheckBox sc = view.findViewById(R.id.Service_Charge);
+                        CheckBox myself = view.findViewById(R.id.myself);
+
+                        EditText bill = view.findViewById(R.id.input);
+                        bill_amount = Double.parseDouble(bill.getText().toString());
+
+                        if (sc.isChecked())
+                            bill_amount = bill_amount * 1.1;
+                        if (gst.isChecked())
+                            bill_amount = bill_amount * 1.07;
+                        if (myself.isChecked())
+                            noOfpeople = 1;
+
                         //second dialog
                         showDialog();
                     }
@@ -89,29 +99,11 @@ public class SplitBill extends AppCompatActivity {
                 dialog.show();
             }
         });
-
-        split.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                double bill_amount = Double.parseDouble(bill.getText().toString());
-
-                if (sc.isChecked())
-                    bill_amount = bill_amount * 1.1;
-                if (gst.isChecked())
-                    bill_amount = bill_amount * 1.07;
-
-                indivBill = bill_amount/contact_list.size();
-                DecimalFormat currency = new DecimalFormat("$###,###.##");
-                resultView.setText("Each: " + currency.format(bill_amount));
-                for (int i = 0; i<selected.length; i++)
-                    if (selected[i])
-                        mItemsList.add(contactListArray[i] + ": " + currency.format(indivBill));
-                mAdapter.notifyItemInserted(mItemsList.size()-1);
-            }
-        });
     }
 
+    //second dialog to choose contact
     private void showDialog() {
+        selected = new boolean[contactListArray.length];
         AlertDialog.Builder builder = new AlertDialog.Builder(SplitBill.this);
         builder.setCancelable(true)
                 .setTitle("Select Contacts")
@@ -124,12 +116,23 @@ public class SplitBill extends AppCompatActivity {
                 .setPositiveButton("Confirm", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-                        String str = "";
-                        for (int i = 0; i<selected.length; i++)
-                            if (selected[i])
-                                str = str + contactListArray[i] +" ";
 
-                 //       resultView.setText(str);
+                        DecimalFormat currency = new DecimalFormat("$###,###.##");
+                        List<String> selected_list = new ArrayList<>();
+
+                        for (int i = 0; i < selected.length; i++) {
+                            if (selected[i]) {
+                                selected_list.add(contactListArray[i]);
+                            }
+                        }
+                        noOfpeople = noOfpeople + selected_list.size();
+                        indivBill = bill_amount/noOfpeople;
+
+                        for (int i = 0; i<selected.length; i++) {
+                            if (selected[i]) {
+                                mItemsList.add(contactListArray[i] + ": " + currency.format(indivBill));
+                            }
+                        }
                         dialog.dismiss();
                     }
                 })
@@ -139,16 +142,9 @@ public class SplitBill extends AppCompatActivity {
                         dialog.dismiss();
                     }
                 });
-                /*
-                Intent i = new Intent(Intent.ACTION_PICK, ContactsContract.Contacts.CONTENT_URI);
-                startActivityForResult(i, PICK_CONTACT);
-
-                 */
         AlertDialog alertDialog = builder.create();
         alertDialog.show();
-
     }
-
 
     public void getPermissionToReadUserContacts() {
         //Check whether this app has access to the contacts permission//
@@ -157,16 +153,6 @@ public class SplitBill extends AppCompatActivity {
         if (permission!= PackageManager.PERMISSION_GRANTED)
             ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.READ_CONTACTS},
                     PERMISSIONS_REQUEST);
-    }
-
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-
-        if (requestCode == PICK_CONTACT && resultCode == RESULT_OK) {
-            Uri contactUri = data.getData();
-            retrieveContactNumber();
-        }
     }
 
     private void retrieveContactNumber() {
@@ -188,15 +174,11 @@ public class SplitBill extends AppCompatActivity {
                 while (cursorPhone.moveToNext()) {
                     contactNumber = cursorPhone.getString(cursorPhone.getColumnIndex(ContactsContract.CommonDataKinds.Phone.NUMBER));
                     contact_list.add(name + ": " + contactNumber);
-
                 }
-
                 cursorPhone.close();
                 Log.d(TAG, "Contact Phone Number: " + contactNumber);
             }
         }
-
         contactListArray = contact_list.toArray(new String[contact_list.size()]);
-
     }
 }

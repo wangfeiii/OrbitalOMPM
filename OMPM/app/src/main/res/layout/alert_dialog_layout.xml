@@ -20,25 +20,41 @@
                 android:id="@+id/input"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:hint="Amount to be split" />
+                android:hint="Amount to be split"
+                android:inputType="number" />
 
-            <CheckBox
-                android:id="@+id/checkBox_GST"
-                android:layout_width="165dp"
+            <LinearLayout
+                android:id="@+id/linear"
+                android:layout_centerHorizontal="true"
+                android:layout_centerInParent="true"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_below="@id/input"
-                android:layout_alignParentLeft="true"
-                android:layout_toLeftOf="@id/Service_Charge"
-                android:text="GST"
-                android:textColor="@android:color/black" />
+                android:orientation="horizontal">
+
+                <CheckBox
+                    android:id="@+id/checkBox_GST"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginRight="20dp"
+                    android:text="GST"
+                    android:textColor="@android:color/black" />
+
+                <CheckBox
+                    android:id="@+id/Service_Charge"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Service Charge"
+                    android:textColor="@android:color/black" />
+            </LinearLayout>
 
             <CheckBox
-                android:id="@+id/Service_Charge"
-                android:layout_width="143dp"
+                android:id="@+id/myself"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_below="@id/input"
-                android:layout_alignParentRight="true"
-                android:text="Service Charge"
+                android:layout_centerHorizontal="true"
+                android:layout_below="@id/linear"
+                android:text="Include myself"
                 android:textColor="@android:color/black" />
         </RelativeLayout>
 
