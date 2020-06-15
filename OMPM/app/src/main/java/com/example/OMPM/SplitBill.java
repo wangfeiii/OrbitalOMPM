@@ -17,6 +17,7 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.provider.ContactsContract;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
 import android.widget.CheckBox;
@@ -73,40 +74,19 @@ public class SplitBill extends AppCompatActivity {
         (findViewById(R.id.fab_AddItems)).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                AlertDialog.Builder builder = new AlertDialog.Builder(SplitBill.this);
-                builder.setCancelable(true)
-                        .setTitle("Select Contacts")
-                        .setMultiChoiceItems(contactListArray, selected, new DialogInterface.OnMultiChoiceClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialog, int pos, boolean isChecked) {
-                                selected[pos] = isChecked;
-                            }
-                        })
-                        .setPositiveButton("Confirm", new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialog, int which) {
-                                String str = "";
-                                for (int i = 0; i<selected.length; i++)
-                                    if (selected[i])
-                                        str = str + contactListArray[i] +" ";
-
-                                resultView.setText(str);
-                                dialog.dismiss();
-                            }
-                        })
-                        .setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialog, int which) {
-                                dialog.dismiss();
-                            }
-                        });
-                /*
-                Intent i = new Intent(Intent.ACTION_PICK, ContactsContract.Contacts.CONTENT_URI);
-                startActivityForResult(i, PICK_CONTACT);
-
-                 */
-                AlertDialog alertDialog = builder.create();
-                alertDialog.show();
+                View view = LayoutInflater.from(getApplicationContext()).inflate(R.layout.alert_dialog_layout,null);
+                AlertDialog.Builder firstBuilder = new AlertDialog.Builder(SplitBill.this);
+                firstBuilder.setTitle("Input Amount");
+                firstBuilder.setPositiveButton("Next", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        //second dialog
+                        showDialog();
+                    }
+                });
+                AlertDialog dialog = firstBuilder.create();
+                dialog.setView(view);
+                dialog.show();
             }
         });
 
@@ -130,6 +110,45 @@ public class SplitBill extends AppCompatActivity {
             }
         });
     }
+
+    private void showDialog() {
+        AlertDialog.Builder builder = new AlertDialog.Builder(SplitBill.this);
+        builder.setCancelable(true)
+                .setTitle("Select Contacts")
+                .setMultiChoiceItems(contactListArray, selected, new DialogInterface.OnMultiChoiceClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int pos, boolean isChecked) {
+                        selected[pos] = isChecked;
+                    }
+                })
+                .setPositiveButton("Confirm", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        String str = "";
+                        for (int i = 0; i<selected.length; i++)
+                            if (selected[i])
+                                str = str + contactListArray[i] +" ";
+
+                 //       resultView.setText(str);
+                        dialog.dismiss();
+                    }
+                })
+                .setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.dismiss();
+                    }
+                });
+                /*
+                Intent i = new Intent(Intent.ACTION_PICK, ContactsContract.Contacts.CONTENT_URI);
+                startActivityForResult(i, PICK_CONTACT);
+
+                 */
+        AlertDialog alertDialog = builder.create();
+        alertDialog.show();
+
+    }
+
 
     public void getPermissionToReadUserContacts() {
         //Check whether this app has access to the contacts permission//
