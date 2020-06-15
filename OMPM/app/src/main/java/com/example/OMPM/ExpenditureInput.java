@@ -27,7 +27,7 @@ import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
 
-//BIGGEST TO-DO: Make the UI like a messaging app
+//! TODO: Prevent user from adding more than 2 dp for currency
 public class ExpenditureInput extends AppCompatActivity implements AdapterView.OnItemSelectedListener {
     private static final String TAG = "LOG_TAG";
 

@@ -45,6 +45,7 @@
     <string name="question4">Finally, how much did that cost?</string>
     <string name="pickdate">Click the calendar to choose a date!</string>
     <string name="button_confirm">Confirm</string>
+    <string name="no_recorded_expenditures">You have not recorded any expenditures this month!</string>
 
     <string-array name="expenditure_choice_array">
         <item>Food</item>
@@ -53,6 +54,12 @@
         <item>Transportation</item>
         <item>Bills</item>
         <item>Others</item>
+    </string-array>
+
+    <string-array name="period_array">
+        <item> This Month </item>
+        <item> This Week  </item>
+        <item> This Year </item>
     </string-array>
 
 </resources>
