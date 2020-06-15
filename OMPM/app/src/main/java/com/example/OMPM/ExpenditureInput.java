@@ -1,11 +1,8 @@
 package com.example.OMPM;
 
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.app.DatePickerDialog;
-import android.content.DialogInterface;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -21,12 +18,8 @@ import android.widget.TextView;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
-import com.google.firebase.database.ChildEventListener;
-import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.ValueEventListener;
 
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
@@ -45,7 +38,7 @@ public class ExpenditureInput extends AppCompatActivity implements AdapterView.O
     private Spinner sExpenditureChoices;
 
     private Expenditure newExpenditure;
-    private String date;
+    private Long timestampDate;
     private String expenditureType;
     private String item;
     private String cost;
@@ -82,6 +75,7 @@ public class ExpenditureInput extends AppCompatActivity implements AdapterView.O
                 myCalendar.set(Calendar.MONTH, month);
                 myCalendar.set(Calendar.DAY_OF_MONTH, dayOfMonth);
                 updateLabel(myCalendar);
+                timestampDate = myCalendar.getTime().getTime();
             }
         };
 
@@ -100,7 +94,7 @@ public class ExpenditureInput extends AppCompatActivity implements AdapterView.O
         });
 
         eItem = findViewById(R.id.editText_Item);
-        //TO-DO Figure out how to input currency nicely
+        //<! TODO: Figure out how to input currency nicely >
         eItem.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
@@ -125,10 +119,9 @@ public class ExpenditureInput extends AppCompatActivity implements AdapterView.O
     public void updateLabel(Calendar myCalendar){
         TextView tvDate = findViewById(R.id.date);
 
-        String format = "dd/MMM/YYYY";
+        String format = "dd/MMMM/YYYY";
         SimpleDateFormat sdf = new SimpleDateFormat(format, Locale.ENGLISH);
         tvDate.setText(sdf.format(myCalendar.getTime()));
-        date = sdf.format(myCalendar.getTime());
 
         String monthFormat = "YYYY/MMM";
         SimpleDateFormat monthSDF = new SimpleDateFormat(monthFormat, Locale.ENGLISH);
@@ -160,7 +153,7 @@ public class ExpenditureInput extends AppCompatActivity implements AdapterView.O
         String key = expenditureDateReference.push().getKey();
         //Creates new Expenditure;
         newExpenditure = new Expenditure(
-                date,
+                timestampDate,
                 expenditureType,
                 item,
                 cost);
