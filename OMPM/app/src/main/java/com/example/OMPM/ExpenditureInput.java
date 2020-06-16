@@ -3,6 +3,7 @@ package com.example.OMPM;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.app.DatePickerDialog;
+import android.content.Intent;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -21,8 +22,10 @@ import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
@@ -30,6 +33,7 @@ import java.util.Map;
 //! TODO: Prevent user from adding more than 2 dp for currency
 public class ExpenditureInput extends AppCompatActivity implements AdapterView.OnItemSelectedListener {
     private static final String TAG = "LOG_TAG";
+    public static final String EXTRA_DATE = "com.example.OMPM.extra.REPLY";
 
     private FirebaseUser user;
     private DatabaseReference mDatabase;
@@ -43,6 +47,9 @@ public class ExpenditureInput extends AppCompatActivity implements AdapterView.O
     private String item;
     private String cost;
     private String monthDate;
+    private String monthsaveDate;
+    private String spinnerDate;
+
     private EditText eItem;
 
 
@@ -74,7 +81,11 @@ public class ExpenditureInput extends AppCompatActivity implements AdapterView.O
                 myCalendar.set(Calendar.YEAR, year);
                 myCalendar.set(Calendar.MONTH, month);
                 myCalendar.set(Calendar.DAY_OF_MONTH, dayOfMonth);
-                updateLabel(myCalendar);
+                try {
+                    updateLabel(myCalendar);
+                } catch (ParseException e) {
+                    e.printStackTrace();
+                }
                 timestampDate = myCalendar.getTime().getTime();
             }
         };
@@ -116,7 +127,7 @@ public class ExpenditureInput extends AppCompatActivity implements AdapterView.O
         });
     }
 
-    public void updateLabel(Calendar myCalendar){
+    public void updateLabel(Calendar myCalendar) throws ParseException {
         TextView tvDate = findViewById(R.id.date);
 
         String format = "dd/MMMM/YYYY";
@@ -126,6 +137,14 @@ public class ExpenditureInput extends AppCompatActivity implements AdapterView.O
         String monthFormat = "YYYY/MMM";
         SimpleDateFormat monthSDF = new SimpleDateFormat(monthFormat, Locale.ENGLISH);
         monthDate = monthSDF.format(myCalendar.getTime());
+        Date date = new SimpleDateFormat("yyyy/MMM").parse(monthDate);
+        monthsaveDate = Long.toString(date.getTime());
+
+        String spinnerFormat = "MMM/YYYY";
+        SimpleDateFormat spinnerSDF = new SimpleDateFormat(spinnerFormat);
+        spinnerDate = spinnerSDF.format(myCalendar.getTime());
+
+        Log.d(TAG, monthsaveDate + "" + monthDate);
 
     }
 
@@ -158,15 +177,18 @@ public class ExpenditureInput extends AppCompatActivity implements AdapterView.O
                 item,
                 cost);
 
-        //Puts the expenditure at /user/userID/Expenditures/YYYY/MMM/
+        //Puts the expenditure at /user/userID/Expenditures/YYYY/mm/
         Map<String, Object> expenditureValues = newExpenditure.toMap();
 
         Map<String,Object> childUpdates = new HashMap<>();
         childUpdates.put("/users/" + userId + "/Expenditures/" + monthDate + "/" + key, newExpenditure);
+        childUpdates.put("/users/" + userId + "/ExpenditureDates/" + monthsaveDate, true);
 
         mDatabase.updateChildren(childUpdates);
 
-
+        Intent replyIntent = new Intent();
+        replyIntent.putExtra(EXTRA_DATE, spinnerDate);
+        setResult(RESULT_OK, replyIntent);
         Log.d(TAG, "New Expenditure added");
         finish();
     }

@@ -42,6 +42,7 @@ import java.util.Map;
 public class ExpenditureLandingPage extends AppCompatActivity {
     //! TODO: Add spinner for different filters
     private static final String TAG = "LOG_TAG";
+    public static final int TEXT_REQUEST = 1;
 
     private FirebaseUser user;
     private DatabaseReference mDatabase;
@@ -80,7 +81,7 @@ public class ExpenditureLandingPage extends AppCompatActivity {
                 .child(userId)
                 .child("ExpenditureDates")
                 .orderByKey();
-        yearQuery.addValueEventListener(new ValueEventListener() {
+        yearQuery.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 if (dataSnapshot.exists()){
@@ -93,26 +94,28 @@ public class ExpenditureLandingPage extends AppCompatActivity {
                             spinnerArray.addFirst(newDate);
                         }
                     }
-                    ArrayAdapter<String> arrayAdapter = new ArrayAdapter<>(spinner.getContext(),
-                            android.R.layout.simple_spinner_dropdown_item,
-                            spinnerArray);
-                    arrayAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-                    spinner.setAdapter(arrayAdapter);
-                    spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-                        @Override
-                        public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                            String selected = parent.getItemAtPosition(position).toString();
-                            String selectedDate = selected.substring(4) + "/" + selected.substring(0, 4);
-                            changeDate(selectedDate);
-                        }
-
-                        @Override
-                        public void onNothingSelected(AdapterView<?> parent) {
-
-
-                        }
-                    });
                 }
+                String newDate = currentDate.substring(5) + "/" + currentDate.substring(0, 4);
+                if (!spinnerArray.contains(newDate)) {
+                    spinnerArray.addFirst(newDate);
+                }
+                ArrayAdapter<String> arrayAdapter = new ArrayAdapter<>(spinner.getContext(),
+                        android.R.layout.simple_spinner_dropdown_item,
+                        spinnerArray);
+                arrayAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+                spinner.setAdapter(arrayAdapter);
+                spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+                    @Override
+                    public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                        String selected = parent.getItemAtPosition(position).toString();
+                        String selectedDate = selected.substring(4) + "/" + selected.substring(0, 4);
+                        changeDate(selectedDate);
+                    }
+
+                    @Override
+                    public void onNothingSelected(AdapterView<?> parent) {
+                    }
+                });
             }
 
             @Override
@@ -120,6 +123,17 @@ public class ExpenditureLandingPage extends AppCompatActivity {
 
             }
         });
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data){
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == TEXT_REQUEST){
+            if (resultCode == RESULT_OK){
+                String newDate = data.getStringExtra(ExpenditureInput.EXTRA_DATE);
+                spinnerArray.add(newDate);
+            }
+        }
     }
 
     //Pie Chart Stuff
@@ -178,12 +192,12 @@ public class ExpenditureLandingPage extends AppCompatActivity {
     }
 
     public void launchExpenditureInput(View view) {
-        Intent iLaunchExpenditureInput = new Intent(ExpenditureLandingPage.this, ExpenditureInput.class);
-        startActivity(iLaunchExpenditureInput);
+        Intent iLaunchExpenditureInput = new Intent(this, ExpenditureInput.class);
+        startActivityForResult(iLaunchExpenditureInput, TEXT_REQUEST);
     }
 
     public void launchExpenditureHistory(View view) {
-        Intent iLaunchExpenditureHistory = new Intent(ExpenditureLandingPage.this, ExpenditureHistory.class);
+        Intent iLaunchExpenditureHistory = new Intent(this, ExpenditureHistory.class);
         startActivity(iLaunchExpenditureHistory);
     }
 }
