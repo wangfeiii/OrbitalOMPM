@@ -3,9 +3,14 @@ package com.example.OMPM;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.Intent;
 import android.os.Bundle;
+import android.renderscript.Sampler;
 import android.util.Log;
 import android.view.View;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
+import android.widget.Spinner;
 import android.widget.TextView;
 
 import com.github.mikephil.charting.charts.PieChart;
@@ -30,6 +35,7 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
@@ -43,12 +49,12 @@ public class ExpenditureLandingPage extends AppCompatActivity {
     private Date cDate;
     private String currentDate;
     private PieChart pcExpenditure;
-    DatabaseReference dateReference;
-    Query myExpenditure;
 
-    ArrayList<Expenditure> monthExpenditureList;
     Map<String, Float> dataSet;
     ArrayList<PieEntry> entries;
+
+    private Spinner spinner;
+    private LinkedList<String> spinnerArray = new LinkedList<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -58,20 +64,76 @@ public class ExpenditureLandingPage extends AppCompatActivity {
         mDatabase = FirebaseDatabase.getInstance().getReference();
         user = FirebaseAuth.getInstance().getCurrentUser();
         userId = user.getUid();
+
         cDate = Calendar.getInstance().getTime();
         SimpleDateFormat sdf = new SimpleDateFormat("YYYY/MMM");
         currentDate = sdf.format(cDate.getTime());
-        monthExpenditureList = new ArrayList<>();
+
         dataSet = new HashMap<>();
         entries = new ArrayList<>();
-
         pcExpenditure = findViewById(R.id.pc_Expenditure);
-        dateReference = mDatabase
+
+        // Spinner Stuff
+        spinner = findViewById(R.id.spinner_monthly);
+        Query yearQuery = mDatabase
+                .child("users")
+                .child(userId)
+                .child("ExpenditureDates")
+                .orderByKey();
+        yearQuery.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                if (dataSnapshot.exists()){
+                    for(DataSnapshot ds: dataSnapshot.getChildren()) {
+                        String key = ds.getKey();
+                        Long timestamp = Long.parseLong(key);
+                        SimpleDateFormat monthSDF = new SimpleDateFormat("MMM/YYYY");
+                        String newDate = monthSDF.format(timestamp);
+                        if(!spinnerArray.contains(newDate)) {
+                            spinnerArray.addFirst(newDate);
+                        }
+                    }
+                    ArrayAdapter<String> arrayAdapter = new ArrayAdapter<>(spinner.getContext(),
+                            android.R.layout.simple_spinner_dropdown_item,
+                            spinnerArray);
+                    arrayAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+                    spinner.setAdapter(arrayAdapter);
+                    spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+                        @Override
+                        public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                            String selected = parent.getItemAtPosition(position).toString();
+                            String selectedDate = selected.substring(4) + "/" + selected.substring(0, 4);
+                            changeDate(selectedDate);
+                        }
+
+                        @Override
+                        public void onNothingSelected(AdapterView<?> parent) {
+
+
+                        }
+                    });
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
+    }
+
+    //Pie Chart Stuff
+    private void changeDate(String selectedDate){
+        //Empty previous Data
+        dataSet.clear();
+        entries.clear();
+
+        Query myExpenditure = mDatabase
                 .child("users")
                 .child(userId)
                 .child("Expenditures")
-                .child(currentDate);
-        myExpenditure = dateReference;
+                .child(selectedDate);
+
         myExpenditure.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
@@ -79,7 +141,6 @@ public class ExpenditureLandingPage extends AppCompatActivity {
                     for (DataSnapshot ds : dataSnapshot.getChildren()) {
                         Expenditure newExpenditure = ds.getValue(Expenditure.class);
                         createDataSet(newExpenditure);
-                        monthExpenditureList.add(newExpenditure);
                     }
                     for (Map.Entry<String, Float> data : dataSet.entrySet()) {
                         entries.add(new PieEntry(data.getValue(), data.getKey()));
@@ -98,8 +159,6 @@ public class ExpenditureLandingPage extends AppCompatActivity {
             }
         });
     }
-
-
     private void createDataSet(Expenditure expenditure){
         String type = expenditure.getType();
         Float cost = Float.parseFloat(expenditure.getCost());
@@ -114,6 +173,17 @@ public class ExpenditureLandingPage extends AppCompatActivity {
             PieData data = new PieData(set);
             pcExpenditure.setData(data);
             pcExpenditure.animateXY(5000,5000);
+            pcExpenditure.setDrawEntryLabels(false);
             pcExpenditure.invalidate();
+    }
+
+    public void launchExpenditureInput(View view) {
+        Intent iLaunchExpenditureInput = new Intent(ExpenditureLandingPage.this, ExpenditureInput.class);
+        startActivity(iLaunchExpenditureInput);
+    }
+
+    public void launchExpenditureHistory(View view) {
+        Intent iLaunchExpenditureHistory = new Intent(ExpenditureLandingPage.this, ExpenditureHistory.class);
+        startActivity(iLaunchExpenditureHistory);
     }
 }
