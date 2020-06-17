@@ -9,9 +9,7 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
-import java.util.LinkedList;
 import java.util.List;
-
 
 public class WordListAdapter extends RecyclerView.Adapter<WordListAdapter.ListViewHolder> {
 

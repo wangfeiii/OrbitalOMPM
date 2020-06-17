@@ -10,7 +10,6 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import android.Manifest;
 import android.content.DialogInterface;
-import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.net.Uri;
@@ -19,18 +18,20 @@ import android.provider.ContactsContract;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.TextView;
-import android.widget.Toast;
 
-import org.w3c.dom.Text;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 
 import java.text.DecimalFormat;
 import java.util.ArrayList;
-import java.util.LinkedList;
 import java.util.List;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
 public class SplitBill extends AppCompatActivity {
     private static final int PERMISSIONS_REQUEST = 100;
@@ -43,17 +44,21 @@ public class SplitBill extends AppCompatActivity {
     private Uri contactUri;
     private String contactID;     // contacts unique ID
     private String contactNumber = "";
-    String [] contactListArray;
-    List<String> contact_list = new ArrayList<>();
+    String[] contactListArray;
+    List<Contact> contact_list = new ArrayList<>();
     boolean[] selected;
-    List<String> selected_list;
+    List<Contact> selected_list;
     private int noOfpeople = 0;
 
+    private DatabaseReference mDatabase;
+    private FirebaseUser user;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_split_bill);
+        mDatabase = FirebaseDatabase.getInstance().getReference();
+        user = FirebaseAuth.getInstance().getCurrentUser();
 
         getPermissionToReadUserContacts();
 
@@ -118,21 +123,32 @@ public class SplitBill extends AppCompatActivity {
                     public void onClick(DialogInterface dialog, int which) {
 
                         DecimalFormat currency = new DecimalFormat("$###,###.##");
-                        List<String> selected_list = new ArrayList<>();
+                       // List<Contact> selected_list = new ArrayList<>();
+
+                        int count  = 0;
 
                         for (int i = 0; i < selected.length; i++) {
                             if (selected[i]) {
-                                selected_list.add(contactListArray[i]);
+                                count = count +1;
+                              //  selected_list.add(contact_list.get(i));
                             }
                         }
-                        noOfpeople = noOfpeople + selected_list.size();
+                        noOfpeople = noOfpeople + count;
                         indivBill = bill_amount/noOfpeople;
+                        SimpleDateFormat sdf = new SimpleDateFormat("yyyy/MM/dd");
+                        String date = sdf.format(new Date());
 
                         for (int i = 0; i<selected.length; i++) {
                             if (selected[i]) {
                                 mItemsList.add(contactListArray[i] + ": " + currency.format(indivBill));
                             }
                         }
+
+                        //firebase
+                        String key = mDatabase.child("debts").push().getKey();
+                        mDatabase.child("debts").child(key).child("date").setValue(date);
+                        mDatabase.child("debts").child(key).child("amount").setValue(indivBill);
+                        mDatabase.child("users").child(user.getUid()).child("debts").child(key).setValue(true);
                         dialog.dismiss();
                     }
                 })
@@ -164,7 +180,6 @@ public class SplitBill extends AppCompatActivity {
             String name = cursor.getString(cursor.getColumnIndex(ContactsContract.Contacts.DISPLAY_NAME));
             if ("1".equals(hasPhone) || Boolean.parseBoolean(hasPhone)) {
                 // You know it has a number so now query it like this
-
                 Log.d(TAG, "Contact ID: " + contactID);
 
                 // Using the contact ID now we will get contact phone number
@@ -173,12 +188,18 @@ public class SplitBill extends AppCompatActivity {
 
                 while (cursorPhone.moveToNext()) {
                     contactNumber = cursorPhone.getString(cursorPhone.getColumnIndex(ContactsContract.CommonDataKinds.Phone.NUMBER));
-                    contact_list.add(name + ": " + contactNumber);
+                    Contact contact = new Contact(name, contactNumber);
+                    contact_list.add(contact);
                 }
                 cursorPhone.close();
                 Log.d(TAG, "Contact Phone Number: " + contactNumber);
             }
         }
-        contactListArray = contact_list.toArray(new String[contact_list.size()]);
+
+        contactListArray = new String[contact_list.size()];
+        for (int i = 0; i<contact_list.size();i++) {
+            contactListArray[i] = contact_list.get(i).toList();
+        }
+
     }
 }
