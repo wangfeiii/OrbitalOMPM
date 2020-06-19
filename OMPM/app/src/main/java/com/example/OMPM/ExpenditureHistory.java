@@ -2,6 +2,7 @@ package com.example.OMPM;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -12,9 +13,6 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Spinner;
 
-import com.github.mikephil.charting.charts.PieChart;
-import com.github.mikephil.charting.data.PieDataSet;
-import com.github.mikephil.charting.data.PieEntry;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
@@ -32,6 +30,9 @@ import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+
+import static android.widget.LinearLayout.HORIZONTAL;
+
 //! TODO: add spinner for different months
 public class ExpenditureHistory extends AppCompatActivity {
 
@@ -51,7 +52,7 @@ public class ExpenditureHistory extends AppCompatActivity {
     private LinkedList<String> spinnerArray = new LinkedList<>();
 
     Map<String, List<Expenditure>> monthExpenditureList;
-    LinkedList<String> mWordList = new LinkedList<String>();
+    ArrayList<Expenditure> mExpenditureList = new ArrayList<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -122,7 +123,7 @@ public class ExpenditureHistory extends AppCompatActivity {
     }
 
     private void changeDate(String selectedDate){
-        mWordList.clear();
+        mExpenditureList.clear();
         monthExpenditureList.clear();
 
         Query myExpenditure = mDatabase
@@ -141,12 +142,14 @@ public class ExpenditureHistory extends AppCompatActivity {
                         Processing(newExpenditure);
                     }
                     Listing(monthExpenditureList);
-                } else { mWordList.add("You have not recorded any expenditures this month!"); }
+                }
                 //Initialize RecyclerView
                 mRecyclerView = findViewById(R.id.recyclerview);
-                mAdapter = new ExpenditureListAdapter(mWordList);
-                mRecyclerView.setAdapter(mAdapter);
+                mAdapter = new ExpenditureListAdapter(mRecyclerView.getContext(), mExpenditureList);
                 mRecyclerView.setLayoutManager(new LinearLayoutManager(mRecyclerView.getContext()));
+                DividerItemDecoration itemDecor = new DividerItemDecoration(mRecyclerView.getContext(), DividerItemDecoration.VERTICAL);
+                mRecyclerView.addItemDecoration(itemDecor);
+                mRecyclerView.setAdapter(mAdapter);
             }
             @Override
             public void onCancelled(@NonNull DatabaseError databaseError) {
@@ -177,18 +180,7 @@ public class ExpenditureHistory extends AppCompatActivity {
             }
         }
         for(Expenditure expenditure : expenditures){
-            String temp = "---------";
-            mWordList.addFirst(temp);
-            String item = expenditure.getItem();
-            mWordList.addFirst(item);
-            String cost = expenditure.getCost();
-            mWordList.addFirst(cost);
-            SimpleDateFormat fullSDF = new SimpleDateFormat("dd/MMMM/YYYY");
-            String date = fullSDF.format(expenditure.getTimestamp());
-            mWordList.addFirst(date);
-            String type = expenditure.getType();
-            mWordList.addFirst(type);
-            Log.d(TAG, item + "added to word list");
+            mExpenditureList.add(expenditure);
         }
     }
 }

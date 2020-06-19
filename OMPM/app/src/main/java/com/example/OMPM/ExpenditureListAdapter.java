@@ -9,20 +9,24 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.List;
 
 public class ExpenditureListAdapter extends RecyclerView.Adapter<ExpenditureListAdapter.ListViewHolder> {
-    List<String> itemList;
 
-    public ExpenditureListAdapter(List<String> itemList){
+    private ArrayList<Expenditure> itemList;
+    private Context mContext;
+
+    public ExpenditureListAdapter(Context context, ArrayList<Expenditure> itemList){
         this.itemList = itemList;
+        this.mContext = context;
     }
 
     @NonNull
     @Override
     public ExpenditureListAdapter.ListViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        Context context = parent.getContext();
-        LayoutInflater inflater = LayoutInflater.from(context);
+        LayoutInflater inflater = LayoutInflater.from(mContext);
 
         //Inflate the custom layout
         View itemView = inflater.inflate(R.layout.expenditurehistorylist, parent, false);
@@ -33,8 +37,8 @@ public class ExpenditureListAdapter extends RecyclerView.Adapter<ExpenditureList
     // Involves populating data into the item through holder
     @Override
     public void onBindViewHolder(@NonNull ExpenditureListAdapter.ListViewHolder holder, int position) {
-        String item = itemList.get(position);
-        holder.expenditure.setText(item);
+        Expenditure item = itemList.get(position);
+        holder.bindTo(item);
 
     }
 
@@ -44,12 +48,27 @@ public class ExpenditureListAdapter extends RecyclerView.Adapter<ExpenditureList
     }
 
     public static class ListViewHolder extends RecyclerView.ViewHolder{
-        public TextView expenditure;
+        private TextView mDateText;
+        private TextView mCostText;
+        private TextView mTypeText;
+        private TextView mItemText;
 
         public ListViewHolder(@NonNull View itemView) {
             super(itemView);
 
-            expenditure = itemView.findViewById(R.id.expenditure);
+            mDateText = itemView.findViewById(R.id.dateText);
+            mCostText = itemView.findViewById(R.id.costText);
+            mTypeText = itemView.findViewById(R.id.typeText);
+            mItemText = itemView.findViewById(R.id.itemText);
+
+        }
+
+        void bindTo(Expenditure item){
+            mCostText.setText(item.getCost());
+            SimpleDateFormat sdf = new SimpleDateFormat("dd/MMMM/YYYY");
+            mDateText.setText(sdf.format(item.getTimestamp()));
+            mTypeText.setText(item.getType());
+            mItemText.setText(item.getItem());
         }
     }
 }
