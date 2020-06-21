@@ -10,16 +10,18 @@ public class Expenditure {
     public String type;
     public String item;
     public String cost;
+    public String key;
 
     public Expenditure(){
 
     }
 
-    public Expenditure(Long timestamp, String type, String item, String cost){
+    public Expenditure(Long timestamp, String type, String item, String cost, String key){
         this.timestamp = timestamp;
         this.type = type;
         this.item = item;
         this.cost = cost;
+        this.key = key;
     }
 
     public Long getTimestamp(){
@@ -37,6 +39,8 @@ public class Expenditure {
     public String getCost(){
         return this.cost;
     }
+
+    public String getKey() { return this.key;}
 
     public Map<String, Object> toMap(){
         HashMap<String, Object> result = new HashMap<>();
