@@ -144,7 +144,7 @@ public class ExpenditureInput extends AppCompatActivity implements AdapterView.O
         SimpleDateFormat spinnerSDF = new SimpleDateFormat(spinnerFormat);
         spinnerDate = spinnerSDF.format(myCalendar.getTime());
 
-        Log.d(TAG, monthsaveDate + "" + monthDate);
+        Log.d(TAG, monthsaveDate + " " + monthDate);
 
     }
 
@@ -175,7 +175,8 @@ public class ExpenditureInput extends AppCompatActivity implements AdapterView.O
                 timestampDate,
                 expenditureType,
                 item,
-                cost);
+                cost,
+                key);
 
         //Puts the expenditure at /user/userID/Expenditures/YYYY/mm/
         Map<String, Object> expenditureValues = newExpenditure.toMap();

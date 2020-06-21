@@ -31,7 +31,6 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
-import static android.widget.LinearLayout.HORIZONTAL;
 
 //! TODO: add spinner for different months
 public class ExpenditureHistory extends AppCompatActivity {
@@ -43,6 +42,7 @@ public class ExpenditureHistory extends AppCompatActivity {
 
     private FirebaseUser user;
     private DatabaseReference mDatabase;
+
     private String userId;
     private Date cDate;
     private String currentDate;
@@ -71,6 +71,10 @@ public class ExpenditureHistory extends AppCompatActivity {
         monthExpenditureList = new HashMap<>();
 
         spinner = findViewById(R.id.spinner_month);
+        createSpinner();
+    }
+
+    private void createSpinner(){
         Query yearQuery = mDatabase
                 .child("users")
                 .child(userId)
@@ -130,8 +134,7 @@ public class ExpenditureHistory extends AppCompatActivity {
                 .child("users")
                 .child(userId)
                 .child("Expenditures")
-                .child(selectedDate)
-                .orderByChild("timestamp");
+                .child(selectedDate);
 
         myExpenditure.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
@@ -168,7 +171,7 @@ public class ExpenditureHistory extends AppCompatActivity {
             monthExpenditureList.put(date, tempList);
         }
         monthExpenditureList.get(date).add(expenditure);
-        Log.d(TAG, "added" + expenditure.getTimestamp());
+        Log.d(TAG, "added " + expenditure.getTimestamp());
     }
 
     private void Listing (Map<String, List<Expenditure>> expenditureList){
@@ -179,8 +182,6 @@ public class ExpenditureHistory extends AppCompatActivity {
                 expenditures.sort(new expenditureComparator());
             }
         }
-        for(Expenditure expenditure : expenditures){
-            mExpenditureList.add(expenditure);
-        }
+        mExpenditureList.addAll(expenditures);
     }
 }

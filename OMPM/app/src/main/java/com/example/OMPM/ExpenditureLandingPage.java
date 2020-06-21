@@ -76,6 +76,17 @@ public class ExpenditureLandingPage extends AppCompatActivity {
 
         // Spinner Stuff
         spinner = findViewById(R.id.spinner_monthly);
+        createSpinner();
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data){
+        super.onActivityResult(requestCode, resultCode, data);
+        createSpinner();
+    }
+
+    private void createSpinner(){
+        spinnerArray.clear();
         Query yearQuery = mDatabase
                 .child("users")
                 .child(userId)
@@ -123,17 +134,6 @@ public class ExpenditureLandingPage extends AppCompatActivity {
 
             }
         });
-    }
-
-    @Override
-    public void onActivityResult(int requestCode, int resultCode, Intent data){
-        super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode == TEXT_REQUEST){
-            if (resultCode == RESULT_OK){
-                String newDate = data.getStringExtra(ExpenditureInput.EXTRA_DATE);
-                spinnerArray.add(newDate);
-            }
-        }
     }
 
     //Pie Chart Stuff
