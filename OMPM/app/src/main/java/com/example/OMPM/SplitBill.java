@@ -1,5 +1,6 @@
 package com.example.OMPM;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
@@ -21,11 +22,15 @@ import android.view.View;
 import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
 import java.text.DecimalFormat;
 import java.util.ArrayList;
@@ -83,7 +88,7 @@ public class SplitBill extends AppCompatActivity {
                     public void onClick(DialogInterface dialog, int which) {
                         CheckBox gst = view.findViewById(R.id.checkBox_GST);
                         CheckBox sc = view.findViewById(R.id.Service_Charge);
-                        CheckBox myself = view.findViewById(R.id.myself);
+                      //  CheckBox myself = view.findViewById(R.id.myself);
 
                         EditText bill = view.findViewById(R.id.input);
                         bill_amount = Double.parseDouble(bill.getText().toString());
@@ -92,8 +97,8 @@ public class SplitBill extends AppCompatActivity {
                             bill_amount = bill_amount * 1.1;
                         if (gst.isChecked())
                             bill_amount = bill_amount * 1.07;
-                        if (myself.isChecked())
-                            noOfpeople = 1;
+                      //  if (myself.isChecked())
+                      //      noOfpeople = 1;
 
                         //second dialog
                         showDialog();
@@ -138,17 +143,29 @@ public class SplitBill extends AppCompatActivity {
                         SimpleDateFormat sdf = new SimpleDateFormat("yyyy/MM/dd");
                         String date = sdf.format(new Date());
 
+                        //firebase
+                        final String key = mDatabase.child("debts").push().getKey();
+                        mDatabase.child("debts").child(key).child("date").setValue(date);
+                        mDatabase.child("debts").child(key).child("amount").setValue(indivBill);
+                        mDatabase.child("users").child(user.getUid()).child("owedBy").child(key).setValue(true);
+
                         for (int i = 0; i<selected.length; i++) {
                             if (selected[i]) {
                                 mItemsList.add(contactListArray[i] + ": " + currency.format(indivBill));
+                                mDatabase.child("users").orderByChild("phoneNumber").equalTo((contact_list.get(i).getPhone()).replaceAll("\\s","")).addValueEventListener(new ValueEventListener() {
+                                    @Override
+                                    public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                                        for (DataSnapshot ds: dataSnapshot.getChildren()) {
+                                            String anotherKey = ds.getKey();
+                                            Log.d(TAG, anotherKey);
+                                            mDatabase.child("users").child(anotherKey).child("owedTo").child(key).setValue(true);
+                                        }
+                                    }
+                                    @Override
+                                    public void onCancelled(@NonNull DatabaseError databaseError) { }
+                                });
                             }
                         }
-
-                        //firebase
-                        String key = mDatabase.child("debts").push().getKey();
-                        mDatabase.child("debts").child(key).child("date").setValue(date);
-                        mDatabase.child("debts").child(key).child("amount").setValue(indivBill);
-                        mDatabase.child("users").child(user.getUid()).child("debts").child(key).setValue(true);
                         dialog.dismiss();
                     }
                 })
@@ -180,7 +197,6 @@ public class SplitBill extends AppCompatActivity {
             String name = cursor.getString(cursor.getColumnIndex(ContactsContract.Contacts.DISPLAY_NAME));
             if ("1".equals(hasPhone) || Boolean.parseBoolean(hasPhone)) {
                 // You know it has a number so now query it like this
-                Log.d(TAG, "Contact ID: " + contactID);
 
                 // Using the contact ID now we will get contact phone number
                 Cursor cursorPhone = getContentResolver().query(ContactsContract.CommonDataKinds.Phone.CONTENT_URI,
@@ -192,10 +208,8 @@ public class SplitBill extends AppCompatActivity {
                     contact_list.add(contact);
                 }
                 cursorPhone.close();
-                Log.d(TAG, "Contact Phone Number: " + contactNumber);
             }
         }
-
         contactListArray = new String[contact_list.size()];
         for (int i = 0; i<contact_list.size();i++) {
             contactListArray[i] = contact_list.get(i).toList();
