@@ -12,26 +12,22 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".ExpenditureLandingPage"
+        <activity
+            android:name=".ExpenditureLandingPage"
             android:label="ExpenditureLandingPage"
             android:parentActivityName=".MainPage">
-            <meta-data
-                android:name="android.support.PARENT_ACTIVITY"
-                android:value="com.example.OMPM.MainPage"/>
         </activity>
-        <activity android:name=".ExpenditureHistory"
+        <activity
+            android:name=".ExpenditureHistory"
             android:label="ExpenditureHistory"
             android:parentActivityName=".ExpenditureLandingPage">
             <meta-data
-            android:name="android.support.PARENT_ACTIVITY"
-            android:value="com.example.OMPM.ExpenditureLandingPage"/>
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.example.OMPM.ExpenditureLandingPage" />
         </activity>
-        <activity android:name=".ExpenditureInput"
-            android:label="ExpenditureInput"
-            android:parentActivityName=".ExpenditureLandingPage">
-            <meta-data
-            android:name="android.support.PARENT_ACTIVITY"
-            android:value="com.example.OMPM.ExpenditureLandingPage"/>
+        <activity
+            android:name=".ExpenditureInput"
+            android:label="ExpenditureInput">
         </activity>
         <activity
             android:name=".History"

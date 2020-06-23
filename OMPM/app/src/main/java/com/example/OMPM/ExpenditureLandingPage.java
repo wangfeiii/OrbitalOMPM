@@ -7,6 +7,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.renderscript.Sampler;
 import android.util.Log;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -43,6 +44,7 @@ public class ExpenditureLandingPage extends AppCompatActivity {
     //! TODO: Add spinner for different filters
     private static final String TAG = "LOG_TAG";
     public static final int TEXT_REQUEST = 1;
+    public static final String EXTRA_FLAG = "com.example.twoactivities.extra.FLAG";
 
     private FirebaseUser user;
     private DatabaseReference mDatabase;
@@ -72,11 +74,13 @@ public class ExpenditureLandingPage extends AppCompatActivity {
 
         dataSet = new HashMap<>();
         entries = new ArrayList<>();
+
         pcExpenditure = findViewById(R.id.pc_Expenditure);
 
         // Spinner Stuff
         spinner = findViewById(R.id.spinner_monthly);
         createSpinner();
+
     }
 
     @Override
@@ -152,6 +156,9 @@ public class ExpenditureLandingPage extends AppCompatActivity {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 if (dataSnapshot.exists()) {
+                    pcExpenditure.setVisibility(View.VISIBLE);
+                    TextView noData = findViewById(R.id.text_noData);
+                    noData.setVisibility(View.INVISIBLE);
                     for (DataSnapshot ds : dataSnapshot.getChildren()) {
                         Expenditure newExpenditure = ds.getValue(Expenditure.class);
                         createDataSet(newExpenditure);
@@ -186,13 +193,14 @@ public class ExpenditureLandingPage extends AppCompatActivity {
             set.setColors(ColorTemplate.COLORFUL_COLORS);
             PieData data = new PieData(set);
             pcExpenditure.setData(data);
-            pcExpenditure.animateXY(5000,5000);
+            pcExpenditure.animateXY(2000,2000);
             pcExpenditure.setDrawEntryLabels(false);
             pcExpenditure.invalidate();
     }
 
     public void launchExpenditureInput(View view) {
         Intent iLaunchExpenditureInput = new Intent(this, ExpenditureInput.class);
+        iLaunchExpenditureInput.putExtra(EXTRA_FLAG, "LandingPage");
         startActivityForResult(iLaunchExpenditureInput, TEXT_REQUEST);
     }
 

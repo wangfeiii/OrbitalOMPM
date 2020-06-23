@@ -1,5 +1,7 @@
 package com.example.OMPM;
 
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.app.DatePickerDialog;
@@ -8,6 +10,8 @@ import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -19,8 +23,12 @@ import android.widget.TextView;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.Query;
+import com.google.firebase.database.ValueEventListener;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -33,7 +41,6 @@ import java.util.Map;
 //! TODO: Prevent user from adding more than 2 dp for currency
 public class ExpenditureInput extends AppCompatActivity implements AdapterView.OnItemSelectedListener {
     private static final String TAG = "LOG_TAG";
-    public static final String EXTRA_DATE = "com.example.OMPM.extra.REPLY";
 
     private FirebaseUser user;
     private DatabaseReference mDatabase;
@@ -49,8 +56,16 @@ public class ExpenditureInput extends AppCompatActivity implements AdapterView.O
     private String monthDate;
     private String monthsaveDate;
     private String spinnerDate;
+    final Calendar myCalendar = Calendar.getInstance();
+
+    private Expenditure editable;
+    private String eKey;
+    private String flag;
+    private Date bDate;
+    private Date dMonth;
 
     private EditText eItem;
+    private EditText eCost;
 
 
     @Override
@@ -61,7 +76,18 @@ public class ExpenditureInput extends AppCompatActivity implements AdapterView.O
         user = FirebaseAuth.getInstance().getCurrentUser();
         userId = user.getUid();
 
+        ActionBar actionBar = getSupportActionBar();
 
+        actionBar.setDisplayHomeAsUpEnabled(true);
+
+        Intent intent = getIntent();
+        flag = intent.getStringExtra("com.example.twoactivities.extra.FLAG");
+
+        //Date Stuff
+        ImageView datePicker = findViewById(R.id.image_DatePicker);
+        chooseDate(myCalendar, datePicker);
+
+        //Spinner Stuff
         sExpenditureChoices = findViewById(R.id.spinner_ExpenditureChoice);
         ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(this,
                 R.array.expenditure_choice_array, android.R.layout.simple_spinner_item);
@@ -71,10 +97,76 @@ public class ExpenditureInput extends AppCompatActivity implements AdapterView.O
             sExpenditureChoices.setOnItemSelectedListener(this);
         }
 
-        final Calendar myCalendar = Calendar.getInstance();
+        eItem = findViewById(R.id.editText_Item);
+        eCost = findViewById(R.id.editText_Cost);
 
-        ImageView datePicker = findViewById(R.id.image_DatePicker);
+        if (flag.equals("HistoryPage")){
+            editable = getIntent().getParcelableExtra("com.example.twoactivities.extra.EXPENDITURE");
+            //Import Date
+            Long timestamp = editable.getTimestamp();
+            Date tDate = new Date(timestamp);
+            SimpleDateFormat sdf = new SimpleDateFormat("dd/MMM/yyyy");
+            String tsDate = sdf.format(tDate);
+            String month = tsDate.substring(3,6);
+            Log.d(TAG, month);
+            try {
+                dMonth = new SimpleDateFormat("MMM").parse(month);
+            } catch (ParseException e) {
+                e.printStackTrace();
+            }
+            Calendar cal = Calendar.getInstance();
+            cal.setTime(dMonth);
+            int iMonth = cal.get(Calendar.MONTH);
 
+            myCalendar.set(Calendar.YEAR, Integer.parseInt(tsDate.substring(7)));
+            Log.d(TAG, tsDate.substring(7));
+            myCalendar.set(Calendar.MONTH, iMonth);
+            Log.d(TAG, Integer.toString(iMonth));
+            myCalendar.set(Calendar.DAY_OF_MONTH,Integer.parseInt(tsDate.substring(0,2)));
+            Log.d(TAG, tsDate.substring(0,2));
+            try {
+                updateLabel(myCalendar);
+            } catch (ParseException e) {
+                e.printStackTrace();
+            }
+            timestampDate = timestamp;
+            //Import the rest
+            expenditureType = editable.getType();
+            sExpenditureChoices.setSelection(getIndex(sExpenditureChoices, expenditureType));
+            item = editable.getItem();
+            eItem.setText(item);
+            cost = editable.getCost();
+            eCost.setText(cost);
+            eKey = editable.getKey();
+        }
+        //<! TODO: Figure out how to input currency nicely >
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item){
+        switch (item.getItemId()){
+            case android.R.id.home:
+                if (flag.equals("HistoryPage")){
+                    getIntent().removeExtra("com.example.twoactivities.extra.EXPENDITURE");
+                }
+                getIntent().removeExtra("com.example.twoactivities.extra.FLAG");
+                finish();
+                return true;
+        }
+        return super.onOptionsItemSelected(item);
+    }
+
+    private int getIndex(Spinner sExpenditureChoices, String expenditureType) {
+        int index = 0;
+        for (int i=0; i<sExpenditureChoices.getCount(); i++){
+            if (sExpenditureChoices.getItemAtPosition(i).equals(expenditureType)){
+                index = i;
+            }
+        }
+        return index;
+    }
+
+    public void chooseDate(final Calendar myCalendar, ImageView datePicker){
         final DatePickerDialog.OnDateSetListener date = new DatePickerDialog.OnDateSetListener() {
             @Override
             public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
@@ -94,34 +186,12 @@ public class ExpenditureInput extends AppCompatActivity implements AdapterView.O
             @Override
             public void onClick(View v) {
                 DatePickerDialog dialog = new DatePickerDialog(ExpenditureInput.this,
-                                                                        date,
-                                                                        myCalendar.get(Calendar.YEAR),
-                                                                        myCalendar.get(Calendar.MONTH),
-                                                                        myCalendar.get(Calendar.DAY_OF_MONTH));
+                        date,
+                        myCalendar.get(Calendar.YEAR),
+                        myCalendar.get(Calendar.MONTH),
+                        myCalendar.get(Calendar.DAY_OF_MONTH));
                 dialog.getDatePicker().setMaxDate(System.currentTimeMillis());
                 dialog.show();
-
-            }
-        });
-
-        eItem = findViewById(R.id.editText_Item);
-        //<! TODO: Figure out how to input currency nicely >
-        eItem.addTextChangedListener(new TextWatcher() {
-            @Override
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-
-            }
-            private String current ="";
-            @Override
-            public void onTextChanged(CharSequence s, int start, int before, int count) {
-                if (!s.toString().equals(current)){
-                    eItem.removeTextChangedListener(this);
-
-                }
-            }
-
-            @Override
-            public void afterTextChanged(Editable s) {
 
             }
         });
@@ -143,8 +213,6 @@ public class ExpenditureInput extends AppCompatActivity implements AdapterView.O
         String spinnerFormat = "MMM/YYYY";
         SimpleDateFormat spinnerSDF = new SimpleDateFormat(spinnerFormat);
         spinnerDate = spinnerSDF.format(myCalendar.getTime());
-
-        Log.d(TAG, monthsaveDate + " " + monthDate);
 
     }
 
@@ -187,10 +255,61 @@ public class ExpenditureInput extends AppCompatActivity implements AdapterView.O
 
         mDatabase.updateChildren(childUpdates);
 
+        if (flag.equals("HistoryPage")){
+            getIntent().removeExtra("com.example.twoactivities.extra.EXPENDITURE");
+            deleteItem(editable);
+        }
+        getIntent().removeExtra("com.example.twoactivities.extra.FLAG");
         Intent replyIntent = new Intent();
-        replyIntent.putExtra(EXTRA_DATE, spinnerDate);
         setResult(RESULT_OK, replyIntent);
         Log.d(TAG, "New Expenditure added");
         finish();
+    }
+
+    public void deleteItem(Expenditure item) {
+        String itemKey = item.getKey();
+        SimpleDateFormat sdf = new SimpleDateFormat("YYYY/MMM");
+        Date newDate = new Date(item.getTimestamp());
+        final String monthDate = sdf.format(newDate.getTime());
+        Log.d(TAG, monthDate);
+        try {
+            bDate = new SimpleDateFormat("yyyy/MMM").parse(monthDate);
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+        final String date = Long.toString(bDate.getTime());
+        Log.d(TAG, date);
+
+        mDatabase.child("users")
+                .child(userId)
+                .child("Expenditures")
+                .child(monthDate)
+                .child(itemKey)
+                .removeValue();
+
+
+        Query dateQuery = mDatabase.child("users")
+                .child(userId)
+                .child("Expenditures")
+                .child(monthDate);
+
+        dateQuery.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                if (dataSnapshot.getValue() == null) {
+                    DatabaseReference dateReference = mDatabase.child("users")
+                            .child(userId)
+                            .child("ExpenditureDates")
+                            .child(date);
+                    dateReference.removeValue();
+                }
+            }
+
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
     }
 }

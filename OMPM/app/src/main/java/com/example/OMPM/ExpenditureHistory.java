@@ -36,7 +36,6 @@ import java.util.Map;
 public class ExpenditureHistory extends AppCompatActivity {
 
     private static final String TAG = "LOG_TAG";
-
     private RecyclerView mRecyclerView;
     private ExpenditureListAdapter mAdapter;
 
@@ -74,7 +73,15 @@ public class ExpenditureHistory extends AppCompatActivity {
         createSpinner();
     }
 
+    @Override
+    public void onResume(){
+        super.onResume();
+        createSpinner();
+    }
+
+
     private void createSpinner(){
+        spinnerArray.clear();
         Query yearQuery = mDatabase
                 .child("users")
                 .child(userId)
@@ -171,7 +178,6 @@ public class ExpenditureHistory extends AppCompatActivity {
             monthExpenditureList.put(date, tempList);
         }
         monthExpenditureList.get(date).add(expenditure);
-        Log.d(TAG, "added " + expenditure.getTimestamp());
     }
 
     private void Listing (Map<String, List<Expenditure>> expenditureList){

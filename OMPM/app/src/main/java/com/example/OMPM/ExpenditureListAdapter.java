@@ -1,6 +1,10 @@
 package com.example.OMPM;
 
+import android.app.Activity;
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
+import android.content.Intent;
 import android.renderscript.Sampler;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -26,14 +30,15 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
-import java.util.List;
-import java.util.Locale;
+
 
 public class ExpenditureListAdapter extends RecyclerView.Adapter<ExpenditureListAdapter.ListViewHolder> {
 
     private ArrayList<Expenditure> itemList;
     private Context mContext;
     private static final String TAG = "LOG_TAG";
+    public static final String EXTRA_FLAG = "com.example.twoactivities.extra.FLAG";
+    public static final String EXTRA_EXPENDITURE = "com.example.twoactivities.extra.EXPENDITURE";
 
     private DatabaseReference mDatabase;
     private FirebaseUser user;
@@ -41,7 +46,7 @@ public class ExpenditureListAdapter extends RecyclerView.Adapter<ExpenditureList
 
     private Date bDate;
 
-    public ExpenditureListAdapter(Context context, ArrayList<Expenditure> itemList){
+    public ExpenditureListAdapter(Context context, ArrayList<Expenditure> itemList) {
         this.itemList = itemList;
         this.mContext = context;
     }
@@ -61,6 +66,7 @@ public class ExpenditureListAdapter extends RecyclerView.Adapter<ExpenditureList
         ListViewHolder viewHolder = new ListViewHolder(itemView);
         return viewHolder;
     }
+
     // Involves populating data into the item through holder
     @Override
     public void onBindViewHolder(@NonNull ExpenditureListAdapter.ListViewHolder holder, final int position) {
@@ -69,54 +75,26 @@ public class ExpenditureListAdapter extends RecyclerView.Adapter<ExpenditureList
         holder.mDelete.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                String itemKey = item.getKey();
-                SimpleDateFormat sdf = new SimpleDateFormat("YYYY/MMM");
-                Date newDate = new Date(item.getTimestamp());
-                final String monthDate = sdf.format(newDate.getTime());
-                Log.d(TAG, monthDate);
-                try {
-                    bDate = new SimpleDateFormat("yyyy/MMM").parse(monthDate);
-                } catch (ParseException e) {
-                    e.printStackTrace();
-                }
-                final String date = Long.toString(bDate.getTime());
-                Log.d(TAG, date);
-
-                mDatabase.child("users")
-                        .child(userId)
-                        .child("Expenditures")
-                        .child(monthDate)
-                        .child(itemKey)
-                        .removeValue();
-
-
-                Query dateQuery = mDatabase.child("users")
-                        .child(userId)
-                        .child("Expenditures")
-                        .child(monthDate);
-
-                dateQuery.addListenerForSingleValueEvent(new ValueEventListener() {
-                    @Override
-                    public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                        if (dataSnapshot.getValue() == null){
-                            DatabaseReference dateReference = mDatabase.child("users")
-                                    .child(userId)
-                                    .child("ExpenditureDates")
-                                    .child(date);
-                            dateReference.removeValue();
-                        }
-                    }
-
-
-                    @Override
-                    public void onCancelled(@NonNull DatabaseError databaseError) {
-
-                    }
-                });
-
-                itemList.remove(item);
-                notifyItemRemoved(position);
-                notifyItemRangeChanged(position, itemList.size());
+                new AlertDialog.Builder(mContext).setTitle("Delete Entry")
+                        .setMessage("Are you sure you want to delete this entry?")
+                        .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                deleteItem(item, position);
+                            }
+                        })
+                        .setNegativeButton("No", null)
+                        .show();
+            }
+        });
+        holder.mEdit.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Activity origin = (Activity) mContext;
+                Intent editIntent = new Intent(mContext, ExpenditureInput.class);
+                editIntent.putExtra(EXTRA_FLAG, "HistoryPage");
+                editIntent.putExtra(EXTRA_EXPENDITURE, item);
+                origin.startActivity(editIntent);
             }
         });
     }
@@ -126,12 +104,13 @@ public class ExpenditureListAdapter extends RecyclerView.Adapter<ExpenditureList
         return itemList.size();
     }
 
-    public static class ListViewHolder extends RecyclerView.ViewHolder{
+    public static class ListViewHolder extends RecyclerView.ViewHolder {
         private TextView mDateText;
         private TextView mCostText;
         private TextView mTypeText;
         private TextView mItemText;
         private ImageView mDelete;
+        private ImageView mEdit;
 
         public ListViewHolder(@NonNull View itemView) {
             super(itemView);
@@ -141,15 +120,65 @@ public class ExpenditureListAdapter extends RecyclerView.Adapter<ExpenditureList
             mTypeText = itemView.findViewById(R.id.typeText);
             mItemText = itemView.findViewById(R.id.itemText);
             mDelete = itemView.findViewById(R.id.ic_delete);
+            mEdit = itemView.findViewById(R.id.ic_edit);
 
         }
 
-        void bindTo(Expenditure item){
+        void bindTo(Expenditure item) {
             mCostText.setText(item.getCost());
             SimpleDateFormat sdf = new SimpleDateFormat("dd/MMMM/YYYY");
             mDateText.setText(sdf.format(item.getTimestamp()));
             mTypeText.setText(item.getType());
             mItemText.setText(item.getItem());
         }
+    }
+
+    public void deleteItem(Expenditure item, int position){
+        String itemKey = item.getKey();
+        SimpleDateFormat sdf = new SimpleDateFormat("YYYY/MMM");
+        Date newDate = new Date(item.getTimestamp());
+        final String monthDate = sdf.format(newDate.getTime());
+        try {
+            bDate = new SimpleDateFormat("yyyy/MMM").parse(monthDate);
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+        final String date = Long.toString(bDate.getTime());
+
+        mDatabase.child("users")
+                .child(userId)
+                .child("Expenditures")
+                .child(monthDate)
+                .child(itemKey)
+                .removeValue();
+
+
+        Query dateQuery = mDatabase.child("users")
+                .child(userId)
+                .child("Expenditures")
+                .child(monthDate);
+
+        dateQuery.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                if (dataSnapshot.getValue() == null) {
+                    DatabaseReference dateReference = mDatabase.child("users")
+                            .child(userId)
+                            .child("ExpenditureDates")
+                            .child(date);
+                    dateReference.removeValue();
+                }
+            }
+
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
+
+        itemList.remove(item);
+        notifyItemRemoved(position);
+        notifyItemRangeChanged(position, itemList.size());
     }
 }

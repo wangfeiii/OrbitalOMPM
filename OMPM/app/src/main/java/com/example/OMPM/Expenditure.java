@@ -1,16 +1,21 @@
 package com.example.OMPM;
 
+import android.os.Parcel;
+import android.os.Parcelable;
+
+import java.io.Serializable;
 import java.sql.Timestamp;
 import java.util.HashMap;
 import java.util.Map;
 
-public class Expenditure {
+public class Expenditure implements Parcelable {
 
     public Long timestamp;
     public String type;
     public String item;
     public String cost;
     public String key;
+
 
     public Expenditure(){
 
@@ -49,5 +54,38 @@ public class Expenditure {
         result.put("item", item);
         result.put("cost", cost);
         return result;
+    }
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeString(key);
+        dest.writeString(type);
+        dest.writeString(item);
+        dest.writeString(cost);
+        dest.writeLong(timestamp);
+    }
+
+    public static final Parcelable.Creator<Expenditure> CREATOR = new Parcelable.Creator<Expenditure>(){
+        @Override
+        public Expenditure createFromParcel(Parcel source) {
+            return new Expenditure(source);
+        }
+
+        @Override
+        public Expenditure[] newArray(int size) {
+            return new Expenditure[size];
+        }
+    };
+    private Expenditure(Parcel source){
+        key = source.readString();
+        type = source.readString();
+        item = source.readString();
+        cost = source.readString();
+        timestamp = source.readLong();
     }
 }
