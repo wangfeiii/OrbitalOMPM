@@ -4,6 +4,7 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.renderscript.Sampler;
 import android.util.Log;
@@ -55,6 +56,7 @@ public class ExpenditureLandingPage extends AppCompatActivity {
 
     Map<String, Float> dataSet;
     ArrayList<PieEntry> entries;
+    private Float tExpenditure;
 
     private Spinner spinner;
     private LinkedList<String> spinnerArray = new LinkedList<>();
@@ -187,15 +189,28 @@ public class ExpenditureLandingPage extends AppCompatActivity {
             cost += dataSet.get(type);
         }
         dataSet.put(type, cost);
+        if (tExpenditure == null){
+            tExpenditure = cost;
+        } else {
+            tExpenditure += cost;
+        }
     }
 
     private void createPieChart(PieDataSet set, PieChart pieChart){
-            set.setColors(ColorTemplate.COLORFUL_COLORS);
-            PieData data = new PieData(set);
-            pcExpenditure.setData(data);
-            pcExpenditure.animateXY(2000,2000);
-            pcExpenditure.setDrawEntryLabels(false);
-            pcExpenditure.invalidate();
+        pcExpenditure.setDrawHoleEnabled(true);
+        pcExpenditure.setHoleColor(Color.WHITE);
+        pcExpenditure.setTransparentCircleRadius(Color.WHITE);
+        pcExpenditure.setTransparentCircleAlpha(110);
+        pcExpenditure.setHoleRadius(70f);
+        pcExpenditure.setDrawCenterText(true);
+        set.setColors(ColorTemplate.COLORFUL_COLORS);
+        PieData data = new PieData(set);
+        data.setValueTextSize(18f);
+        pcExpenditure.setData(data);
+        pcExpenditure.animateXY(2000,2000);
+        pcExpenditure.setDrawEntryLabels(false);
+        pcExpenditure.setCenterText("Total Expenditure : \n" + tExpenditure.toString());
+        pcExpenditure.invalidate();
     }
 
     public void launchExpenditureInput(View view) {
