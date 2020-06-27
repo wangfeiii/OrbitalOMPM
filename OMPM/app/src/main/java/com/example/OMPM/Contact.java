@@ -10,12 +10,6 @@ public class Contact {
         this.phone = phone;
     }
 
-    public Contact(String name, String phone, double debt) {
-        this.name = name;
-        this.phone = phone;
-        this.debt = debt;
-    }
-
     public String getName() {
         return name;
     }

@@ -11,30 +11,27 @@ import com.example.OMPM.dummy.DummyContent.DummyItem;
 
 import java.util.List;
 
-/**
- * {@link RecyclerView.Adapter} that can display a {@link DummyItem}.
- * TODO: Replace the implementation with code for your data type.
- */
 public class MyItemRecyclerViewAdapter extends RecyclerView.Adapter<MyItemRecyclerViewAdapter.ViewHolder> {
 
-    private final List<DummyItem> mValues;
+    private List<Debt> mValues;
 
-    public MyItemRecyclerViewAdapter(List<DummyItem> items) {
+    public MyItemRecyclerViewAdapter(List<Debt> items) {
         mValues = items;
     }
 
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(parent.getContext())
-                .inflate(R.layout.fragment_owe_me, parent, false);
+                .inflate(R.layout.debt_item, parent, false);
         return new ViewHolder(view);
     }
 
     @Override
     public void onBindViewHolder(final ViewHolder holder, int position) {
-        holder.mItem = mValues.get(position);
-        holder.mIdView.setText(mValues.get(position).id);
-        holder.mContentView.setText(mValues.get(position).content);
+        holder.name.setText(mValues.get(position).getName());
+        holder.phoneNumber.setText(mValues.get(position).getNumber());
+        holder.date.setText(mValues.get(position).getDate());
+        holder.amount.setText(mValues.get(position).getAmount());
     }
 
     @Override
@@ -42,22 +39,26 @@ public class MyItemRecyclerViewAdapter extends RecyclerView.Adapter<MyItemRecycl
         return mValues.size();
     }
 
-    public class ViewHolder extends RecyclerView.ViewHolder {
-        public final View mView;
-        public final TextView mIdView;
-        public final TextView mContentView;
-        public DummyItem mItem;
+    public static class ViewHolder extends RecyclerView.ViewHolder {
+
+        public final TextView name;
+        public final TextView phoneNumber;
+        public final TextView date;
+        public final TextView amount;
 
         public ViewHolder(View view) {
             super(view);
-            mView = view;
-            mIdView = (TextView) view.findViewById(R.id.item_number);
-            mContentView = (TextView) view.findViewById(R.id.content);
+            name = view.findViewById(R.id.Name);
+            phoneNumber = view.findViewById(R.id.phoneNumber);
+            date = view.findViewById(R.id.date);
+            amount = view.findViewById(R.id.amount);
         }
-
+/*
         @Override
         public String toString() {
             return super.toString() + " '" + mContentView.getText() + "'";
         }
+
+ */
     }
 }

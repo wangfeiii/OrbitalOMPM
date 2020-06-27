@@ -53,7 +53,7 @@ public class SplitBill extends AppCompatActivity {
     List<Contact> contact_list = new ArrayList<>();
     boolean[] selected;
     List<Contact> selected_list;
-    private int noOfpeople = 0;
+    private int noOfpeople = 1;
 
     private DatabaseReference mDatabase;
     private FirebaseUser user;
@@ -68,8 +68,6 @@ public class SplitBill extends AppCompatActivity {
         getPermissionToReadUserContacts();
 
         //initialize widgets
-        final TextView resultView = findViewById(R.id.result);
-
         RecyclerView mRecyclerView = findViewById(R.id.item_list);
         mRecyclerView.addItemDecoration(new DividerItemDecoration(this, LinearLayoutManager.VERTICAL));
         final WordListAdapter mAdapter = new WordListAdapter(mItemsList);
@@ -128,14 +126,14 @@ public class SplitBill extends AppCompatActivity {
                     public void onClick(DialogInterface dialog, int which) {
 
                         DecimalFormat currency = new DecimalFormat("$###,###.##");
-                       // List<Contact> selected_list = new ArrayList<>();
+                        List<Contact> selected_list = new ArrayList<>();
 
                         int count  = 0;
 
                         for (int i = 0; i < selected.length; i++) {
                             if (selected[i]) {
                                 count = count +1;
-                              //  selected_list.add(contact_list.get(i));
+                                selected_list.add(contact_list.get(i));
                             }
                         }
                         noOfpeople = noOfpeople + count;
@@ -147,6 +145,8 @@ public class SplitBill extends AppCompatActivity {
                         final String key = mDatabase.child("debts").push().getKey();
                         mDatabase.child("debts").child(key).child("date").setValue(date);
                         mDatabase.child("debts").child(key).child("amount").setValue(indivBill);
+                        mDatabase.child("debts").child(key).child("debtors").setValue(selected_list);
+
                         mDatabase.child("users").child(user.getUid()).child("owedBy").child(key).setValue(true);
 
                         for (int i = 0; i<selected.length; i++) {
@@ -196,8 +196,6 @@ public class SplitBill extends AppCompatActivity {
             String hasPhone = cursor.getString(cursor.getColumnIndex(ContactsContract.Contacts.HAS_PHONE_NUMBER));
             String name = cursor.getString(cursor.getColumnIndex(ContactsContract.Contacts.DISPLAY_NAME));
             if ("1".equals(hasPhone) || Boolean.parseBoolean(hasPhone)) {
-                // You know it has a number so now query it like this
-
                 // Using the contact ID now we will get contact phone number
                 Cursor cursorPhone = getContentResolver().query(ContactsContract.CommonDataKinds.Phone.CONTENT_URI,
                         null, ContactsContract.CommonDataKinds.Phone.CONTACT_ID + " = " + contactID, null, null);
@@ -214,6 +212,5 @@ public class SplitBill extends AppCompatActivity {
         for (int i = 0; i<contact_list.size();i++) {
             contactListArray[i] = contact_list.get(i).toList();
         }
-
     }
 }
