@@ -157,6 +157,7 @@ public class ExpenditureLandingPage extends AppCompatActivity {
         myExpenditure.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                tExpenditure = 0f;
                 if (dataSnapshot.exists()) {
                     pcExpenditure.setVisibility(View.VISIBLE);
                     TextView noData = findViewById(R.id.text_noData);
