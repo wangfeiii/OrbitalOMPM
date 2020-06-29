@@ -8,6 +8,7 @@ import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -19,6 +20,9 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -32,13 +36,13 @@ public class OweOthersFragment extends Fragment {
     private static final String ARG_PARAM1 = "param1";
     private static final String ARG_PARAM2 = "param2";
 
-    // TODO: Rename and change types of parameters
     private String mParam1;
     private String mParam2;
+    private List<Debt> debtList = new ArrayList<>();
 
     public OweOthersFragment() {
         // Required empty public constructor
-    }
+        }
 
     /**
      * Use this factory method to create a new instance of
@@ -71,7 +75,7 @@ public class OweOthersFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         final View view = inflater.inflate(R.layout.fragment_owe_others, container, false);
-        final RecyclerView recyclerView = view.findViewById(R.id.RV);
+        final RecyclerView recyclerView = view.findViewById(R.id.recyclerview);
         recyclerView.addItemDecoration(new DividerItemDecoration(getContext(), LinearLayoutManager.VERTICAL));
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
 
@@ -83,9 +87,13 @@ public class OweOthersFragment extends Fragment {
                 for (DataSnapshot ds: dataSnapshot.child("users").child(user.getUid()).child("owedTo").getChildren()) {
                     String key = ds.getKey();
                     DataSnapshot sc = dataSnapshot.child("debts").child(key);
+                    String num = String.valueOf(sc.child("creditor").child("phone").getValue());
+                    String name = String.valueOf(sc.child("creditor").child("name").getValue());
+                    Debt debt = new Debt("$" + sc.child("amount").getValue(), String.valueOf(sc.child("date").getValue()), num,name);
+                    debtList.add(debt);
                 }
+                recyclerView.setAdapter(new MyItemRecyclerViewAdapter(debtList));
             }
-
             @Override
             public void onCancelled(@NonNull DatabaseError databaseError) { }
         });

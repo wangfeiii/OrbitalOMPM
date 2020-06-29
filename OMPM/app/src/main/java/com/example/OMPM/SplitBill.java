@@ -53,7 +53,8 @@ public class SplitBill extends AppCompatActivity {
     List<Contact> contact_list = new ArrayList<>();
     boolean[] selected;
     List<Contact> selected_list;
-    private int noOfpeople = 1;
+    private int noOfpeople = 0;
+    private String myName;
 
     private DatabaseReference mDatabase;
     private FirebaseUser user;
@@ -65,48 +66,57 @@ public class SplitBill extends AppCompatActivity {
         mDatabase = FirebaseDatabase.getInstance().getReference();
         user = FirebaseAuth.getInstance().getCurrentUser();
 
-        getPermissionToReadUserContacts();
+       // getPermissionToReadUserContacts();
 
-        //initialize widgets
-        RecyclerView mRecyclerView = findViewById(R.id.item_list);
-        mRecyclerView.addItemDecoration(new DividerItemDecoration(this, LinearLayoutManager.VERTICAL));
-        final WordListAdapter mAdapter = new WordListAdapter(mItemsList);
-        mRecyclerView.setAdapter(mAdapter);
-        mRecyclerView.setLayoutManager(new LinearLayoutManager(this));
+        int permission = ContextCompat.checkSelfPermission(this,
+                Manifest.permission.READ_CONTACTS);
+        if (permission!= PackageManager.PERMISSION_GRANTED) {
+            ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.READ_CONTACTS},
+                    PERMISSIONS_REQUEST);
+        } else {
+            //initialize widgets
+            RecyclerView mRecyclerView = findViewById(R.id.item_list);
+            mRecyclerView.addItemDecoration(new DividerItemDecoration(this, LinearLayoutManager.VERTICAL));
+            final WordListAdapter mAdapter = new WordListAdapter(mItemsList);
+            mRecyclerView.setAdapter(mAdapter);
+            mRecyclerView.setLayoutManager(new LinearLayoutManager(this));
 
-        retrieveContactNumber();
-        (findViewById(R.id.fab_AddItems)).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                final View view = LayoutInflater.from(getApplicationContext()).inflate(R.layout.alert_dialog_layout,null);
-                AlertDialog.Builder firstBuilder = new AlertDialog.Builder(SplitBill.this);
-                firstBuilder.setTitle("Input Amount");
-                firstBuilder.setPositiveButton("Next", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        CheckBox gst = view.findViewById(R.id.checkBox_GST);
-                        CheckBox sc = view.findViewById(R.id.Service_Charge);
-                      //  CheckBox myself = view.findViewById(R.id.myself);
+            retrieveContactNumber();
+            (findViewById(R.id.fab_AddItems)).setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    final View view = LayoutInflater.from(getApplicationContext()).inflate(R.layout.alert_dialog_layout, null);
+                    AlertDialog.Builder firstBuilder = new AlertDialog.Builder(SplitBill.this);
+                    firstBuilder.setTitle("Bill Details");
+                    firstBuilder.setPositiveButton("Next", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            CheckBox gst = view.findViewById(R.id.checkBox_GST);
+                            CheckBox sc = view.findViewById(R.id.Service_Charge);
+                            CheckBox myself = view.findViewById(R.id.myself);
+                            EditText me = view.findViewById(R.id.name);
+                            myName = me.getText().toString();
 
-                        EditText bill = view.findViewById(R.id.input);
-                        bill_amount = Double.parseDouble(bill.getText().toString());
+                            EditText bill = view.findViewById(R.id.input);
+                            bill_amount = Double.parseDouble(bill.getText().toString());
 
-                        if (sc.isChecked())
-                            bill_amount = bill_amount * 1.1;
-                        if (gst.isChecked())
-                            bill_amount = bill_amount * 1.07;
-                      //  if (myself.isChecked())
-                      //      noOfpeople = 1;
+                            if (sc.isChecked())
+                                bill_amount = bill_amount * 1.1;
+                            if (gst.isChecked())
+                                bill_amount = bill_amount * 1.07;
+                            if (myself.isChecked())
+                                noOfpeople = 1;
 
-                        //second dialog
-                        showDialog();
-                    }
-                });
-                AlertDialog dialog = firstBuilder.create();
-                dialog.setView(view);
-                dialog.show();
-            }
-        });
+                            //second dialog
+                            showDialog();
+                        }
+                    });
+                    AlertDialog dialog = firstBuilder.create();
+                    dialog.setView(view);
+                    dialog.show();
+                }
+            });
+        }
     }
 
     //second dialog to choose contact
@@ -146,7 +156,7 @@ public class SplitBill extends AppCompatActivity {
                         mDatabase.child("debts").child(key).child("date").setValue(date);
                         mDatabase.child("debts").child(key).child("amount").setValue(indivBill);
                         mDatabase.child("debts").child(key).child("debtors").setValue(selected_list);
-
+                        mDatabase.child("debts").child(key).child("creditor").setValue(new Contact(myName, user.getPhoneNumber()));
                         mDatabase.child("users").child(user.getUid()).child("owedBy").child(key).setValue(true);
 
                         for (int i = 0; i<selected.length; i++) {
@@ -178,7 +188,7 @@ public class SplitBill extends AppCompatActivity {
         AlertDialog alertDialog = builder.create();
         alertDialog.show();
     }
-
+/*
     public void getPermissionToReadUserContacts() {
         //Check whether this app has access to the contacts permission//
         int permission = ContextCompat.checkSelfPermission(this,
@@ -187,6 +197,8 @@ public class SplitBill extends AppCompatActivity {
             ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.READ_CONTACTS},
                     PERMISSIONS_REQUEST);
     }
+
+ */
 
     private void retrieveContactNumber() {
 
