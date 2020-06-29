@@ -186,15 +186,11 @@ public class ExpenditureLandingPage extends AppCompatActivity {
     private void createDataSet(Expenditure expenditure){
         String type = expenditure.getType();
         Float cost = Float.parseFloat(expenditure.getCost());
+        tExpenditure += cost;
         if (dataSet.containsKey(type)) {
             cost += dataSet.get(type);
         }
         dataSet.put(type, cost);
-        if (tExpenditure == null){
-            tExpenditure = cost;
-        } else {
-            tExpenditure += cost;
-        }
     }
 
     private void createPieChart(PieDataSet set, PieChart pieChart){
