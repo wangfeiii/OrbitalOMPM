@@ -8,6 +8,7 @@ import android.app.DatePickerDialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.Editable;
+import android.text.InputFilter;
 import android.text.TextWatcher;
 import android.util.Log;
 import android.view.Menu;
@@ -99,7 +100,7 @@ public class ExpenditureInput extends AppCompatActivity implements AdapterView.O
 
         eItem = findViewById(R.id.editText_Item);
         eCost = findViewById(R.id.editText_Cost);
-
+        eCost.setFilters(new InputFilter[]{new DecimalDigitsInputFilter(99,2)});
         if (flag.equals("HistoryPage")){
             editable = getIntent().getParcelableExtra("com.example.twoactivities.extra.EXPENDITURE");
             //Import Date
