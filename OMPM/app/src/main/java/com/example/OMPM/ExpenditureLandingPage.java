@@ -197,16 +197,27 @@ public class ExpenditureLandingPage extends AppCompatActivity {
         pcExpenditure.setDrawHoleEnabled(true);
         pcExpenditure.setHoleColor(Color.WHITE);
         pcExpenditure.setTransparentCircleRadius(Color.WHITE);
-        pcExpenditure.setTransparentCircleAlpha(110);
-        pcExpenditure.setHoleRadius(70f);
+        pcExpenditure.setTransparentCircleAlpha(90);
+        pcExpenditure.setHoleRadius(90f);
         pcExpenditure.setDrawCenterText(true);
         set.setColors(ColorTemplate.COLORFUL_COLORS);
         PieData data = new PieData(set);
-        data.setValueTextSize(18f);
+        data.setValueTextSize(12f);
+        set.setYValuePosition(PieDataSet.ValuePosition.OUTSIDE_SLICE);
+        set.setValueLinePart1Length(0.2f);
+        set.setValueLinePart2Length(0.1f);
+        set.setSliceSpace(2f);
+        set.setLabel("");
+        pcExpenditure.getDescription().setEnabled(false);
         pcExpenditure.setData(data);
-        pcExpenditure.animateXY(2000,2000);
+        pcExpenditure.animateXY(500,500);
         pcExpenditure.setDrawEntryLabels(false);
         pcExpenditure.setCenterText("Total Expenditure : \n" + tExpenditure.toString());
+        pcExpenditure.setCenterTextSize(18f);
+        pcExpenditure.setExtraBottomOffset(20f);
+        pcExpenditure.setExtraLeftOffset(20f);
+        pcExpenditure.setExtraRightOffset(20f);
+        pcExpenditure.setExtraTopOffset(20f);
         pcExpenditure.invalidate();
     }
 
