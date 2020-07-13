@@ -7,10 +7,14 @@ public class User {
 
     public String phoneNumber;
 
-    public User(){
+    public User() {
     }
 
-    public User(String phoneNumber){
+    public User(String phoneNumber) {
         this.phoneNumber = phoneNumber;
+    }
+
+    public String getPhoneNumber() {
+        return this.phoneNumber;
     }
 }
