@@ -20,6 +20,8 @@ import com.github.mikephil.charting.data.Entry;
 import com.github.mikephil.charting.data.PieData;
 import com.github.mikephil.charting.data.PieDataSet;
 import com.github.mikephil.charting.data.PieEntry;
+import com.github.mikephil.charting.highlight.Highlight;
+import com.github.mikephil.charting.listener.OnChartValueSelectedListener;
 import com.github.mikephil.charting.utils.ColorTemplate;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -32,6 +34,7 @@ import com.google.firebase.database.ValueEventListener;
 
 import org.w3c.dom.Text;
 
+import java.text.NumberFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -82,6 +85,23 @@ public class ExpenditureLandingPage extends AppCompatActivity {
         // Spinner Stuff
         spinner = findViewById(R.id.spinner_monthly);
         createSpinner();
+
+        pcExpenditure.setOnChartValueSelectedListener(new OnChartValueSelectedListener() {
+            @Override
+            public void onValueSelected(Entry e, Highlight h) {
+                PieEntry pEntry = (PieEntry) e;
+                NumberFormat formatter = NumberFormat.getCurrencyInstance();
+                String sExpenditure = formatter.format(e.getY());
+                pcExpenditure.setCenterText(pEntry.getLabel() + " Expenditure : \n" + sExpenditure);
+            }
+
+            @Override
+            public void onNothingSelected() {
+                NumberFormat formatter = NumberFormat.getCurrencyInstance();
+                String sExpenditure = formatter.format(tExpenditure);
+                pcExpenditure.setCenterText("Total Expenditure : \n" + sExpenditure);
+            }
+        });
 
     }
 
@@ -200,20 +220,20 @@ public class ExpenditureLandingPage extends AppCompatActivity {
         pcExpenditure.setTransparentCircleAlpha(90);
         pcExpenditure.setHoleRadius(90f);
         pcExpenditure.setDrawCenterText(true);
-        set.setColors(ColorTemplate.COLORFUL_COLORS);
+        set.setColors(ColorTemplate.MATERIAL_COLORS);
         PieData data = new PieData(set);
         data.setValueTextSize(12f);
-        set.setYValuePosition(PieDataSet.ValuePosition.OUTSIDE_SLICE);
-        set.setValueLinePart1Length(0.2f);
-        set.setValueLinePart2Length(0.1f);
-        set.setSliceSpace(2f);
+        set.setYValuePosition(null);
         set.setLabel("");
+        pcExpenditure.setRotationEnabled(false);
         pcExpenditure.getDescription().setEnabled(false);
         pcExpenditure.setData(data);
         pcExpenditure.animateXY(500,500);
         pcExpenditure.setDrawEntryLabels(false);
-        pcExpenditure.setCenterText("Total Expenditure : \n" + tExpenditure.toString());
-        pcExpenditure.setCenterTextSize(18f);
+        NumberFormat formatter = NumberFormat.getCurrencyInstance();
+        String sExpenditure = formatter.format(tExpenditure);
+        pcExpenditure.setCenterText("Total Expenditure : \n" + sExpenditure);
+        pcExpenditure.setCenterTextSize(24f);
         pcExpenditure.setExtraBottomOffset(20f);
         pcExpenditure.setExtraLeftOffset(20f);
         pcExpenditure.setExtraRightOffset(20f);
