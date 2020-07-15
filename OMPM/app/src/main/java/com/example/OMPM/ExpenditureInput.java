@@ -120,11 +120,8 @@ public class ExpenditureInput extends AppCompatActivity implements AdapterView.O
             int iMonth = cal.get(Calendar.MONTH);
 
             myCalendar.set(Calendar.YEAR, Integer.parseInt(tsDate.substring(7)));
-            Log.d(TAG, tsDate.substring(7));
             myCalendar.set(Calendar.MONTH, iMonth);
-            Log.d(TAG, Integer.toString(iMonth));
             myCalendar.set(Calendar.DAY_OF_MONTH,Integer.parseInt(tsDate.substring(0,2)));
-            Log.d(TAG, tsDate.substring(0,2));
             try {
                 updateLabel(myCalendar);
             } catch (ParseException e) {

@@ -46,6 +46,8 @@
     <string name="pickdate">Click the calendar to choose a date!</string>
     <string name="button_confirm">Confirm</string>
     <string name="no_recorded_expenditures">You have not recorded any expenditures this month!</string>
+    <string name="name">Name</string>
+    <string name="update_profile">Update Profile</string>
 
     <string-array name="expenditure_choice_array">
         <item>Food</item>

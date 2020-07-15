@@ -16,6 +16,8 @@ import android.provider.MediaStore;
 import android.renderscript.Sampler;
 import android.util.Log;
 import android.view.View;
+import android.widget.Button;
+import android.widget.EditText;
 import android.widget.Toast;
 
 import com.google.android.gms.tasks.Continuation;
@@ -57,6 +59,8 @@ public class ProfileSettings extends AppCompatActivity {
     private Uri photoUrl;
 
     private CircleImageView profilePicture;
+    private EditText eName;
+    private Button bUpdateProfile;
 
     private static final int IMAGE_REQUEST = 1;
     private Uri imageUri;
@@ -76,15 +80,36 @@ public class ProfileSettings extends AppCompatActivity {
         }
 
         profilePicture = findViewById(R.id.profile_image);
+        eName = findViewById(R.id.profile_name);
+        bUpdateProfile = findViewById(R.id.update_profile);
+
+        if(name != null){
+            eName.setText(name);
+        }
 
         if (photoUrl != null){
-            Log.d(TAG, photoUrl.toString());
             updateImage(photoUrl);
         }
         profilePicture.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 openImage();
+            }
+        });
+        bUpdateProfile.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                String profileName = eName.getText().toString();
+                UserProfileChangeRequest profileUpdates = new UserProfileChangeRequest.Builder().setDisplayName(profileName).build();
+                user.updateProfile(profileUpdates).addOnCompleteListener(new OnCompleteListener<Void>() {
+                    @Override
+                    public void onComplete(@NonNull Task<Void> task) {
+                        if (task.isSuccessful()){
+                            Log.d(TAG, "User profile Updated");
+                        }
+                    }
+                });
+
             }
         });
 
@@ -102,7 +127,7 @@ public class ProfileSettings extends AppCompatActivity {
 
     private void updateImage(Uri uri){
         Picasso.get().load(uri).into(profilePicture);
-        Log.d(TAG, "Profile Picture Updated");
+        Log.d(TAG, "Profile Picture Loaded");
     }
 
     private void openImage(){
@@ -144,7 +169,7 @@ public class ProfileSettings extends AppCompatActivity {
                                 @Override
                                 public void onComplete(@NonNull Task<Void> task) {
                                   if (task.isSuccessful()){
-                                      Log.d(TAG, "User profile Updated");
+                                      Log.d(TAG, "Profile Picture Updated");
                                       updateImage(downloadUri);
                                   }
                                 }
