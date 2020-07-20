@@ -69,6 +69,7 @@ public class ProfileSettings extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_profile_settings);
+        getSupportActionBar().setTitle("Profile Page");
 
         mDatabase = FirebaseDatabase.getInstance().getReference();
         mStorage = FirebaseStorage.getInstance().getReference();
@@ -105,6 +106,7 @@ public class ProfileSettings extends AppCompatActivity {
                     @Override
                     public void onComplete(@NonNull Task<Void> task) {
                         if (task.isSuccessful()){
+                            Toast.makeText(getApplicationContext(), "User Profile Updated!", Toast.LENGTH_SHORT).show();
                             Log.d(TAG, "User profile Updated");
                         }
                     }
