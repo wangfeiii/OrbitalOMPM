@@ -73,6 +73,8 @@ public class ExpenditureInput extends AppCompatActivity implements AdapterView.O
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_expenditure_input);
+        getSupportActionBar().setTitle("Expenditure");
+
         mDatabase = FirebaseDatabase.getInstance().getReference();
         user = FirebaseAuth.getInstance().getCurrentUser();
         userId = user.getUid();

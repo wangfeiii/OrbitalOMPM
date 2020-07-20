@@ -57,6 +57,7 @@ public class ExpenditureHistory extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_expenditure_history);
+        getSupportActionBar().setTitle("Expenditure");
         //Initialize firebase
         mDatabase = FirebaseDatabase.getInstance().getReference();
         user = FirebaseAuth.getInstance().getCurrentUser();

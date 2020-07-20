@@ -8,6 +8,7 @@ import android.graphics.Color;
 import android.os.Bundle;
 import android.renderscript.Sampler;
 import android.util.Log;
+import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
@@ -68,6 +69,7 @@ public class ExpenditureLandingPage extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_expenditure_landing_page);
+        getSupportActionBar().setTitle("Expenditure");
 
         mDatabase = FirebaseDatabase.getInstance().getReference();
         user = FirebaseAuth.getInstance().getCurrentUser();
@@ -104,6 +106,27 @@ public class ExpenditureLandingPage extends AppCompatActivity {
         });
 
     }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu){
+        getMenuInflater().inflate(R.menu.expenditure_menu, menu);
+        return super.onCreateOptionsMenu(menu);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item){
+        switch(item.getItemId()){
+            case R.id.action_history:
+                Intent launchHistory = new Intent(ExpenditureLandingPage.this, ExpenditureHistory.class);
+                startActivity(launchHistory);
+                return true;
+
+            default:
+        }
+        return super.onOptionsItemSelected(item);
+    }
+
+
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data){
