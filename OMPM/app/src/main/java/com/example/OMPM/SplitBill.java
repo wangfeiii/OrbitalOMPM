@@ -20,6 +20,7 @@ import android.text.InputFilter;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.TextView;
@@ -46,7 +47,8 @@ public class SplitBill extends AppCompatActivity {
     private final ArrayList<Debt> mItemsList = new ArrayList<>();
     private RecyclerView mRecyclerView;
     private WordListAdapter mAdapter;
-    double bill_amount, indivBill;
+    double  indivBill;
+    private String amount;
     private Uri contactUri;
     private String contactID;     // contacts unique ID
     private String contactNumber = "";
@@ -59,6 +61,7 @@ public class SplitBill extends AppCompatActivity {
 
     private DatabaseReference mDatabase;
     private FirebaseUser user;
+    private double bill_amount;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -74,14 +77,16 @@ public class SplitBill extends AppCompatActivity {
                     PERMISSIONS_REQUEST);
         } else {
             //initialize widgets
-            CheckBox gst = findViewById(R.id.checkBox_GST);
-            CheckBox sc = findViewById(R.id.Service_Charge);
+            final CheckBox gst = findViewById(R.id.checkBox_GST);
+            final CheckBox sc = findViewById(R.id.Service_Charge);
             EditText me = findViewById(R.id.name);
             me.setText(user.getDisplayName());
             myName = me.getText().toString();
-            EditText bill = findViewById(R.id.input);
+            final EditText bill = findViewById(R.id.input);
             bill.setFilters(new InputFilter[]{new DecimalDigitsInputFilter(99,2)});
             retrieveContactNumber();
+            final WordListAdapter mAdapter = new WordListAdapter(selected_list);
+
 
             (findViewById(R.id.fab_AddItems)).setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -108,7 +113,6 @@ public class SplitBill extends AppCompatActivity {
                                     dialog.dismiss();
                                     RecyclerView mRecyclerView = findViewById(R.id.item_list);
                                     mRecyclerView.addItemDecoration(new DividerItemDecoration(mRecyclerView.getContext(), LinearLayoutManager.VERTICAL));
-                                    final WordListAdapter mAdapter = new WordListAdapter(selected_list);
                                     mRecyclerView.setAdapter(mAdapter);
                                     mRecyclerView.setLayoutManager(new LinearLayoutManager(mRecyclerView.getContext()));
                                 }
@@ -123,17 +127,72 @@ public class SplitBill extends AppCompatActivity {
                     dialog.show();
                 }
             });
+
+
+            findViewById(R.id.Confirm).setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+
+                    amount = bill.getText().toString();
+
+                    if (amount.isEmpty()) {
+                        Toast.makeText(getApplicationContext(), "Please key in amount!",
+                                Toast.LENGTH_SHORT).show();
+                        return;
+                    } else if (selected_list.size()<1) {
+                        Toast.makeText(getApplicationContext(), "Please choose debtors!",
+                                Toast.LENGTH_SHORT).show();
+                        return;
+                    }
+
+                    bill_amount = Double.parseDouble(amount);
+
+                    if (sc.isChecked())
+                        bill_amount = bill_amount * 1.1;
+                    if (gst.isChecked())
+                        bill_amount = bill_amount * 1.07;
+
+                    indivBill = bill_amount/selected_list.size();
+
+                    SimpleDateFormat sdf = new SimpleDateFormat("yyyy/MM/dd");
+                    String date = sdf.format(new Date());
+
+                    final String key = mDatabase.child("debts").push().getKey();
+                    mDatabase.child("debts").child(key).child("date").setValue(date);
+                    mDatabase.child("debts").child(key).child("amount").setValue(indivBill);
+                    mDatabase.child("debts").child(key).child("debtors").setValue(selected_list);
+                    mDatabase.child("debts").child(key).child("creditor").setValue(new Contact(myName, user.getPhoneNumber()));
+                    mDatabase.child("users").child(user.getUid()).child("owedBy").child(key).setValue(true);
+
+                    for (int i = 0; i<selected_list.size(); i++) {
+                        mDatabase.child("users").orderByChild("phoneNumber").equalTo((selected_list.get(i).getPhone()).replaceAll("\\s","")).addValueEventListener(new ValueEventListener() {
+
+                            @Override
+                            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                                for (DataSnapshot ds: dataSnapshot.getChildren()) {
+                                    String anotherKey = ds.getKey();
+                                    mDatabase.child("users").child(anotherKey).child("owedTo").child(key).setValue(true);
+                                }
+                            }
+                            @Override
+                            public void onCancelled(@NonNull DatabaseError databaseError) { }
+                        });
+                    }
+
+                    bill.setText("");
+                    gst.setChecked(false);
+                    sc.setChecked(false);
+                    selected_list.clear();
+                    mAdapter.notifyDataSetChanged();
+                }
+            });
         }
     }
 
-
     private void retrieveContactNumber() {
 
-        Cursor cursor = getContentResolver().query(ContactsContract.Contacts.CONTENT_URI
-                , null
-                , null
-                , null
-                , null);
+        Cursor cursor = getContentResolver().query(ContactsContract.Contacts.CONTENT_URI, null, null, null, null);
+
         while (cursor.moveToNext()) {
             String contactID = cursor.getString(cursor.getColumnIndex(ContactsContract.Contacts._ID));
             String hasPhone = cursor.getString(cursor.getColumnIndex(ContactsContract.Contacts.HAS_PHONE_NUMBER));
