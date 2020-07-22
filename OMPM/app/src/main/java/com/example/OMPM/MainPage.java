@@ -65,6 +65,8 @@ public class MainPage extends AppCompatActivity{
     @Override
     public boolean onCreateOptionsMenu(Menu menu){
         getMenuInflater().inflate(R.menu.main_menu, menu);
+        MenuItem iNoti = menu.findItem(R.id.action_notifications);
+        iNoti.setIcon(R.drawable.ic_notification_true);
         return super.onCreateOptionsMenu(menu);
     }
 
