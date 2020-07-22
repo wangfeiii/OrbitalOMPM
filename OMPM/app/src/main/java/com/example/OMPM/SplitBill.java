@@ -18,12 +18,9 @@ import android.os.Bundle;
 import android.provider.ContactsContract;
 import android.text.InputFilter;
 import android.util.Log;
-import android.view.LayoutInflater;
 import android.view.View;
-import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.firebase.auth.FirebaseAuth;
@@ -34,7 +31,6 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
-import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.List;
 import java.text.SimpleDateFormat;
@@ -42,7 +38,6 @@ import java.util.Date;
 
 public class SplitBill extends AppCompatActivity {
     private static final int PERMISSIONS_REQUEST = 100;
-    private static final String TAG = SplitBill.class.getSimpleName();
 
     private final ArrayList<Debt> mItemsList = new ArrayList<>();
     private RecyclerView mRecyclerView;
@@ -56,7 +51,6 @@ public class SplitBill extends AppCompatActivity {
     List<Contact> contact_list = new ArrayList<>();
     boolean[] selected;
     List<Contact> selected_list = new ArrayList<>();
-    private int noOfpeople;
     private String myName;
 
     private DatabaseReference mDatabase;
@@ -112,7 +106,7 @@ public class SplitBill extends AppCompatActivity {
                                     }
                                     dialog.dismiss();
                                     RecyclerView mRecyclerView = findViewById(R.id.item_list);
-                                    mRecyclerView.addItemDecoration(new DividerItemDecoration(mRecyclerView.getContext(), LinearLayoutManager.VERTICAL));
+                                  //  mRecyclerView.addItemDecoration(new DividerItemDecoration(mRecyclerView.getContext(), LinearLayoutManager.VERTICAL));
                                     mRecyclerView.setAdapter(mAdapter);
                                     mRecyclerView.setLayoutManager(new LinearLayoutManager(mRecyclerView.getContext()));
                                 }
@@ -127,7 +121,6 @@ public class SplitBill extends AppCompatActivity {
                     dialog.show();
                 }
             });
-
 
             findViewById(R.id.Confirm).setOnClickListener(new View.OnClickListener() {
                 @Override

@@ -79,7 +79,8 @@ public class OweMeFragment extends Fragment {
 
                     for (DataSnapshot debtor : sc.child("debtors").getChildren()) {
                         Map<String, String> map = (HashMap<String, String>)debtor.getValue();
-                        Debt debt = new Debt("$" + sc.child("amount").getValue(), String.valueOf(sc.child("date").getValue()), map.get("phone"),map.get("name"));
+                        String paid = String.valueOf(sc.child("creditor").child("paid").getValue());
+                        Debt debt = new Debt(key, "$" + sc.child("amount").getValue(), String.valueOf(sc.child("date").getValue()), map.get("phone"),map.get("name"),Boolean.parseBoolean(paid));
                         debtList.add(debt);
                     }
                 }

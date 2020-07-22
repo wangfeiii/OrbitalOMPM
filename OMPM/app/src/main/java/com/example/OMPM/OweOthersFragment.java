@@ -89,10 +89,11 @@ public class OweOthersFragment extends Fragment {
                     DataSnapshot sc = dataSnapshot.child("debts").child(key);
                     String num = String.valueOf(sc.child("creditor").child("phone").getValue());
                     String name = String.valueOf(sc.child("creditor").child("name").getValue());
-                    Debt debt = new Debt("$" + sc.child("amount").getValue(), String.valueOf(sc.child("date").getValue()), num,name);
+                    String paid = String.valueOf(sc.child("creditor").child("paid").getValue());
+                    Debt debt = new Debt(key,"$" + sc.child("amount").getValue(), String.valueOf(sc.child("date").getValue()), num,name,Boolean.parseBoolean(paid));
                     debtList.add(debt);
                 }
-                recyclerView.setAdapter(new MyItemRecyclerViewAdapter(debtList));
+                recyclerView.setAdapter(new OweOthersAdapter(debtList));
             }
             @Override
             public void onCancelled(@NonNull DatabaseError databaseError) { }

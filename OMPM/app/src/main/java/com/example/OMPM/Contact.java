@@ -4,6 +4,7 @@ public class Contact {
     private String name;
     private String phone;
     private double debt;
+    private boolean paid = false;
 
     public Contact(String name, String phone) {
         this.name = name;
@@ -17,6 +18,8 @@ public class Contact {
     public String getPhone() {
         return phone;
     }
+
+    public boolean isPaid() { return paid;}
 
     public String toList() {
         return this.name +": " + this.phone;
