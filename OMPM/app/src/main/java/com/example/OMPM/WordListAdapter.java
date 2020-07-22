@@ -4,6 +4,7 @@ import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -13,10 +14,10 @@ import java.util.List;
 
 public class WordListAdapter extends RecyclerView.Adapter<WordListAdapter.ListViewHolder> {
 
-    List<String> itemList;
+    List<Contact> itemList;
 
     // Constructor
-    public WordListAdapter(List<String> itemList) {
+    public WordListAdapter(List<Contact> itemList) {
         this.itemList = itemList;
     }
 
@@ -35,9 +36,17 @@ public class WordListAdapter extends RecyclerView.Adapter<WordListAdapter.ListVi
 
     // Involves populating data into the item through holder
     @Override
-    public void onBindViewHolder(@NonNull ListViewHolder holder, int position) {
-        String item = itemList.get(position);
-        holder.Contact.setText(item);
+    public void onBindViewHolder(@NonNull ListViewHolder holder, final int position) {
+        Contact item = itemList.get(position);
+        holder.contact.setText(item.getName());
+        holder.delete.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                itemList.remove(position);
+                notifyItemRemoved(position);
+                notifyItemRangeChanged(position,itemList.size());
+            }
+        });
     }
 
     @Override
@@ -47,53 +56,17 @@ public class WordListAdapter extends RecyclerView.Adapter<WordListAdapter.ListVi
 
     public static class ListViewHolder extends RecyclerView.ViewHolder {
 
-        public TextView Contact;
+        public TextView contact;
+        public ImageView delete;
 
         public ListViewHolder(View itemView) {
             super(itemView);
 
-            Contact = itemView.findViewById(R.id.contacts);
+            contact = itemView.findViewById(R.id.contacts);
+            delete = itemView.findViewById(R.id.imageView);
+
         }
     }
 
 }
-
-    /*
-    private final LinkedList<String> mWordList;
-    private LayoutInflater mInflater;
-
-    @NonNull
-    @Override
-    public WordViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View mItemView = mInflater.inflate(R.layout.wordlist_item, parent, false);
-        return new WordViewHolder(mItemView, this);
-    }
-
-    @Override
-    public void onBindViewHolder(@NonNull WordViewHolder holder, int position) {
-        String mCurrent = mWordList.get(position);
-        holder.wordItemView.setText(mCurrent);
-    }
-
-    public WordListAdapter(Context context, LinkedList<String> wordList){
-        mInflater = LayoutInflater.from(context);
-        this.mWordList = wordList;
-    }
-
-    public class WordViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
-        public final TextView wordItemView;
-        final WordListAdapter mAdapter;
-        public WordViewHolder(@NonNull View itemView, WordListAdapter adapter) {
-            super(itemView);
-            wordItemView = itemView.findViewById(R.id.contacts);
-            this.mAdapter = adapter;
-            itemView.setOnClickListener(this);
-        }
-
-        @Override
-        public void onClick(View v) {
-            
-        }
-    }
-    */
 

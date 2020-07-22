@@ -13,6 +13,12 @@ public class Debt {
         this.name = name;
     }
 
+    public Debt(String amount, String number, String name) {
+        this.amount = amount;
+        this.number = number;
+        this.name = name;
+    }
+
     public String getAmount() { return amount; }
 
     public String getDate() {

@@ -42,7 +42,7 @@ public class SplitBill extends AppCompatActivity {
     private static final int PERMISSIONS_REQUEST = 100;
     private static final String TAG = SplitBill.class.getSimpleName();
 
-    private final ArrayList<String> mItemsList = new ArrayList<>();
+    private final ArrayList<Debt> mItemsList = new ArrayList<>();
     private RecyclerView mRecyclerView;
     private WordListAdapter mAdapter;
     double bill_amount, indivBill;
@@ -52,8 +52,8 @@ public class SplitBill extends AppCompatActivity {
     String[] contactListArray;
     List<Contact> contact_list = new ArrayList<>();
     boolean[] selected;
-    List<Contact> selected_list;
-    private int noOfpeople = 0;
+    List<Contact> selected_list = new ArrayList<>();
+    private int noOfpeople;
     private String myName;
 
     private DatabaseReference mDatabase;
@@ -77,14 +77,51 @@ public class SplitBill extends AppCompatActivity {
             //initialize widgets
             RecyclerView mRecyclerView = findViewById(R.id.item_list);
             mRecyclerView.addItemDecoration(new DividerItemDecoration(this, LinearLayoutManager.VERTICAL));
-            final WordListAdapter mAdapter = new WordListAdapter(mItemsList);
+            final WordListAdapter mAdapter = new WordListAdapter(selected_list);
             mRecyclerView.setAdapter(mAdapter);
             mRecyclerView.setLayoutManager(new LinearLayoutManager(this));
+            CheckBox gst = findViewById(R.id.checkBox_GST);
+            CheckBox sc = findViewById(R.id.Service_Charge);
+            EditText me = findViewById(R.id.name);
+            myName = me.getText().toString();
+            EditText bill = findViewById(R.id.input);
+        //    bill_amount = Double.parseDouble(bill.getText().toString());
 
             retrieveContactNumber();
             (findViewById(R.id.fab_AddItems)).setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
+                    selected = new boolean[contactListArray.length];
+                    AlertDialog.Builder builder = new AlertDialog.Builder(SplitBill.this);
+                    builder.setCancelable(true)
+                            .setTitle("Select Contacts")
+                            .setMultiChoiceItems(contactListArray, selected, new DialogInterface.OnMultiChoiceClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialog, int pos, boolean isChecked) {
+                                    selected[pos] = isChecked;
+                                }
+                            })
+                            .setPositiveButton("Confirm", new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialog, int which) {
+
+                                    DecimalFormat currency = new DecimalFormat("$###,###.##");
+
+                                    for (int i = 0; i < selected.length; i++) {
+                                        if (selected[i]) {
+                                            selected_list.add(contact_list.get(i));
+                                        }
+                                    }
+                                    dialog.dismiss();
+                                }
+                            })
+                            .setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialog, int which) {
+                                    dialog.dismiss();
+                                }
+                            });
+                    /*
                     final View view = LayoutInflater.from(getApplicationContext()).inflate(R.layout.alert_dialog_layout, null);
                     AlertDialog.Builder firstBuilder = new AlertDialog.Builder(SplitBill.this);
                     firstBuilder.setTitle("Bill Details");
@@ -99,6 +136,7 @@ public class SplitBill extends AppCompatActivity {
 
                             EditText bill = view.findViewById(R.id.input);
                             bill_amount = Double.parseDouble(bill.getText().toString());
+                            noOfpeople = 0;
 
                             if (sc.isChecked())
                                 bill_amount = bill_amount * 1.1;
@@ -111,14 +149,17 @@ public class SplitBill extends AppCompatActivity {
                             showDialog();
                         }
                     });
-                    AlertDialog dialog = firstBuilder.create();
-                    dialog.setView(view);
+                     */
+                    AlertDialog dialog = builder.create();
+                    // dialog.setView(view);
                     dialog.show();
                 }
             });
+          //  Log.d("a", selected_list.get(0).toList());
         }
     }
 
+    /*
     //second dialog to choose contact
     private void showDialog() {
         selected = new boolean[contactListArray.length];
@@ -139,7 +180,6 @@ public class SplitBill extends AppCompatActivity {
                         List<Contact> selected_list = new ArrayList<>();
 
                         int count  = 0;
-
                         for (int i = 0; i < selected.length; i++) {
                             if (selected[i]) {
                                 count = count +1;
@@ -148,20 +188,12 @@ public class SplitBill extends AppCompatActivity {
                         }
                         noOfpeople = noOfpeople + count;
                         indivBill = bill_amount/noOfpeople;
-                        SimpleDateFormat sdf = new SimpleDateFormat("yyyy/MM/dd");
-                        String date = sdf.format(new Date());
-
-                        //firebase
-                        final String key = mDatabase.child("debts").push().getKey();
-                        mDatabase.child("debts").child(key).child("date").setValue(date);
-                        mDatabase.child("debts").child(key).child("amount").setValue(indivBill);
-                        mDatabase.child("debts").child(key).child("debtors").setValue(selected_list);
-                        mDatabase.child("debts").child(key).child("creditor").setValue(new Contact(myName, user.getPhoneNumber()));
-                        mDatabase.child("users").child(user.getUid()).child("owedBy").child(key).setValue(true);
-
+/*
                         for (int i = 0; i<selected.length; i++) {
                             if (selected[i]) {
-                                mItemsList.add(contactListArray[i] + ": " + currency.format(indivBill));
+                                Debt debt = new Debt(String.valueOf(indivBill), contact_list.get(i).getPhone(),contact_list.get(i).getName());
+                                mItemsList.add(debt);
+
                                 mDatabase.child("users").orderByChild("phoneNumber").equalTo((contact_list.get(i).getPhone()).replaceAll("\\s","")).addValueEventListener(new ValueEventListener() {
                                     @Override
                                     public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
@@ -175,7 +207,20 @@ public class SplitBill extends AppCompatActivity {
                                     public void onCancelled(@NonNull DatabaseError databaseError) { }
                                 });
                             }
+
                         }
+
+                        SimpleDateFormat sdf = new SimpleDateFormat("yyyy/MM/dd");
+                        String date = sdf.format(new Date());
+
+                        //firebase
+                        final String key = mDatabase.child("debts").push().getKey();
+                        mDatabase.child("debts").child(key).child("date").setValue(date);
+                        mDatabase.child("debts").child(key).child("amount").setValue(indivBill);
+                        mDatabase.child("debts").child(key).child("debtors").setValue(selected_list);
+                        mDatabase.child("debts").child(key).child("creditor").setValue(new Contact(myName, user.getPhoneNumber()));
+                        mDatabase.child("users").child(user.getUid()).child("owedBy").child(key).setValue(true);
+
                         dialog.dismiss();
                     }
                 })
@@ -188,17 +233,7 @@ public class SplitBill extends AppCompatActivity {
         AlertDialog alertDialog = builder.create();
         alertDialog.show();
     }
-/*
-    public void getPermissionToReadUserContacts() {
-        //Check whether this app has access to the contacts permission//
-        int permission = ContextCompat.checkSelfPermission(this,
-                Manifest.permission.READ_CONTACTS);
-        if (permission!= PackageManager.PERMISSION_GRANTED)
-            ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.READ_CONTACTS},
-                    PERMISSIONS_REQUEST);
-    }
-
- */
+    */
 
     private void retrieveContactNumber() {
 
