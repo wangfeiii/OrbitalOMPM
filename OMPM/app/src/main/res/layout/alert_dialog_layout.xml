@@ -2,73 +2,18 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#D3EFE8"
     android:orientation="vertical">
 
-    <LinearLayout
-        android:layout_width="match_parent"
+    <RatingBar
+        android:id="@+id/ratingBar"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_margin="8dp"
-        android:background="@android:color/white"
-        android:orientation="horizontal">
-
-        <RelativeLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content">
-
-            <EditText
-                android:id="@+id/name"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:hint="Your name"
-                android:textSize="14sp" />
-
-            <EditText
-                android:id="@+id/input"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_below="@id/name"
-                android:hint="Amount to be split"
-                android:inputType="number"
-                android:textSize="14sp" />
-
-            <LinearLayout
-                android:id="@+id/linear"
-                android:layout_centerHorizontal="true"
-                android:layout_centerInParent="true"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_below="@id/input"
-                android:orientation="horizontal">
-
-                <CheckBox
-                    android:id="@+id/checkBox_GST"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginRight="20dp"
-                    android:text="GST"
-                    android:textColor="@android:color/black" />
-
-                <CheckBox
-                    android:id="@+id/Service_Charge"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Service Charge"
-                    android:textColor="@android:color/black" />
-            </LinearLayout>
-
-            <CheckBox
-                android:id="@+id/myself"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_below="@id/linear"
-                android:layout_centerHorizontal="true"
-                android:text="Include myself" />
-
-        </RelativeLayout>
-
-    </LinearLayout>
-
-
+        android:layout_gravity="center"
+        android:background="#FFFFFF"
+        android:backgroundTint="#FFFFFF"
+        android:numStars="5"
+        android:progressBackgroundTint="#FCF8EBDB"
+        android:progressTint="#FBCB6A"
+        android:stepSize="0.5" />
 
 </LinearLayout>

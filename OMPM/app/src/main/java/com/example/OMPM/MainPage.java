@@ -8,6 +8,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -90,15 +91,17 @@ public class MainPage extends AppCompatActivity{
                 return true;
 
             case R.id.action_rate_us:
+                LayoutInflater inflater = getLayoutInflater();
                 AlertDialog.Builder myAlertBuilder = new AlertDialog.Builder(MainPage.this);
                 myAlertBuilder.setTitle(R.string.rate_us);
-                myAlertBuilder.setMessage(R.string.placeholder);
                 myAlertBuilder.setPositiveButton("OK", new DialogInterface.OnClickListener(){
                     public void onClick(DialogInterface dialog, int which) {
                         Toast.makeText(getApplicationContext(), "Thank you for your feedback!",
                                 Toast.LENGTH_SHORT).show();
                     }
                 });
+                View dialogLayout = inflater.inflate(R.layout.alert_dialog_layout, null);
+                myAlertBuilder.setView(dialogLayout);
                 myAlertBuilder.show();
                 return true;
 
