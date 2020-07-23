@@ -14,6 +14,7 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
+import java.text.NumberFormat;
 import java.util.List;
 
 public class OweOthersAdapter extends RecyclerView.Adapter<OweOthersAdapter.ViewHolder> {
@@ -39,10 +40,11 @@ public class OweOthersAdapter extends RecyclerView.Adapter<OweOthersAdapter.View
         else
             holder.status.setText("Unpaid");
 
+        NumberFormat formatter = NumberFormat.getCurrencyInstance();
         holder.name.setText(mValues.get(position).getName());
         holder.phoneNumber.setText(mValues.get(position).getNumber());
         holder.date.setText(mValues.get(position).getDate());
-        holder.amount.setText(mValues.get(position).getAmount());
+        holder.amount.setText(formatter.format(Float.parseFloat(mValues.get(position).getAmount())));
     }
 
     @Override

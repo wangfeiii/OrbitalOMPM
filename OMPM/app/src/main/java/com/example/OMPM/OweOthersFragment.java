@@ -90,7 +90,7 @@ public class OweOthersFragment extends Fragment {
                     String num = String.valueOf(sc.child("creditor").child("phone").getValue());
                     String name = String.valueOf(sc.child("creditor").child("name").getValue());
                     String paid = String.valueOf(sc.child("creditor").child("paid").getValue());
-                    Debt debt = new Debt(key,"$" + sc.child("amount").getValue(), String.valueOf(sc.child("date").getValue()), num,name,Boolean.parseBoolean(paid));
+                    Debt debt = new Debt(key,String.valueOf(sc.child("amount").getValue()), String.valueOf(sc.child("date").getValue()), num,name,Boolean.parseBoolean(paid));
                     debtList.add(debt);
                 }
                 recyclerView.setAdapter(new OweOthersAdapter(debtList));

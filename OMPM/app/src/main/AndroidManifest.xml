@@ -78,7 +78,7 @@
                 android:value="com.example.OMPM.MainPage" />
         </activity>
         <activity
-            android:name=".Notifications"
+            android:name=".NotificationsPage"
             android:label="Notifications"
             android:parentActivityName=".MainPage">
             <meta-data

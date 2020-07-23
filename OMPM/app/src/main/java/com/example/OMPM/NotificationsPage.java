@@ -9,7 +9,7 @@ import android.os.Bundle;
 
 import java.util.ArrayList;
 
-public class Notifications extends AppCompatActivity {
+public class NotificationsPage extends AppCompatActivity {
 
     private RecyclerView mRecyclerView;
     private NotificationListAdapter mAdapter;

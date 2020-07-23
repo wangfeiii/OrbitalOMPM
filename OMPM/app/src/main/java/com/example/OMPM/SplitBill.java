@@ -177,6 +177,7 @@ public class SplitBill extends AppCompatActivity {
                     sc.setChecked(false);
                     selected_list.clear();
                     mAdapter.notifyDataSetChanged();
+                    Toast.makeText(getApplicationContext(), "Debt Updated!", Toast.LENGTH_SHORT).show();
                 }
             });
         }
