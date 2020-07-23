@@ -48,6 +48,7 @@
     <string name="no_recorded_expenditures">You have not recorded any expenditures this month!</string>
     <string name="name">Name</string>
     <string name="update_profile">Update Profile</string>
+    <string name="email">Email</string>
 
     <string name="Address">
         Address

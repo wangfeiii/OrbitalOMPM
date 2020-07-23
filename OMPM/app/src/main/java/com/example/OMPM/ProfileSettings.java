@@ -18,6 +18,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.gms.tasks.Continuation;
@@ -56,10 +57,14 @@ public class ProfileSettings extends AppCompatActivity {
     private StorageReference mStorage;
     private String userId;
     private String name;
+    private String email;
+    private String phoneNumber;
     private Uri photoUrl;
 
     private CircleImageView profilePicture;
     private EditText eName;
+    private EditText eEmail;
+    private TextView tPhoneNumber;
     private Button bUpdateProfile;
 
     private static final int IMAGE_REQUEST = 1;
@@ -78,14 +83,26 @@ public class ProfileSettings extends AppCompatActivity {
             name = user.getDisplayName();
             photoUrl = user.getPhotoUrl();
             userId = user.getUid();
+            email = user.getEmail();
+            phoneNumber = user.getPhoneNumber();
         }
 
         profilePicture = findViewById(R.id.profile_image);
         eName = findViewById(R.id.profile_name);
         bUpdateProfile = findViewById(R.id.update_profile);
+        eEmail = findViewById(R.id.email);
+        tPhoneNumber = findViewById(R.id.phone);
 
         if(name != null){
             eName.setText(name);
+        }
+
+        if (phoneNumber != null){
+            tPhoneNumber.setText(phoneNumber);
+        }
+
+        if(email != null){
+            eEmail.setText(email);
         }
 
         if (photoUrl != null){
@@ -101,7 +118,10 @@ public class ProfileSettings extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 String profileName = eName.getText().toString();
-                UserProfileChangeRequest profileUpdates = new UserProfileChangeRequest.Builder().setDisplayName(profileName).build();
+                String profileEmail = eEmail.getText().toString();
+                UserProfileChangeRequest profileUpdates = new UserProfileChangeRequest.Builder()
+                        .setDisplayName(profileName).build();
+                user.updateEmail(profileEmail);
                 user.updateProfile(profileUpdates).addOnCompleteListener(new OnCompleteListener<Void>() {
                     @Override
                     public void onComplete(@NonNull Task<Void> task) {

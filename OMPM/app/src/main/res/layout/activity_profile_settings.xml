@@ -57,6 +57,44 @@
                 app:cardCornerRadius="5dp"
                 app:cardElevation="10dp">
 
+                <ImageView
+                    android:id="@+id/icon_phone"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:src="@drawable/ic_phone"
+                    android:layout_marginTop="60dp"
+                    android:layout_marginStart="20dp"/>
+
+                <TextView
+                    android:id="@+id/phone"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="60dp"
+                    android:layout_marginTop="60dp"
+                    android:text="@string/phone_number"/>
+
+                <ImageView
+                    android:id="@+id/icon_email"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:src="@drawable/ic_email"
+                    android:layout_marginTop="120dp"
+                    android:layout_marginStart="20dp"/>
+
+                <EditText
+                    android:id="@+id/email"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="60dp"
+                    android:layout_marginTop="124dp"
+                    android:inputType="textEmailAddress"
+                    android:textSize="14sp"
+                    android:textColor="#8a000000"
+                    android:background="@android:color/transparent"
+                    android:text="@string/email"/>
+
+
+
             </androidx.cardview.widget.CardView>
 
             <Button
