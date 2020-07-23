@@ -152,8 +152,8 @@ public class SplitBill extends AppCompatActivity {
                     mDatabase.child("debts").child(key).child("date").setValue(date);
                     mDatabase.child("debts").child(key).child("amount").setValue(indivBill);
                     for (Contact ct: selected_list)
-                        mDatabase.child("debts").child(key).child("debtors").child(ct.getPhone()).setValue(new Contact(ct.getName(),null));
-                    mDatabase.child("debts").child(key).child("creditor").setValue(new Contact(myName, user.getPhoneNumber()));
+                        mDatabase.child("debts").child(key).child("debtors").child(ct.getPhone().replaceAll("\\s","")).setValue(new Contact(ct.getName(),null));
+                    mDatabase.child("debts").child(key).child("creditor").setValue(new Contact(myName, user.getPhoneNumber().replaceAll("\\s","")));
                     mDatabase.child("users").child(user.getUid()).child("owedBy").child(key).setValue(true);
 
                     for (int i = 0; i<selected_list.size(); i++) {
