@@ -47,17 +47,7 @@ public class MyItemRecyclerViewAdapter extends RecyclerView.Adapter<MyItemRecycl
                     final DatabaseReference mDatabase = FirebaseDatabase.getInstance().getReference();;
                     FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();;
                     final DatabaseReference ref = mDatabase.child("debts").child(mValues.get(position).getKey()).child("debtors");
-                    ref.orderByChild("phone").equalTo(mValues.get(position).getNumber()).addValueEventListener(new ValueEventListener() {
-                        @Override
-                        public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                            for (DataSnapshot ds: dataSnapshot.getChildren()) {
-                                String anotherKey = ds.getKey();
-                                ref.child(anotherKey).child("paid").setValue(false);
-                            }
-                        }
-                        @Override
-                        public void onCancelled(@NonNull DatabaseError databaseError) { }
-                    });
+                    ref.child(mValues.get(position).getNumber()).child("paid").setValue(false);
                     holder.status.setText("Unpaid");
                 }
             });
@@ -70,17 +60,7 @@ public class MyItemRecyclerViewAdapter extends RecyclerView.Adapter<MyItemRecycl
                     final DatabaseReference mDatabase = FirebaseDatabase.getInstance().getReference();;
                     FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();;
                     final DatabaseReference ref = mDatabase.child("debts").child(mValues.get(position).getKey()).child("debtors");
-                    ref.orderByChild("phone").equalTo(mValues.get(position).getNumber()).addValueEventListener(new ValueEventListener() {
-                        @Override
-                        public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                            for (DataSnapshot ds: dataSnapshot.getChildren()) {
-                                String anotherKey = ds.getKey();
-                                ref.child(anotherKey).child("paid").setValue(true);
-                            }
-                        }
-                        @Override
-                        public void onCancelled(@NonNull DatabaseError databaseError) { }
-                    });
+                    ref.child(mValues.get(position).getNumber()).child("paid").setValue(true);
                     holder.status.setText("Paid");
                 }
             });

@@ -127,7 +127,6 @@ public class SplitBill extends AppCompatActivity {
                 public void onClick(View v) {
 
                     amount = bill.getText().toString();
-
                     if (amount.isEmpty()) {
                         Toast.makeText(getApplicationContext(), "Please key in amount!",
                                 Toast.LENGTH_SHORT).show();
@@ -137,7 +136,6 @@ public class SplitBill extends AppCompatActivity {
                                 Toast.LENGTH_SHORT).show();
                         return;
                     }
-
                     bill_amount = Double.parseDouble(amount);
 
                     if (sc.isChecked())
@@ -153,7 +151,8 @@ public class SplitBill extends AppCompatActivity {
                     final String key = mDatabase.child("debts").push().getKey();
                     mDatabase.child("debts").child(key).child("date").setValue(date);
                     mDatabase.child("debts").child(key).child("amount").setValue(indivBill);
-                    mDatabase.child("debts").child(key).child("debtors").setValue(selected_list);
+                    for (Contact ct: selected_list)
+                        mDatabase.child("debts").child(key).child("debtors").child(ct.getPhone()).setValue(new Contact(ct.getName(),null));
                     mDatabase.child("debts").child(key).child("creditor").setValue(new Contact(myName, user.getPhoneNumber()));
                     mDatabase.child("users").child(user.getUid()).child("owedBy").child(key).setValue(true);
 

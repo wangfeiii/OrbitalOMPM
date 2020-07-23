@@ -89,7 +89,7 @@ public class OweOthersFragment extends Fragment {
                     DataSnapshot sc = dataSnapshot.child("debts").child(key);
                     String num = String.valueOf(sc.child("creditor").child("phone").getValue());
                     String name = String.valueOf(sc.child("creditor").child("name").getValue());
-                    String paid = String.valueOf(sc.child("creditor").child("paid").getValue());
+                    String paid = String.valueOf(sc.child("debtors").child(user.getPhoneNumber()).child("paid").getValue());
                     Debt debt = new Debt(key,String.valueOf(sc.child("amount").getValue()), String.valueOf(sc.child("date").getValue()), num,name,Boolean.parseBoolean(paid));
                     debtList.add(debt);
                 }

@@ -33,7 +33,7 @@ public class OweMeFragment extends Fragment {
 
     private RecyclerView recyclerView;
     private MyItemRecyclerViewAdapter mAdapter;
-    private List<Debt> debtList = new ArrayList<>();
+    private List<Debt> debtList;
     private List<String> keyList = new ArrayList<>();
 
     private DatabaseReference mDatabase;
@@ -74,13 +74,15 @@ public class OweMeFragment extends Fragment {
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
 
                 for (DataSnapshot ds: dataSnapshot.child("users").child(user.getUid()).child("owedBy").getChildren()) {
+                    debtList = new ArrayList<>();
                     String key = ds.getKey();
                     DataSnapshot sc = dataSnapshot.child("debts").child(key);
 
                     for (DataSnapshot debtor : sc.child("debtors").getChildren()) {
-                        Map<String, String> map = (HashMap<String, String>)debtor.getValue();
-                        String paid = String.valueOf(sc.child("creditor").child("paid").getValue());
-                        Debt debt = new Debt(key, String.valueOf(sc.child("amount").getValue()), String.valueOf(sc.child("date").getValue()), map.get("phone"),map.get("name"),Boolean.parseBoolean(paid));
+                        String num = debtor.getKey();
+                        String paid = String.valueOf(debtor.child("paid").getValue());
+                        String name = String.valueOf(debtor.child("name").getValue());
+                        Debt debt = new Debt(key, String.valueOf(sc.child("amount").getValue()), String.valueOf(sc.child("date").getValue()), num,name,Boolean.parseBoolean(paid));
                         debtList.add(debt);
                     }
                 }

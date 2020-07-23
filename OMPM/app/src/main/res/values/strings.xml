@@ -49,6 +49,12 @@
     <string name="name">Name</string>
     <string name="update_profile">Update Profile</string>
 
+    <string name="Address">
+        Address
+        \n
+    </string>
+
+
     <string-array name="expenditure_choice_array">
         <item>Food</item>
         <item>Groceries</item>
