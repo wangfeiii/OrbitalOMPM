@@ -7,45 +7,46 @@
     android:background="@drawable/bg"
     tools:context=".MainPage">
 
-    <Button
+    <ImageView
         android:id="@+id/button_Split"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
+        android:layout_width="110dp"
+        android:layout_height="110dp"
         android:layout_marginStart="64dp"
-        android:layout_marginTop="168dp"
         android:layout_marginEnd="64dp"
-        android:background="#FAA299"
+        android:layout_marginBottom="20dp"
         android:onClick="launchSplit"
-        android:text="@string/split_the_bill"
+        android:src="@drawable/a1"
+        app:layout_constraintBottom_toTopOf="@+id/button2"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintHorizontal_bias="0.502"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="1.0" />
 
-    <Button
+    <ImageView
         android:id="@+id/button2"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="40dp"
-        android:background="#FAA299"
+        android:layout_width="110dp"
+        android:layout_height="110dp"
         android:onClick="launchExpenditure"
-        android:text="@string/expenditure"
+        android:src="@drawable/a2"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="@+id/button_Split"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="@+id/button_Split"
-        app:layout_constraintTop_toBottomOf="@+id/button_Split" />
+        app:layout_constraintTop_toTopOf="parent" />
 
-    <Button
+    <ImageView
         android:id="@+id/button3"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="40dp"
-        android:background="#FAA299"
+        android:layout_width="110dp"
+        android:layout_height="110dp"
+        android:layout_marginTop="20dp"
         android:onClick="launchHistory"
-        android:text="@string/history"
+        android:src="@drawable/a3"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="@+id/button2"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="@+id/button2"
-        app:layout_constraintTop_toBottomOf="@+id/button2" />
+        app:layout_constraintTop_toBottomOf="@+id/button2"
+        app:layout_constraintVertical_bias="0.0" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
