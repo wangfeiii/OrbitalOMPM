@@ -72,9 +72,8 @@ public class OweMeFragment extends Fragment {
         mDatabase.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-
+                debtList = new ArrayList<>();
                 for (DataSnapshot ds: dataSnapshot.child("users").child(user.getUid()).child("owedBy").getChildren()) {
-                    debtList = new ArrayList<>();
                     String key = ds.getKey();
                     DataSnapshot sc = dataSnapshot.child("debts").child(key);
 
