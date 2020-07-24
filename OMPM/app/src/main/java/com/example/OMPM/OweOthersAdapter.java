@@ -2,6 +2,7 @@ package com.example.OMPM;
 
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -18,6 +19,7 @@ import java.text.NumberFormat;
 import java.util.List;
 
 public class OweOthersAdapter extends RecyclerView.Adapter<OweOthersAdapter.ViewHolder> {
+    private static final String TAG = "LOG_TAG";
 
     private List<Debt> mValues;
 

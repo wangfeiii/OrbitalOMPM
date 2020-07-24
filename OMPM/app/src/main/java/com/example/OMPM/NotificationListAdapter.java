@@ -71,7 +71,7 @@ public class NotificationListAdapter extends RecyclerView.Adapter<NotificationLi
             NumberFormat formatter = NumberFormat.getCurrencyInstance();
             String cost = formatter.format(Float.parseFloat(item.getAmount()));
             String creditor = item.getName();
-            mNotiText.setText("You owe " + creditor + cost + "!");
+            mNotiText.setText("You owe " + creditor + " " + cost + "!");
         }
     }
 

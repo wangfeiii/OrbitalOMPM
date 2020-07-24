@@ -44,15 +44,17 @@ public class NotificationsPage extends AppCompatActivity {
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 for (DataSnapshot ds: dataSnapshot.child("users").child(user.getUid()).child("owedTo").getChildren()) {
                     String key = ds.getKey();
-                    DataSnapshot sc = dataSnapshot.child("debts").child(key);
-                    Log.d(TAG, String.valueOf(sc.child("debtors").child(phoneNumber).child("paid").getValue()));
-//                    if (sc.child("debtors").child(phoneNumber).child("paid").getValue().equals(false)) {
-//                        String num = String.valueOf(sc.child("creditor").child("phone").getValue());
-//                        String name = String.valueOf(sc.child("creditor").child("name").getValue());
-//                        String paid = String.valueOf(sc.child("debtors").child(user.getPhoneNumber()).child("paid").getValue());
-//                        Debt debt = new Debt(key,String.valueOf(sc.child("amount").getValue()), String.valueOf(sc.child("date").getValue()), num,name,Boolean.parseBoolean(paid));
-//                        mDebtList.add(debt);
-//                    }
+                    if(!key.equals(null)){
+                        DataSnapshot sc = dataSnapshot.child("debts").child(key);
+                        Log.d(TAG, String.valueOf(sc.child("debtors").child(phoneNumber).child("paid").getValue()));
+                        if (sc.child("debtors").child(phoneNumber).child("paid").getValue().equals(false)) {
+                            String num = String.valueOf(sc.child("creditor").child("phone").getValue());
+                            String name = String.valueOf(sc.child("creditor").child("name").getValue());
+                            String paid = String.valueOf(sc.child("debtors").child(user.getPhoneNumber()).child("paid").getValue());
+                            Debt debt = new Debt(key, String.valueOf(sc.child("amount").getValue()), String.valueOf(sc.child("date").getValue()), num, name, Boolean.parseBoolean(paid));
+                            mDebtList.add(debt);
+                        }
+                    }
                 }
                 mRecyclerView = findViewById(R.id.recyclerview);
                 mAdapter = new NotificationListAdapter(mRecyclerView.getContext(), mDebtList);
