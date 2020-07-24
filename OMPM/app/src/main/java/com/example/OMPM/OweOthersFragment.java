@@ -38,7 +38,7 @@ public class OweOthersFragment extends Fragment {
 
     private String mParam1;
     private String mParam2;
-    private List<Debt> debtList = new ArrayList<>();
+    private List<Debt> debtList;
 
     public OweOthersFragment() {
         // Required empty public constructor
@@ -84,6 +84,7 @@ public class OweOthersFragment extends Fragment {
         mDatabase.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                debtList = new ArrayList<>();
                 for (DataSnapshot ds: dataSnapshot.child("users").child(user.getUid()).child("owedTo").getChildren()) {
                     String key = ds.getKey();
                     DataSnapshot sc = dataSnapshot.child("debts").child(key);

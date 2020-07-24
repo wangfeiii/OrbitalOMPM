@@ -20,8 +20,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:adjustViewBounds="true"
-                android:src="@drawable/contact_us"
-                 />
+                android:src="@drawable/contact_us" />
 
             <TextView
                 android:id="@+id/tv_long"
