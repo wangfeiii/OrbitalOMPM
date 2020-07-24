@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".ExpenditureLandingPage"
-    android:background="@drawable/redgradientbackground">
+    android:background="#FFD5B9">
 
     <Spinner
         android:id="@+id/spinner_monthly"
@@ -16,13 +16,14 @@
         android:textAlignment="textStart" />
 
     <androidx.cardview.widget.CardView
-        android:layout_width="390dp"
-        android:layout_height="500dp"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
         android:layout_gravity="center_horizontal"
         android:layout_centerHorizontal="true"
-        android:layout_marginStart="10dp"
         android:layout_marginTop="60dp"
-        app:cardBackgroundColor="#fff"
+        android:layout_marginHorizontal="40dp"
+        android:layout_marginBottom="60dp"
+        app:cardBackgroundColor="@android:color/white"
         app:cardCornerRadius="5dp"
         app:cardElevation="8dp">
 

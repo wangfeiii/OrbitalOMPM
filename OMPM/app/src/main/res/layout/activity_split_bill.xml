@@ -4,22 +4,28 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".SplitBill"
-    android:background="@drawable/greengradientbackground">
+    android:background="#F4E7F1"
+    tools:context=".SplitBill">
 
-    <RelativeLayout
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/re"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
         <androidx.cardview.widget.CardView
             android:id="@+id/cardView"
-            android:layout_width="350dp"
-            android:layout_height="400dp"
-            android:layout_gravity="center_horizontal"
-            android:layout_centerHorizontal="true"
-            android:layout_marginTop="60dp"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginHorizontal="40dp"
+            android:layout_marginTop="40dp"
+            android:layout_marginBottom="80dp"
             app:cardBackgroundColor="#fff"
-            app:cardCornerRadius="5dp">
+            app:cardCornerRadius="5dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent">
+
             <RelativeLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent">
@@ -27,11 +33,11 @@
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:orientation="vertical"
-                    android:divider="@color/colorPrimaryDark"
                     android:layout_marginStart="10dp"
                     android:layout_marginTop="10dp"
+                    android:divider="@color/colorPrimaryDark"
                     android:dividerPadding="20dp"
+                    android:orientation="vertical"
                     android:showDividers="middle">
 
                     <LinearLayout
@@ -47,12 +53,12 @@
 
                         <EditText
                             android:id="@+id/name"
-                            android:inputType="text"
                             android:layout_width="match_parent"
                             android:layout_height="match_parent"
                             android:background="@null"
+                            android:hint="Your Name"
                             android:imeOptions="actionDone"
-                            android:hint="Your Name" />
+                            android:inputType="text" />
                     </LinearLayout>
 
                     <LinearLayout
@@ -76,9 +82,9 @@
                                 android:layout_width="match_parent"
                                 android:layout_height="40dp"
                                 android:background="@null"
-                                android:imeOptions="actionDone"
                                 android:hint="Amount"
-                                android:inputType="numberDecimal"/>
+                                android:imeOptions="actionDone"
+                                android:inputType="numberDecimal" />
 
                             <LinearLayout
                                 android:id="@+id/linear"
@@ -101,11 +107,9 @@
                                     android:text="Service Charge"
                                     android:textColor="@android:color/black" />
 
-
                             </LinearLayout>
                         </LinearLayout>
                     </LinearLayout>
-
 
                     <LinearLayout
                         android:layout_width="match_parent"
@@ -124,39 +128,41 @@
                             android:id="@+id/item_list"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:scrollbars="vertical"
-                            android:paddingRight="20dp"/>
+                            android:paddingRight="20dp"
+                            android:scrollbars="vertical" />
 
                     </LinearLayout>
                 </LinearLayout>
 
-            <com.google.android.material.floatingactionbutton.FloatingActionButton
-                android:id="@+id/fab_AddItems"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignParentRight="true"
-                android:layout_alignParentBottom="true"
-                android:layout_marginBottom="8dp"
-                android:layout_marginEnd="8dp"
-                android:clickable="true"
-                android:src="@drawable/ic_add"
-                app:backgroundTint="#716A6A" />
+                <com.google.android.material.floatingactionbutton.FloatingActionButton
+                    android:id="@+id/fab_AddItems"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentRight="true"
+                    android:layout_alignParentBottom="true"
+                    android:layout_marginEnd="8dp"
+                    android:layout_marginBottom="8dp"
+                    android:clickable="true"
+                    android:src="@drawable/ic_add"
+                    app:backgroundTint="#716A6A" />
 
             </RelativeLayout>
-
         </androidx.cardview.widget.CardView>
-
 
         <Button
             android:id="@+id/Confirm"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/confirm"
-            android:layout_centerHorizontal="true"
-            android:layout_marginTop="40dp"
-            android:background="@drawable/profilebuttonstyle"
-            android:layout_below="@id/cardView"/>
 
-    </RelativeLayout>
+            android:layout_centerHorizontal="true"
+            android:layout_centerVertical="true"
+            android:background="@drawable/profilebuttonstyle"
+            android:text="@string/confirm"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/cardView" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

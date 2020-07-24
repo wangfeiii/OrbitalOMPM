@@ -33,16 +33,18 @@
                 android:text="Phone Number"
                 android:textColor="@android:color/black"
                 android:textSize="10sp" />
+
+            <TextView
+                android:id="@+id/date"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerInParent="true"
+                android:text="Date"
+                android:textColor="@android:color/black"
+                android:textSize="10sp" />
         </LinearLayout>
 
-        <TextView
-            android:id="@+id/date"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_centerInParent="true"
-            android:text="Date"
-            android:textColor="@android:color/black"
-            android:textSize="18sp" />
+
 
         <RelativeLayout
             android:layout_width="wrap_content"

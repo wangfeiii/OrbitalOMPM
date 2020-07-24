@@ -3,6 +3,7 @@ package com.example.OMPM;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.graphics.Color;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -40,6 +41,7 @@ public class MyItemRecyclerViewAdapter extends RecyclerView.Adapter<MyItemRecycl
     public void onBindViewHolder(final ViewHolder holder, final int position) {
 
         if (mValues.get(position).isPaid()) {
+            holder.status.setBackgroundColor(Color.parseColor("#C1F1E4"));
             holder.status.setText("Paid");
             holder.status.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -62,6 +64,7 @@ public class MyItemRecyclerViewAdapter extends RecyclerView.Adapter<MyItemRecycl
                     final DatabaseReference ref = mDatabase.child("debts").child(mValues.get(position).getKey()).child("debtors");
                     ref.child(mValues.get(position).getNumber()).child("paid").setValue(true);
                     holder.status.setText("Paid");
+                    holder.status.setBackgroundColor(Color.parseColor("#C1F1E4"));
                 }
             });
         }
