@@ -28,6 +28,18 @@ public class MainPage extends AppCompatActivity{
     private static final String TAG = "LOG_TAG";
 
     private FirebaseUser user;
+    private FirebaseAuth mAuth = FirebaseAuth.getInstance();
+    FirebaseAuth.AuthStateListener authStateListener = new FirebaseAuth.AuthStateListener() {
+        @Override
+        public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
+            FirebaseUser user = firebaseAuth.getCurrentUser();
+            if(user == null){
+                Intent intent = new Intent(MainPage.this, LoginPage.class);
+                startActivity(intent);
+                finish();
+            }
+        }
+    };
     private DatabaseReference mDatabase;
     private String userId;
     private String userToken;
@@ -59,6 +71,18 @@ public class MainPage extends AppCompatActivity{
                     }
                 });
 
+    }
+
+    @Override
+    public void onStart(){
+        super.onStart();
+        mAuth.addAuthStateListener(authStateListener);
+    }
+
+    @Override
+    public void onStop(){
+        super.onStop();
+        mAuth.removeAuthStateListener(authStateListener);
     }
 
     @Override
@@ -106,6 +130,10 @@ public class MainPage extends AppCompatActivity{
             case R.id.action_contact_us:
                 Intent launchContactUs = new Intent(MainPage.this, ContactUs.class);
                 startActivity(launchContactUs);
+                return true;
+
+            case R.id.action_logout:
+                mAuth.signOut();
                 return true;
 
             default:

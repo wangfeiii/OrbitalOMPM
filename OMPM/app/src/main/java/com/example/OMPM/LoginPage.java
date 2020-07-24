@@ -44,12 +44,22 @@ public class LoginPage extends AppCompatActivity implements View.OnClickListener
     private static final int STATE_SIGNIN_FAILED = 5;
     private static final int STATE_SIGNIN_SUCCESS = 6;
 
-    private FirebaseAuth mAuth;
+    private FirebaseAuth mAuth = FirebaseAuth.getInstance(); ;
     private boolean mVerificationInProgress = false;
     private String mVerificationId;
     private PhoneAuthProvider.ForceResendingToken mResendToken;
     private PhoneAuthProvider.OnVerificationStateChangedCallbacks mCallbacks;
     private DatabaseReference mDatabase;
+    FirebaseAuth.AuthStateListener authStateListener = new FirebaseAuth.AuthStateListener() {
+        @Override
+        public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
+            FirebaseUser user = firebaseAuth.getCurrentUser();
+            if(user != null){
+                Intent intent = new Intent(LoginPage.this, MainPage.class);
+                startActivity(intent);
+            }
+        }
+    };
 
     private EditText mPhone;
     private EditText mVerificationCode;
@@ -71,7 +81,6 @@ public class LoginPage extends AppCompatActivity implements View.OnClickListener
         findViewById(R.id.button_resend).setOnClickListener(this);
         findViewById(R.id.button_verify).setOnClickListener(this);
 
-        mAuth = FirebaseAuth.getInstance();
         mDatabase = FirebaseDatabase.getInstance().getReference();
         mCallbacks = new PhoneAuthProvider.OnVerificationStateChangedCallbacks() {
 
@@ -108,12 +117,19 @@ public class LoginPage extends AppCompatActivity implements View.OnClickListener
     @Override
     public void onStart() {
         super.onStart();
+        mAuth.addAuthStateListener(authStateListener);
         FirebaseUser currentUser = mAuth.getCurrentUser();
         updateUI(currentUser);
         if (mVerificationInProgress && validatePhoneNumber()){
             mPhone = (EditText) findViewById(R.id.editText_Phone);
             startPhoneNumberVerification(mPhone.getText().toString());
         }
+    }
+
+    @Override
+    public void onStop(){
+        super.onStop();
+        mAuth.removeAuthStateListener(authStateListener);
     }
 
     @Override
