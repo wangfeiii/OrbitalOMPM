@@ -2,6 +2,7 @@ package com.example.OMPM;
 
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.graphics.Color;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -37,10 +38,12 @@ public class OweOthersAdapter extends RecyclerView.Adapter<OweOthersAdapter.View
     @Override
     public void onBindViewHolder(final ViewHolder holder, int position) {
 
-        if (mValues.get(position).isPaid())
+        if (mValues.get(position).isPaid()) {
+            holder.status.setBackgroundColor(Color.parseColor("#C1F1E4"));
             holder.status.setText("Paid");
-        else
+        } else {
             holder.status.setText("Unpaid");
+        }
 
         NumberFormat formatter = NumberFormat.getCurrencyInstance();
         holder.name.setText(mValues.get(position).getName());
