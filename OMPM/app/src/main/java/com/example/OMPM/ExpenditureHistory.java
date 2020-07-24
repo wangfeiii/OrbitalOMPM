@@ -12,6 +12,7 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Spinner;
+import android.widget.TextView;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -46,7 +47,7 @@ public class ExpenditureHistory extends AppCompatActivity {
     private Date cDate;
     private String currentDate;
 
-
+    private TextView noData;
     private Spinner spinner;
     private LinkedList<String> spinnerArray = new LinkedList<>();
 
@@ -70,6 +71,7 @@ public class ExpenditureHistory extends AppCompatActivity {
 
         monthExpenditureList = new HashMap<>();
 
+        noData = findViewById(R.id.text_noData);
         spinner = findViewById(R.id.spinner_month);
         createSpinner();
     }
@@ -153,14 +155,17 @@ public class ExpenditureHistory extends AppCompatActivity {
                         Processing(newExpenditure);
                     }
                     Listing(monthExpenditureList);
+                    //Initialize RecyclerView
+                    mRecyclerView = findViewById(R.id.recyclerview);
+                    mAdapter = new ExpenditureListAdapter(mRecyclerView.getContext(), mExpenditureList);
+                    mRecyclerView.setLayoutManager(new LinearLayoutManager(mRecyclerView.getContext()));
+                    DividerItemDecoration itemDecor = new DividerItemDecoration(mRecyclerView.getContext(), DividerItemDecoration.VERTICAL);
+                    mRecyclerView.addItemDecoration(itemDecor);
+                    mRecyclerView.setAdapter(mAdapter);
                 }
-                //Initialize RecyclerView
-                mRecyclerView = findViewById(R.id.recyclerview);
-                mAdapter = new ExpenditureListAdapter(mRecyclerView.getContext(), mExpenditureList);
-                mRecyclerView.setLayoutManager(new LinearLayoutManager(mRecyclerView.getContext()));
-                DividerItemDecoration itemDecor = new DividerItemDecoration(mRecyclerView.getContext(), DividerItemDecoration.VERTICAL);
-                mRecyclerView.addItemDecoration(itemDecor);
-                mRecyclerView.setAdapter(mAdapter);
+                else {
+                    noData.setVisibility(View.VISIBLE);
+                }
             }
             @Override
             public void onCancelled(@NonNull DatabaseError databaseError) {

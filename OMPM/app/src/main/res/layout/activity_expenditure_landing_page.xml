@@ -1,10 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".ExpenditureLandingPage">
+    tools:context=".ExpenditureLandingPage"
+    android:background="@drawable/redgradientbackground">
 
     <Spinner
         android:id="@+id/spinner_monthly"
@@ -12,46 +13,53 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
         android:layout_marginTop="8dp"
-        android:textAlignment="textStart"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        android:textAlignment="textStart" />
 
-    <com.github.mikephil.charting.charts.PieChart
-        android:id="@+id/pc_Expenditure"
-        android:layout_width="match_parent"
-        android:layout_marginTop="28dp"
-        android:layout_marginBottom="28dp"
-        android:layout_height="0dp"
+    <androidx.cardview.widget.CardView
+        android:layout_width="390dp"
+        android:layout_height="500dp"
+        android:layout_gravity="center_horizontal"
+        android:layout_centerHorizontal="true"
+        android:layout_marginStart="10dp"
+        android:layout_marginTop="60dp"
+        app:cardBackgroundColor="#fff"
+        app:cardCornerRadius="5dp"
+        app:cardElevation="8dp">
 
-        app:layout_constraintBottom_toTopOf="@+id/fab_add"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.494"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/spinner_monthly"
-        ></com.github.mikephil.charting.charts.PieChart>
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
 
-    <TextView
-        android:id="@+id/text_noData"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/no_recorded_expenditures"
-        android:visibility="invisible"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+            <com.github.mikephil.charting.charts.PieChart
+                android:id="@+id/pc_Expenditure"
+                android:layout_width="match_parent"
+                android:layout_height="450dp"
+                android:layout_centerHorizontal="true"
+
+                />
+
+            <TextView
+                android:id="@+id/text_noData"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/no_recorded_expenditures"
+                android:visibility="invisible"
+                android:layout_centerInParent="true"/>
+        </RelativeLayout>
+
+    </androidx.cardview.widget.CardView>
+
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/fab_add"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="16dp"
+        android:layout_marginTop="530dp"
+        app:elevation="16dp"
         android:clickable="true"
         android:onClick="launchExpenditureInput"
-        app:backgroundTint="#E91E2F"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
+        android:layout_centerHorizontal="true"
+        app:backgroundTint="#4bb6ef"
         app:srcCompat="@drawable/ic_baseline_add_24" />
 
-</androidx.constraintlayout.widget.ConstraintLayout>
+</RelativeLayout>

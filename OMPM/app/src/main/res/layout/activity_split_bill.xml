@@ -4,127 +4,159 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:layout_marginLeft="20dp"
-    android:layout_marginRight="20dp"
-    android:layout_marginBottom="20dp"
-    tools:context=".SplitBill">
+    tools:context=".SplitBill"
+    android:background="@drawable/greengradientbackground">
 
-    <LinearLayout
+    <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:orientation="vertical"
-        android:divider="@color/colorPrimaryDark"
-        android:dividerPadding="20dp"
-        android:showDividers="middle">
+        android:layout_height="match_parent">
 
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal">
-
-            <ImageView
-                android:layout_width="wrap_content"
-                android:layout_height="40dp"
-                android:layout_marginRight="10dp"
-                app:srcCompat="@drawable/ic_yourself" />
-
-            <EditText
-                android:id="@+id/name"
+        <androidx.cardview.widget.CardView
+            android:id="@+id/cardView"
+            android:layout_width="350dp"
+            android:layout_height="400dp"
+            android:layout_gravity="center_horizontal"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="60dp"
+            app:cardBackgroundColor="#fff"
+            app:cardCornerRadius="5dp">
+            <RelativeLayout
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:background="@null"
-                android:hint="Your Name" />
-        </LinearLayout>
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal">
-
-            <ImageView
-                android:layout_width="wrap_content"
-                android:layout_height="40dp"
-                android:layout_marginRight="10dp"
-                app:srcCompat="@drawable/ic_money" />
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="vertical">
-
-                <EditText
-                    android:id="@+id/input"
-                    android:layout_width="match_parent"
-                    android:layout_height="40dp"
-                    android:background="@null"
-                    android:hint="Amount"
-                    android:inputType="numberDecimal"/>
+                android:layout_height="match_parent">
 
                 <LinearLayout
-                    android:id="@+id/linear"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:orientation="horizontal">
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:orientation="vertical"
+                    android:divider="@color/colorPrimaryDark"
+                    android:layout_marginStart="10dp"
+                    android:layout_marginTop="10dp"
+                    android:dividerPadding="20dp"
+                    android:showDividers="middle">
 
-                    <CheckBox
-                        android:id="@+id/checkBox_GST"
-                        android:layout_width="wrap_content"
+                    <LinearLayout
+                        android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_marginRight="20dp"
-                        android:text="GST"
-                        android:textColor="@android:color/black" />
+                        android:orientation="horizontal">
 
-                    <CheckBox
-                        android:id="@+id/Service_Charge"
-                        android:layout_width="wrap_content"
+                        <ImageView
+                            android:layout_width="wrap_content"
+                            android:layout_height="40dp"
+                            android:layout_marginRight="10dp"
+                            app:srcCompat="@drawable/ic_yourself" />
+
+                        <EditText
+                            android:id="@+id/name"
+                            android:inputType="text"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:background="@null"
+                            android:imeOptions="actionDone"
+                            android:hint="Your Name" />
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:text="Service Charge"
-                        android:textColor="@android:color/black" />
-                    
+                        android:orientation="horizontal">
 
+                        <ImageView
+                            android:layout_width="wrap_content"
+                            android:layout_height="40dp"
+                            android:layout_marginRight="10dp"
+                            app:srcCompat="@drawable/ic_money" />
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:orientation="vertical">
+
+                            <EditText
+                                android:id="@+id/input"
+                                android:layout_width="match_parent"
+                                android:layout_height="40dp"
+                                android:background="@null"
+                                android:imeOptions="actionDone"
+                                android:hint="Amount"
+                                android:inputType="numberDecimal"/>
+
+                            <LinearLayout
+                                android:id="@+id/linear"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:orientation="horizontal">
+
+                                <CheckBox
+                                    android:id="@+id/checkBox_GST"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_marginRight="20dp"
+                                    android:text="GST"
+                                    android:textColor="@android:color/black" />
+
+                                <CheckBox
+                                    android:id="@+id/Service_Charge"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:text="Service Charge"
+                                    android:textColor="@android:color/black" />
+
+
+                            </LinearLayout>
+                        </LinearLayout>
+                    </LinearLayout>
+
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        android:paddingVertical="5dp">
+
+                        <ImageView
+
+                            android:layout_width="wrap_content"
+                            android:layout_height="40dp"
+                            android:layout_marginRight="10dp"
+                            app:srcCompat="@drawable/ic_friends" />
+
+                        <androidx.recyclerview.widget.RecyclerView
+                            android:id="@+id/item_list"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:scrollbars="vertical"
+                            android:paddingRight="20dp"/>
+
+                    </LinearLayout>
                 </LinearLayout>
-            </LinearLayout>
-        </LinearLayout>
 
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:paddingVertical="5dp">
-
-            <ImageView
+            <com.google.android.material.floatingactionbutton.FloatingActionButton
+                android:id="@+id/fab_AddItems"
                 android:layout_width="wrap_content"
-                android:layout_height="40dp"
-                android:layout_marginRight="10dp"
-                app:srcCompat="@drawable/ic_friends" />
-
-            <androidx.recyclerview.widget.RecyclerView
-                android:id="@+id/item_list"
-                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:scrollbars="vertical"
-                android:paddingRight="20dp"/>
+                android:layout_alignParentRight="true"
+                android:layout_alignParentBottom="true"
+                android:layout_marginBottom="8dp"
+                android:layout_marginEnd="8dp"
+                android:clickable="true"
+                android:src="@drawable/ic_add"
+                app:backgroundTint="#716A6A" />
 
-        </LinearLayout>
-    </LinearLayout>
+            </RelativeLayout>
 
-    <com.google.android.material.floatingactionbutton.FloatingActionButton
-        android:id="@+id/fab_AddItems"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:clickable="true"
-        android:src="@drawable/ic_add"
-        app:backgroundTint="#716A6A"
-        android:layout_gravity="bottom|left"
-        android:layout_marginLeft="10dp"/>
+        </androidx.cardview.widget.CardView>
 
-    <Button
-        android:id="@+id/Confirm"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Confirm"
-        android:layout_gravity="bottom|right"
-        android:layout_marginRight="10dp"/>
+
+        <Button
+            android:id="@+id/Confirm"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/confirm"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="40dp"
+            android:background="@drawable/profilebuttonstyle"
+            android:layout_below="@id/cardView"/>
+
+    </RelativeLayout>
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>
