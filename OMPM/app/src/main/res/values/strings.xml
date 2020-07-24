@@ -54,6 +54,7 @@
         \n
     </string>
     <string name="history">History</string>
+    <string name="logout">Logout</string>
 
 
     <string-array name="expenditure_choice_array">
