@@ -1,22 +1,28 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/relativeLayout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".ExpenditureInput"
-    android:background="@drawable/redgradientbackground">
+    android:background="#FFEAD3"
+    tools:context=".ExpenditureInput">
 
     <androidx.cardview.widget.CardView
         android:id="@+id/cardView"
-        android:layout_width="390dp"
-        android:layout_height="450dp"
-        android:layout_centerHorizontal="true"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginHorizontal="40dp"
         android:layout_marginTop="40dp"
+        android:layout_marginBottom="80dp"
         android:elevation="8dp"
         app:cardBackgroundColor="#fff"
         app:cardCornerRadius="5dp"
-        app:cardElevation="10dp">
+        app:cardElevation="10dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
@@ -88,9 +94,9 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="20dp"
                 android:layout_marginEnd="8dp"
-                android:imeOptions="actionDone"
                 android:ems="10"
                 android:hint="@string/item"
+                android:imeOptions="actionDone"
                 android:inputType="text"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/text_QuestionItem" />
@@ -111,9 +117,9 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="20dp"
                 android:layout_marginEnd="8dp"
-                android:imeOptions="actionDone"
                 android:ems="10"
                 android:hint="@string/cost"
+                android:imeOptions="actionDone"
                 android:inputType="numberDecimal"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/text_QuestionCost" />
@@ -126,12 +132,13 @@
         android:id="@+id/button"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_centerHorizontal="true"
-        android:layout_below="@id/cardView"
-        android:layout_marginTop="30dp"
+        android:background="@drawable/profilebuttonstyle"
         android:gravity="center"
         android:onClick="confirm"
-        android:background="@drawable/profilebuttonstyle"
-        android:text="@string/button_confirm" />
+        android:text="@string/button_confirm"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/cardView" />
 
-</RelativeLayout>
+</androidx.constraintlayout.widget.ConstraintLayout>
