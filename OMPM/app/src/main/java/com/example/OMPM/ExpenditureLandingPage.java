@@ -88,6 +88,14 @@ public class ExpenditureLandingPage extends AppCompatActivity {
         spinner = findViewById(R.id.spinner_monthly);
         createSpinner();
 
+        (findViewById(R.id.history)).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent launchHistory = new Intent(ExpenditureLandingPage.this, ExpenditureHistory.class);
+                startActivity(launchHistory);
+            }
+        });
+
         pcExpenditure.setOnChartValueSelectedListener(new OnChartValueSelectedListener() {
             @Override
             public void onValueSelected(Entry e, Highlight h) {
@@ -104,15 +112,13 @@ public class ExpenditureLandingPage extends AppCompatActivity {
                 pcExpenditure.setCenterText("Total Expenditure : \n" + sExpenditure);
             }
         });
-
     }
-
+/*
     @Override
     public boolean onCreateOptionsMenu(Menu menu){
         getMenuInflater().inflate(R.menu.expenditure_menu, menu);
         return super.onCreateOptionsMenu(menu);
     }
-
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item){
@@ -126,8 +132,7 @@ public class ExpenditureLandingPage extends AppCompatActivity {
         }
         return super.onOptionsItemSelected(item);
     }
-
-
+ */
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data){
@@ -257,7 +262,7 @@ public class ExpenditureLandingPage extends AppCompatActivity {
         NumberFormat formatter = NumberFormat.getCurrencyInstance();
         String sExpenditure = formatter.format(tExpenditure);
         pcExpenditure.setCenterText("Total Expenditure : \n" + sExpenditure);
-        pcExpenditure.setCenterTextSize(24f);
+        pcExpenditure.setCenterTextSize(20f);
         pcExpenditure.setExtraBottomOffset(20f);
         pcExpenditure.setExtraLeftOffset(20f);
         pcExpenditure.setExtraRightOffset(20f);

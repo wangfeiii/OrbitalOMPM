@@ -48,7 +48,7 @@ public class MainPage extends AppCompatActivity{
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main_page);
-        getSupportActionBar().setDisplayShowTitleEnabled(false);
+        getSupportActionBar().setTitle("OMPM");
 
         mDatabase = FirebaseDatabase.getInstance().getReference();
         user = FirebaseAuth.getInstance().getCurrentUser();
@@ -106,11 +106,12 @@ public class MainPage extends AppCompatActivity{
                 Intent launchProfileS = new Intent(MainPage.this, ProfileSettings.class);
                 startActivity(launchProfileS);
                 return true;
-
+/*
             case R.id.action_app_settings:
                 Intent launchAppS = new Intent(MainPage.this, AppSettings.class);
                 startActivity(launchAppS);
                 return true;
+ */
 
             case R.id.action_rate_us:
                 LayoutInflater inflater = getLayoutInflater();

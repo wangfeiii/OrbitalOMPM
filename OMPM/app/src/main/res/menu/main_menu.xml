@@ -16,12 +16,6 @@
         android:icon="@drawable/ic_profile_settings"
         app:showAsAction="always"/>
     <item
-        android:id="@+id/action_app_settings"
-        android:orderInCategory="3"
-        android:title="@string/app_settings"
-        android:icon="@drawable/ic_app_settings"
-        app:showAsAction="ifRoom"/>
-    <item
         android:id="@+id/action_rate_us"
         android:orderInCategory="4"
         android:title="@string/rate_us"
