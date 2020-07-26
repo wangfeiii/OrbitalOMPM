@@ -15,7 +15,7 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="240sp"
-            android:background="#A5E8F1"
+            android:background="@drawable/bluegradientbackground"
             android:orientation="vertical">
 
             <de.hdodenhof.circleimageview.CircleImageView
@@ -105,7 +105,6 @@
 
             <Button
                 android:id="@+id/update_profile"
-                android:textColor="#fff"
                 android:background="@drawable/profilebuttonstyle"
                 android:layout_marginTop="35dp"
                 android:layout_width="wrap_content"
