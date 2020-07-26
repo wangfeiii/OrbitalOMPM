@@ -36,16 +36,7 @@ public class History extends AppCompatActivity {
         oweMeFragment = new OweMeFragment();
         oweOthersFragment = new OweOthersFragment();
 
-        /*  tabLayout.setupWithViewPager(viewPager);
-
-         */
-
         ViewPagerAdapter viewPagerAdapter = new ViewPagerAdapter(this);
-      /*
-        viewPagerAdapter.addFragment(oweMeFragment,"Owe Me");
-        viewPagerAdapter.addFragment(oweOthersFragment, "Owe Others");
-
-       */
         viewPager.setAdapter(viewPagerAdapter);
         TabLayoutMediator tabLayoutMediator = new TabLayoutMediator(tabLayout, viewPager, new TabLayoutMediator.TabConfigurationStrategy() {
             @Override

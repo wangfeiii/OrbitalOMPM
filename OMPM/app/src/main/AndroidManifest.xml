@@ -48,7 +48,7 @@
         <activity
             android:name=".SplitBill"
             android:label="SplitBill"
-            android:parentActivityName=".MainPage">
+        android:parentActivityName=".MainPage">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.example.OMPM.MainPage" />

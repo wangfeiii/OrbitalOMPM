@@ -47,11 +47,12 @@ public class SplitBill extends AppCompatActivity {
     private Uri contactUri;
     private String contactID;     // contacts unique ID
     private String contactNumber = "";
-    String[] contactListArray;
-    List<Contact> contact_list = new ArrayList<>();
+    private String[] contactListArray;
+    private List<Contact> contact_list = new ArrayList<>();
     boolean[] selected;
-    List<Contact> selected_list = new ArrayList<>();
+    private List<Contact> selected_list = new ArrayList<>();
     private String myName;
+    private int noOfPeople;
 
     private DatabaseReference mDatabase;
     private FirebaseUser user;
@@ -73,6 +74,7 @@ public class SplitBill extends AppCompatActivity {
             //initialize widgets
             final CheckBox gst = findViewById(R.id.checkBox_GST);
             final CheckBox sc = findViewById(R.id.Service_Charge);
+            final CheckBox myself = findViewById(R.id.myself);
             EditText me = findViewById(R.id.name);
             me.setText(user.getDisplayName());
             myName = me.getText().toString();
@@ -80,7 +82,6 @@ public class SplitBill extends AppCompatActivity {
             bill.setFilters(new InputFilter[]{new DecimalDigitsInputFilter(99,2)});
             retrieveContactNumber();
             final WordListAdapter mAdapter = new WordListAdapter(selected_list);
-
 
             (findViewById(R.id.fab_AddItems)).setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -106,7 +107,6 @@ public class SplitBill extends AppCompatActivity {
                                     }
                                     dialog.dismiss();
                                     RecyclerView mRecyclerView = findViewById(R.id.item_list);
-                                  //  mRecyclerView.addItemDecoration(new DividerItemDecoration(mRecyclerView.getContext(), LinearLayoutManager.VERTICAL));
                                     mRecyclerView.setAdapter(mAdapter);
                                     mRecyclerView.setLayoutManager(new LinearLayoutManager(mRecyclerView.getContext()));
                                 }
@@ -143,7 +143,12 @@ public class SplitBill extends AppCompatActivity {
                     if (gst.isChecked())
                         bill_amount = bill_amount * 1.07;
 
-                    indivBill = bill_amount/selected_list.size();
+                    if (myself.isChecked())
+                        noOfPeople = selected_list.size() +1;
+                    else
+                        noOfPeople = selected_list.size();
+
+                    indivBill = bill_amount/noOfPeople;
 
                     SimpleDateFormat sdf = new SimpleDateFormat("yyyy/MM/dd");
                     String date = sdf.format(new Date());
@@ -174,6 +179,7 @@ public class SplitBill extends AppCompatActivity {
                     bill.setText("");
                     gst.setChecked(false);
                     sc.setChecked(false);
+                    myself.setChecked(false);
                     selected_list.clear();
                     mAdapter.notifyDataSetChanged();
                     Toast.makeText(getApplicationContext(), "Debt Updated!", Toast.LENGTH_SHORT).show();

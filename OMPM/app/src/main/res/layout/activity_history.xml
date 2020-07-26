@@ -31,12 +31,12 @@
                 <com.google.android.material.tabs.TabItem
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Owes me" />
+                    android:text="Owes me"/>
 
                 <com.google.android.material.tabs.TabItem
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Owes others" />
+                    android:text="Owes others"/>
 
             </com.google.android.material.tabs.TabLayout>
 

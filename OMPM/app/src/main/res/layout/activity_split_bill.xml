@@ -72,10 +72,9 @@
                             android:layout_marginRight="10dp"
                             app:srcCompat="@drawable/ic_money" />
 
-                        <LinearLayout
+                        <RelativeLayout
                             android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:orientation="vertical">
+                            android:layout_height="wrap_content">
 
                             <EditText
                                 android:id="@+id/input"
@@ -86,9 +85,11 @@
                                 android:imeOptions="actionDone"
                                 android:inputType="numberDecimal" />
 
+
                             <LinearLayout
                                 android:id="@+id/linear"
                                 android:layout_width="wrap_content"
+                                android:layout_below="@+id/input"
                                 android:layout_height="wrap_content"
                                 android:orientation="horizontal">
 
@@ -108,7 +109,14 @@
                                     android:textColor="@android:color/black" />
 
                             </LinearLayout>
-                        </LinearLayout>
+
+                            <CheckBox
+                                android:id="@+id/myself"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_below="@id/linear"
+                                android:text="Include Myself"/>
+                        </RelativeLayout>
                     </LinearLayout>
 
                     <LinearLayout
