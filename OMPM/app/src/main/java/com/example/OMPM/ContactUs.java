@@ -67,6 +67,9 @@ public class ContactUs extends AppCompatActivity {
                 mDatabase.child("contactUs").child(key).child("subject").setValue(subject);
                 mDatabase.child("contactUs").child(key).child("email").setValue(email);
                 mDatabase.child("contactUs").child(key).child("message").setValue(message);
+                subjectET.setText("");
+                emailET.setText("");
+                messageET.setText("");
             }
         });
 

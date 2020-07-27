@@ -10,6 +10,7 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
     private static final String TAG = "LOG_TAG";
 
 
+
     @Override
     public void onNewToken(String token){
         Log.d(TAG, "Refreshed token: " + token);
