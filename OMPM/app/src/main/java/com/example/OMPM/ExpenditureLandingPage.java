@@ -102,14 +102,14 @@ public class ExpenditureLandingPage extends AppCompatActivity {
                 PieEntry pEntry = (PieEntry) e;
                 NumberFormat formatter = NumberFormat.getCurrencyInstance();
                 String sExpenditure = formatter.format(e.getY());
-                pcExpenditure.setCenterText(pEntry.getLabel() + " Expenditure : \n" + sExpenditure);
+                pcExpenditure.setCenterText(pEntry.getLabel() + "\n Expenditure : \n" + sExpenditure);
             }
 
             @Override
             public void onNothingSelected() {
                 NumberFormat formatter = NumberFormat.getCurrencyInstance();
                 String sExpenditure = formatter.format(tExpenditure);
-                pcExpenditure.setCenterText("Total Expenditure : \n" + sExpenditure);
+                pcExpenditure.setCenterText("Total \n Expenditure : \n" + sExpenditure);
             }
         });
     }
@@ -261,7 +261,7 @@ public class ExpenditureLandingPage extends AppCompatActivity {
         pcExpenditure.setDrawEntryLabels(false);
         NumberFormat formatter = NumberFormat.getCurrencyInstance();
         String sExpenditure = formatter.format(tExpenditure);
-        pcExpenditure.setCenterText("Total Expenditure : \n" + sExpenditure);
+        pcExpenditure.setCenterText("Total \n Expenditure : \n" + sExpenditure);
         pcExpenditure.setCenterTextSize(20f);
         pcExpenditure.setExtraBottomOffset(20f);
         pcExpenditure.setExtraLeftOffset(20f);
