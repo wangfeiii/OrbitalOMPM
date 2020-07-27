@@ -34,6 +34,7 @@ import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.OnProgressListener;
@@ -83,7 +84,6 @@ public class ProfileSettings extends AppCompatActivity {
             name = user.getDisplayName();
             photoUrl = user.getPhotoUrl();
             userId = user.getUid();
-            email = user.getEmail();
             phoneNumber = user.getPhoneNumber();
         }
 
@@ -101,9 +101,24 @@ public class ProfileSettings extends AppCompatActivity {
             tPhoneNumber.setText(phoneNumber);
         }
 
-        if(email != null){
-            eEmail.setText(email);
-        }
+        Query emailQuery = mDatabase
+                .child("users")
+                .child(userId)
+                .child("email");
+        emailQuery.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                if (dataSnapshot.exists()){
+                    email = String.valueOf(dataSnapshot.getValue());
+                    eEmail.setText(email);
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
 
         if (photoUrl != null){
             updateImage(photoUrl);
@@ -121,7 +136,10 @@ public class ProfileSettings extends AppCompatActivity {
                 String profileEmail = eEmail.getText().toString();
                 UserProfileChangeRequest profileUpdates = new UserProfileChangeRequest.Builder()
                         .setDisplayName(profileName).build();
-                user.updateEmail(profileEmail);
+                mDatabase.child("users")
+                        .child(userId)
+                        .child("email")
+                        .setValue(profileEmail);
                 user.updateProfile(profileUpdates).addOnCompleteListener(new OnCompleteListener<Void>() {
                     @Override
                     public void onComplete(@NonNull Task<Void> task) {
