@@ -50,7 +50,7 @@
     <string name="email">Email</string>
 
     <string name="Address">
-        <font size='25' face='serif'><b>Address </b></font>
+        <font face='serif' size='25'><b>Address </b></font>
         <font size='10'>\n\n</font>
         <font size='17'>123 ABC Road #01-01
         \n
@@ -59,7 +59,7 @@
     </string>
 
     <string name="phone">
-        <font size='25' face='serif'><b>Phone </b></font>
+        <font face='serif' size='25'><b>Phone </b></font>
         <font size='10'>\n\n</font>
         <font size='17'>Tel: +(65) 60000000 </font></string>
 

@@ -1,10 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:orientation="horizontal"
     android:paddingRight="10dp"
     android:paddingVertical="10dp">
 
@@ -13,16 +10,28 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentLeft="true"
-        android:layout_toLeftOf="@id/imageView"
         android:text="contact"
         android:textColor="@android:color/black"
         android:textSize="18sp" />
+    <EditText
+        android:id="@+id/percentage"
+        android:background="@drawable/edit_text_border"
+        android:layout_width="30dp"
+        android:layout_height="wrap_content"
+        android:layout_toStartOf="@id/percent"/>
+    <TextView
+        android:id="@+id/percent"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="%"
+        android:layout_centerVertical="true"
+        android:layout_toLeftOf="@id/imageView"/>
 
     <ImageView
         android:id="@+id/imageView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentRight="true"
-        android:src="@drawable/ic_delete"/>
+        android:src="@drawable/ic_delete" />
 
 </RelativeLayout>

@@ -3,16 +3,27 @@ package com.example.OMPM;
 public class Contact {
     private String name;
     private String phone;
-    private double debt;
     private boolean paid = false;
+    private String percentage = "0";
+
 
     public Contact(String name, String phone) {
         this.name = name;
         this.phone = phone;
     }
 
+    public Contact(String name, String phone,String percentage) {
+        this.name = name;
+        this.phone = phone;
+        this.percentage =percentage;
+    }
+
     public String getName() {
         return name;
+    }
+
+    public String getPercentage() {
+        return percentage;
     }
 
     public String getPhone() {
@@ -21,12 +32,13 @@ public class Contact {
 
     public boolean isPaid() { return paid;}
 
+    public void setPercentage(String perc) {
+        this.percentage = perc;
+    }
+
     public String toList() {
         return this.name +": " + this.phone;
     }
-    @Override
-    public String toString() {
-        return this.name +": " + this.debt;
-    }
+
 }
 
