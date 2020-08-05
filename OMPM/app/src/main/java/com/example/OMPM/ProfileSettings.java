@@ -212,6 +212,7 @@ public class ProfileSettings extends AppCompatActivity {
                                 public void onComplete(@NonNull Task<Void> task) {
                                   if (task.isSuccessful()){
                                       Log.d(TAG, "Profile Picture Updated");
+                                      Toast.makeText(getApplicationContext(), "Profile Picture Updated!", Toast.LENGTH_SHORT).show();
                                       updateImage(downloadUri);
                                   }
                                 }
