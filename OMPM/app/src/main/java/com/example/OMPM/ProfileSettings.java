@@ -110,7 +110,9 @@ public class ProfileSettings extends AppCompatActivity {
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 if (dataSnapshot.exists()){
                     email = String.valueOf(dataSnapshot.getValue());
-                    eEmail.setText(email);
+                    if (!email.equals("")) {
+                        eEmail.setText(email);
+                    }
                 }
             }
 
