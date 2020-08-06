@@ -83,7 +83,7 @@ public class SplitBill extends AppCompatActivity implements AdapterView.OnItemSe
     private EditText myShare;
     private TextView total;
     private int tot;
-    private boolean filled;
+    private boolean filled = true;
 
     private DatabaseReference mDatabase;
     private FirebaseUser user;
@@ -116,7 +116,6 @@ public class SplitBill extends AppCompatActivity implements AdapterView.OnItemSe
             findViewById(R.id.calc).setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    tot = 0;
                     checkBlank();
                     setTextView(String.valueOf(tot));
                 }
@@ -338,6 +337,13 @@ public class SplitBill extends AppCompatActivity implements AdapterView.OnItemSe
                             break;
 
                         case R.id.btn2:
+                            if (myself.isChecked()) {
+                                if (myShare.getText().toString().isEmpty()) {
+                                    Toast.makeText(getApplicationContext(), "Please do not leave blanks!",
+                                            Toast.LENGTH_SHORT).show();
+                                    return;
+                                }
+                            }
                             if (tot>100) {
                                 Toast.makeText(getApplicationContext(), "Total percentage cannot be more than 100!", Toast.LENGTH_SHORT).show();
                                 return;
@@ -423,9 +429,11 @@ public class SplitBill extends AppCompatActivity implements AdapterView.OnItemSe
         myself.setChecked(false);
         selected_list.clear();
         thing.setText("");
+        total.setText("Total Percentage: 0%");
     }
 
     private void checkBlank() {
+        tot = 0;
         for (Contact c:selected_list) {
             try {
                 tot = tot + Integer.parseInt(c.getPercentage());
