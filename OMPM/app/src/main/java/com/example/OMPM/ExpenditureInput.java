@@ -21,6 +21,7 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.Spinner;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -54,7 +55,7 @@ public class ExpenditureInput extends AppCompatActivity implements AdapterView.O
     private String expenditureType;
     private String item;
     private String cost;
-    private String monthDate;
+    private String monthDate = "";
     private String monthsaveDate;
     private String spinnerDate;
     final Calendar myCalendar = Calendar.getInstance();
@@ -229,6 +230,16 @@ public class ExpenditureInput extends AppCompatActivity implements AdapterView.O
         item = eItem.getText().toString();
         EditText eCost = findViewById(R.id.editText_Cost);
         cost = eCost.getText().toString();
+        if(monthDate.equals("")){
+            Toast.makeText(getApplicationContext(), "Please select a date!",
+                    Toast.LENGTH_SHORT).show();
+            return;
+        }
+        if(item.equals("") || cost.equals("")){
+            Toast.makeText(getApplicationContext(), "Please do not leave blanks!",
+                    Toast.LENGTH_SHORT).show();
+            return;
+        }
 
         DatabaseReference expenditureDateReference = mDatabase
                                                 .child("users")
