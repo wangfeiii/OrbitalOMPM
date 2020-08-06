@@ -116,16 +116,16 @@ public class SplitBill extends AppCompatActivity implements AdapterView.OnItemSe
             findViewById(R.id.calc).setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-
+                    tot = 0;
                     if (myself.isChecked()) {
                         if (myShare.getText().toString().isEmpty()) {
                             Toast.makeText(getApplicationContext(), "Please do not leave blanks!",
                                     Toast.LENGTH_SHORT).show();
                             return;
                         }
+                        tot = tot + Integer.parseInt(myShare.getText().toString());
                     }
                     checkBlank();
-                    tot = tot + Integer.parseInt(myShare.getText().toString());
                     if (tot>100) {
                         Toast.makeText(getApplicationContext(), "Total percentage cannot be more than 100!", Toast.LENGTH_SHORT).show();
                     }
@@ -349,18 +349,19 @@ public class SplitBill extends AppCompatActivity implements AdapterView.OnItemSe
                             break;
 
                         case R.id.btn2:
+                            tot = 0;
                             if (myself.isChecked()) {
                                 if (myShare.getText().toString().isEmpty()) {
                                     Toast.makeText(getApplicationContext(), "Please do not leave blanks!",
                                             Toast.LENGTH_SHORT).show();
                                     return;
                                 }
+                                tot = tot + Integer.parseInt(myShare.getText().toString());
                             }
 
                             checkBlank();
-                            tot = tot + Integer.parseInt(myShare.getText().toString());
-                            if (tot>100) {
-                                Toast.makeText(getApplicationContext(), "Total percentage cannot be more than 100!", Toast.LENGTH_SHORT).show();
+                            if (tot!=100) {
+                                Toast.makeText(getApplicationContext(), "Total percentage must be 100!", Toast.LENGTH_SHORT).show();
                                 return;
                             }
                             if (myself.isChecked()) {
@@ -448,7 +449,6 @@ public class SplitBill extends AppCompatActivity implements AdapterView.OnItemSe
     }
 
     private void checkBlank() {
-        tot = 0;
         for (Contact c:selected_list) {
             try {
                 tot = tot + Integer.parseInt(c.getPercentage());
@@ -482,7 +482,9 @@ public class SplitBill extends AppCompatActivity implements AdapterView.OnItemSe
 
                                 for (int i = 0; i < selected.length; i++) {
                                     if (selected[i]) {
-                                        selected_list.add(contact_list.get(i));
+                                        if (!selected_list.contains(contact_list.get(i)) || contact_list.get(i).equals(user.getPhoneNumber())) {
+                                            selected_list.add(contact_list.get(i));
+                                        }
                                     }
                                 }
                                 dialog.dismiss();
@@ -526,7 +528,9 @@ public class SplitBill extends AppCompatActivity implements AdapterView.OnItemSe
 
                                 for (int i = 0; i < selected.length; i++) {
                                     if (selected[i]) {
-                                        selected_list.add(contact_list.get(i));
+                                        if (!selected_list.contains(contact_list.get(i)) || contact_list.get(i).equals(user.getPhoneNumber())) {
+                                            selected_list.add(contact_list.get(i));
+                                        }
                                     }
                                 }
                                 dialog.dismiss();
