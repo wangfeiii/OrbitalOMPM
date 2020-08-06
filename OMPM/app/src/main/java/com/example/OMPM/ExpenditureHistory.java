@@ -162,6 +162,7 @@ public class ExpenditureHistory extends AppCompatActivity {
                     DividerItemDecoration itemDecor = new DividerItemDecoration(mRecyclerView.getContext(), DividerItemDecoration.VERTICAL);
                     mRecyclerView.addItemDecoration(itemDecor);
                     mRecyclerView.setAdapter(mAdapter);
+                    noData.setVisibility(View.INVISIBLE);
                 }
                 else {
                     noData.setVisibility(View.VISIBLE);
