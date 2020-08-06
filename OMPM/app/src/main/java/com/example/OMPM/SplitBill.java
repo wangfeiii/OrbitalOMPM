@@ -17,6 +17,7 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.provider.ContactsContract;
 import android.text.InputFilter;
+import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
@@ -50,6 +51,7 @@ import java.util.Map;
 public class SplitBill extends AppCompatActivity implements AdapterView.OnItemSelectedListener{
 
     private static final int PERMISSIONS_REQUEST = 100;
+    private static final String TAG = "LOG_TAG";
 
     private final ArrayList<Debt> mItemsList = new ArrayList<>();
     private RecyclerView mRecyclerView;
@@ -482,7 +484,7 @@ public class SplitBill extends AppCompatActivity implements AdapterView.OnItemSe
 
                                 for (int i = 0; i < selected.length; i++) {
                                     if (selected[i]) {
-                                        if (!selected_list.contains(contact_list.get(i)) || contact_list.get(i).getPhone().replaceAll("\\s", "").equals(user.getPhoneNumber().replaceAll("\\s", ""))) {
+                                        if (!selected_list.contains(contact_list.get(i)) && !contact_list.get(i).getPhone().replaceAll("\\s", "").equals(user.getPhoneNumber())) {
                                             selected_list.add(contact_list.get(i));
                                         }
                                     }
@@ -528,7 +530,7 @@ public class SplitBill extends AppCompatActivity implements AdapterView.OnItemSe
 
                                 for (int i = 0; i < selected.length; i++) {
                                     if (selected[i]) {
-                                        if (!selected_list.contains(contact_list.get(i)) || contact_list.get(i).getPhone().replaceAll("\\s", "").equals(user.getPhoneNumber().replaceAll("\\s", ""))) {
+                                        if (!selected_list.contains(contact_list.get(i)) && !contact_list.get(i).getPhone().replaceAll("\\s", "").equals(user.getPhoneNumber())) {
                                             selected_list.add(contact_list.get(i));
                                         }
                                     }
