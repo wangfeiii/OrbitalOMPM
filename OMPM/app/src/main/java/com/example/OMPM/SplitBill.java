@@ -75,7 +75,6 @@ public class SplitBill extends AppCompatActivity implements AdapterView.OnItemSe
     private String item;
     private Spinner sExpenditureChoices;
     private Expenditure editable;
-    private String flag;
     private String expenditureType;
     private Expenditure newExpenditure;
     private String monthDate;
@@ -123,9 +122,6 @@ public class SplitBill extends AppCompatActivity implements AdapterView.OnItemSe
                 }
             });
 
-            Intent intent = getIntent();
-            flag = intent.getStringExtra("com.example.twoactivities.extra.FLAG");
-
             //Spinner Stuff
             sExpenditureChoices = findViewById(R.id.spinner_ExpenditureChoice);
             ArrayAdapter<CharSequence> exAdapter = ArrayAdapter.createFromResource(this,
@@ -145,8 +141,8 @@ public class SplitBill extends AppCompatActivity implements AdapterView.OnItemSe
             int id = radioGroup.getCheckedRadioButtonId();
             switch (id) {
                 case R.id.btn1:
-                    findViewById(R.id.perc).setVisibility(View.INVISIBLE);
-                    myShare.setVisibility(View.INVISIBLE);
+                    findViewById(R.id.perc).setVisibility(View.GONE);
+                    myShare.setVisibility(View.GONE);
                     total.setVisibility(View.INVISIBLE);
                     findViewById(R.id.calc).setVisibility(View.INVISIBLE);
                     equal();
@@ -165,7 +161,6 @@ public class SplitBill extends AppCompatActivity implements AdapterView.OnItemSe
                             }
                         }
                     });
-
                     unequal();
                     break;
             }
@@ -176,8 +171,20 @@ public class SplitBill extends AppCompatActivity implements AdapterView.OnItemSe
                     switch (checkedId) {
                         case R.id.btn1:
                             clear();
-                            myShare.setVisibility(View.INVISIBLE);
-                            findViewById(R.id.perc).setVisibility(View.INVISIBLE);
+                            myself.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+                                @Override
+                                public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                                    if (isChecked) {
+                                        myShare.setVisibility(View.INVISIBLE);
+                                        findViewById(R.id.perc).setVisibility(View.INVISIBLE);
+                                    } else {
+                                        myShare.setVisibility(View.INVISIBLE);
+                                        findViewById(R.id.perc).setVisibility(View.INVISIBLE);
+                                    }
+                                }
+                            });
+                            myShare.setVisibility(View.GONE);
+                            findViewById(R.id.perc).setVisibility(View.GONE);
                             total.setVisibility(View.INVISIBLE);
                             findViewById(R.id.calc).setVisibility(View.INVISIBLE);
                             adapter.notifyDataSetChanged();
@@ -331,6 +338,10 @@ public class SplitBill extends AppCompatActivity implements AdapterView.OnItemSe
                             break;
 
                         case R.id.btn2:
+                            if (tot>100) {
+                                Toast.makeText(getApplicationContext(), "Total percentage cannot be more than 100!", Toast.LENGTH_SHORT).show();
+                                return;
+                            }
                             if (myself.isChecked()) {
                                 DatabaseReference expenditureDateReference = mDatabase
                                         .child("users")
@@ -523,19 +534,6 @@ public class SplitBill extends AppCompatActivity implements AdapterView.OnItemSe
         return index;
     }
 
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item){
-        switch (item.getItemId()){
-            case android.R.id.home:
-                if (flag.equals("HistoryPage")){
-                    getIntent().removeExtra("com.example.twoactivities.extra.EXPENDITURE");
-                }
-                getIntent().removeExtra("com.example.twoactivities.extra.FLAG");
-                finish();
-                return true;
-        }
-        return super.onOptionsItemSelected(item);
-    }
 
     @Override
     public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
