@@ -136,21 +136,26 @@ public class ProfileSettings extends AppCompatActivity {
             public void onClick(View v) {
                 String profileName = eName.getText().toString();
                 String profileEmail = eEmail.getText().toString();
-                UserProfileChangeRequest profileUpdates = new UserProfileChangeRequest.Builder()
-                        .setDisplayName(profileName).build();
-                mDatabase.child("users")
-                        .child(userId)
-                        .child("email")
-                        .setValue(profileEmail);
-                user.updateProfile(profileUpdates).addOnCompleteListener(new OnCompleteListener<Void>() {
-                    @Override
-                    public void onComplete(@NonNull Task<Void> task) {
-                        if (task.isSuccessful()){
-                            Toast.makeText(getApplicationContext(), "User Profile Updated!", Toast.LENGTH_SHORT).show();
-                            Log.d(TAG, "User profile Updated");
+                if (!profileName.equals("")) {
+                    UserProfileChangeRequest profileUpdates = new UserProfileChangeRequest.Builder()
+                            .setDisplayName(profileName).build();
+                    mDatabase.child("users")
+                            .child(userId)
+                            .child("email")
+                            .setValue(profileEmail);
+                    user.updateProfile(profileUpdates).addOnCompleteListener(new OnCompleteListener<Void>() {
+                        @Override
+                        public void onComplete(@NonNull Task<Void> task) {
+                            if (task.isSuccessful()) {
+                                Toast.makeText(getApplicationContext(), "User Profile Updated!", Toast.LENGTH_SHORT).show();
+                                Log.d(TAG, "User profile Updated");
+                            }
                         }
-                    }
-                });
+                    });
+                }
+                else{
+                    Toast.makeText(getApplicationContext(), "Please Enter Name", Toast.LENGTH_SHORT).show();
+                }
 
             }
         });
