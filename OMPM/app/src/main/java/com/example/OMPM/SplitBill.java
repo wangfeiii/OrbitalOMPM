@@ -129,7 +129,7 @@ public class SplitBill extends AppCompatActivity implements AdapterView.OnItemSe
                     }
                     checkBlank();
                     if (tot>100) {
-                        Toast.makeText(getApplicationContext(), "Total percentage cannot be more than 100%!", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(getApplicationContext(), "Total percentage must be 100!", Toast.LENGTH_SHORT).show();
                     }
                     setTextView(String.valueOf(tot));
                 }

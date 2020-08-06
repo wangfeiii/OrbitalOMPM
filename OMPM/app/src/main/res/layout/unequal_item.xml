@@ -4,7 +4,7 @@
     android:layout_height="wrap_content"
     android:orientation="horizontal"
     android:paddingRight="10dp"
-    android:paddingVertical="10dp">
+    android:paddingVertical="3dp">
 
     <TextView
         android:id="@+id/contacts"
@@ -18,10 +18,10 @@
 
     <EditText
         android:id="@+id/percent"
-        android:layout_width="60dp"
-        android:layout_height="30dp"
-        android:padding="5dp"
-        android:textSize="18sp"
+        android:layout_width="40dp"
+        android:layout_height="25dp"
+        android:paddingHorizontal="3dp"
+        android:textSize="16sp"
         android:inputType="number"
         android:layout_toLeftOf="@id/sign"
         android:background="@drawable/edit_text_border"/>
