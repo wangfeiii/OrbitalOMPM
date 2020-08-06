@@ -565,7 +565,7 @@ public class SplitBill extends AppCompatActivity implements AdapterView.OnItemSe
             }
         }
         return index;
-    }git
+    }
 
     @Override
     public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
