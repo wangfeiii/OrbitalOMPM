@@ -222,9 +222,7 @@ public class ExpenditureInput extends AppCompatActivity implements AdapterView.O
     }
 
     @Override
-    public void onNothingSelected(AdapterView<?> parent) {
-
-    }
+    public void onNothingSelected(AdapterView<?> parent) { }
 
     public void confirm(View view) {
 
@@ -237,6 +235,7 @@ public class ExpenditureInput extends AppCompatActivity implements AdapterView.O
                                                 .child(userId)
                                                 .child("Expenditures")
                                                 .child(monthDate);
+
         String key = expenditureDateReference.push().getKey();
         //Creates new Expenditure;
         newExpenditure = new Expenditure(

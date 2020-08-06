@@ -60,6 +60,10 @@ public class ContactUs extends AppCompatActivity {
                     Toast.makeText(getApplicationContext(), "Please key in message!",
                             Toast.LENGTH_SHORT).show();
                     return;
+                } else if (!android.util.Patterns.EMAIL_ADDRESS.matcher(email).matches()) {
+                    Toast.makeText(getApplicationContext(), "Please enter a valid email!",
+                            Toast.LENGTH_SHORT).show();
+                    return;
                 }
 
                 String key = mDatabase.child("contactUs").push().getKey();

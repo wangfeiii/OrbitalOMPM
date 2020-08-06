@@ -1,36 +1,34 @@
 package com.example.OMPM;
 
 import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
-import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentActivity;
-import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
-import androidx.viewpager2.adapter.FragmentStateAdapter;
-import androidx.viewpager2.widget.ViewPager2;
 
 import android.Manifest;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.ContactsContract;
 import android.text.InputFilter;
-import android.util.Log;
+import android.view.MenuItem;
 import android.view.View;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.CheckBox;
+import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.RadioGroup;
+import android.widget.Spinner;
+import android.widget.TextView;
 import android.widget.Toast;
 
-import com.google.android.material.tabs.TabLayout;
-import com.google.android.material.tabs.TabLayoutMediator;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
@@ -39,72 +37,17 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
+import java.text.ParseException;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.HashMap;
 import java.util.List;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.Locale;
+import java.util.Map;
 
-public class SplitBill extends AppCompatActivity {
-    /*
-    private TabLayout tabLayout;
-    private ViewPager2 viewPager;
-    private SplitEquallyFragment splitEquallyFragment;
-    private SplitUnequallyFragment splitUnequallyFragment;
-
-    @Override
-    protected void onCreate(@Nullable Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.split_bill);
-
-        tabLayout = findViewById(R.id.tabLayout);
-        viewPager = findViewById(R.id.viewPager);
-        splitEquallyFragment = new SplitEquallyFragment();
-        splitUnequallyFragment = new SplitUnequallyFragment();
-
-        ViewPagerAdapter viewPagerAdapter = new ViewPagerAdapter(this);
-        viewPager.setAdapter(viewPagerAdapter);
-        TabLayoutMediator tabLayoutMediator = new TabLayoutMediator(tabLayout, viewPager, new TabLayoutMediator.TabConfigurationStrategy() {
-            @Override
-            public void onConfigureTab(@NonNull TabLayout.Tab tab, int position) {
-                switch (position) {
-                    case 0:
-                        tab.setText("Split Equally");
-                        break;
-                    case 1:
-                        tab.setText("Split Unequally");
-                        break;
-                }
-            }
-        });
-        tabLayoutMediator.attach();
-    }
-
-    private class ViewPagerAdapter extends FragmentStateAdapter {
-
-        public ViewPagerAdapter(@NonNull FragmentActivity fragmentActivity) {
-            super(fragmentActivity);
-        }
-
-        @NonNull
-        @Override
-        public Fragment createFragment(int position) {
-            switch (position) {
-                case 0:
-                    return new SplitEquallyFragment();
-                case 1:
-                    return new SplitUnequallyFragment();
-                default:
-                    return null;
-            }
-        }
-
-        @Override
-        public int getItemCount() {
-            return 2;
-        }
-    }
-}
-*/
+public class SplitBill extends AppCompatActivity implements AdapterView.OnItemSelectedListener{
 
     private static final int PERMISSIONS_REQUEST = 100;
 
@@ -127,6 +70,21 @@ public class SplitBill extends AppCompatActivity {
     private CheckBox sc;
     private CheckBox myself;
     private EditText bill;
+    private EditText thing;
+    private EditText me;
+    private String item;
+    private Spinner sExpenditureChoices;
+    private Expenditure editable;
+    private String flag;
+    private String expenditureType;
+    private Expenditure newExpenditure;
+    private String monthDate;
+    private String monthsaveDate;
+    private Long timestampDate;
+    private EditText myShare;
+    private TextView total;
+    private int tot;
+    private boolean filled;
 
     private DatabaseReference mDatabase;
     private FirebaseUser user;
@@ -150,9 +108,36 @@ public class SplitBill extends AppCompatActivity {
             gst = findViewById(R.id.checkBox_GST);
             sc = findViewById(R.id.Service_Charge);
             myself = findViewById(R.id.myself);
-            EditText me = findViewById(R.id.name);
+            me = findViewById(R.id.name);
             me.setText(user.getDisplayName());
-            myName = me.getText().toString();
+            thing = findViewById(R.id.thing);
+            myShare = findViewById(R.id.myShare);
+            myShare.setFilters(new InputFilter[]{ new InputFilterMinMax("1", "100", getApplicationContext())});
+            total = findViewById(R.id.total);
+            findViewById(R.id.calc).setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    tot = 0;
+                    checkBlank();
+                    setTextView(String.valueOf(tot));
+                }
+            });
+
+            Intent intent = getIntent();
+            flag = intent.getStringExtra("com.example.twoactivities.extra.FLAG");
+
+            //Spinner Stuff
+            sExpenditureChoices = findViewById(R.id.spinner_ExpenditureChoice);
+            ArrayAdapter<CharSequence> exAdapter = ArrayAdapter.createFromResource(this,
+                    R.array.expenditure_choice_array, android.R.layout.simple_spinner_item);
+            exAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+            if (sExpenditureChoices != null) {
+                sExpenditureChoices.setAdapter(exAdapter);
+                sExpenditureChoices.setOnItemSelectedListener(this);
+            }
+            sExpenditureChoices.setSelection(getIndex(sExpenditureChoices, expenditureType));
+
+
             bill = findViewById(R.id.input);
             bill.setFilters(new InputFilter[]{new DecimalDigitsInputFilter(99,2)});
             retrieveContactNumber();
@@ -160,10 +145,27 @@ public class SplitBill extends AppCompatActivity {
             int id = radioGroup.getCheckedRadioButtonId();
             switch (id) {
                 case R.id.btn1:
+                    findViewById(R.id.perc).setVisibility(View.INVISIBLE);
+                    myShare.setVisibility(View.INVISIBLE);
+                    total.setVisibility(View.INVISIBLE);
+                    findViewById(R.id.calc).setVisibility(View.INVISIBLE);
                     equal();
                     break;
 
                 case R.id.btn2:
+                    myself.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+                        @Override
+                        public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                            if (isChecked) {
+                                myShare.setVisibility(View.VISIBLE);
+                                findViewById(R.id.perc).setVisibility(View.VISIBLE);
+                            } else {
+                                myShare.setVisibility(View.INVISIBLE);
+                                findViewById(R.id.perc).setVisibility(View.INVISIBLE);
+                            }
+                        }
+                    });
+
                     unequal();
                     break;
             }
@@ -174,12 +176,30 @@ public class SplitBill extends AppCompatActivity {
                     switch (checkedId) {
                         case R.id.btn1:
                             clear();
+                            myShare.setVisibility(View.INVISIBLE);
+                            findViewById(R.id.perc).setVisibility(View.INVISIBLE);
+                            total.setVisibility(View.INVISIBLE);
+                            findViewById(R.id.calc).setVisibility(View.INVISIBLE);
                             adapter.notifyDataSetChanged();
                             equal();
                             break;
 
                         case R.id.btn2:
                             clear();
+                            total.setVisibility(View.VISIBLE);
+                            findViewById(R.id.calc).setVisibility(View.VISIBLE);
+                            myself.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+                                @Override
+                                public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                                    if (isChecked) {
+                                        myShare.setVisibility(View.VISIBLE);
+                                        findViewById(R.id.perc).setVisibility(View.VISIBLE);
+                                    } else {
+                                        myShare.setVisibility(View.INVISIBLE);
+                                        findViewById(R.id.perc).setVisibility(View.INVISIBLE);
+                                    }
+                                }
+                            });
                             mAdapter.notifyDataSetChanged();
                             unequal();
                             break;
@@ -191,7 +211,14 @@ public class SplitBill extends AppCompatActivity {
                 @Override
                 public void onClick(View v) {
 
+                    myName = me.getText().toString();
+                    item = thing.getText().toString();
                     amount = bill.getText().toString();
+                    checkBlank();
+                    setTextView(String.valueOf(tot));
+                    if (!filled) {
+                        return;
+                    }
                     if (amount.isEmpty()) {
                         Toast.makeText(getApplicationContext(), "Please key in amount!",
                                 Toast.LENGTH_SHORT).show();
@@ -208,8 +235,23 @@ public class SplitBill extends AppCompatActivity {
                     if (gst.isChecked())
                         bill_amount = bill_amount * 1.07;
 
-                    SimpleDateFormat sdf = new SimpleDateFormat("yyyy/MM/dd");
-                    String date = sdf.format(new Date());
+                    SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy/MM/dd");
+                    String dateToday = simpleDateFormat.format(new Date());
+
+                    //date for expenditure
+                    String format = "dd/MMMM/YYYY";
+                    SimpleDateFormat sdf = new SimpleDateFormat(format, Locale.ENGLISH);
+                    String monthFormat = "YYYY/MMM";
+                    SimpleDateFormat monthSDF = new SimpleDateFormat(monthFormat, Locale.ENGLISH);
+                    monthDate = monthSDF.format(Calendar.getInstance().getTime());
+                    Date date = null;
+                    try {
+                        date = new SimpleDateFormat("yyyy/MMM").parse(monthDate);
+                    } catch (ParseException e) {
+                        e.printStackTrace();
+                    }
+                    monthsaveDate = Long.toString(date.getTime());
+                    timestampDate = Calendar.getInstance().getTime().getTime();
 
                     int id = radioGroup.getCheckedRadioButtonId();
                     switch (id) {
@@ -222,7 +264,7 @@ public class SplitBill extends AppCompatActivity {
                             indivBill = bill_amount/noOfPeople;
 
                             final String key = mDatabase.child("debts").push().getKey();
-                            mDatabase.child("debts").child(key).child("date").setValue(date);
+                            mDatabase.child("debts").child(key).child("date").setValue(dateToday);
                             mDatabase.child("debts").child(key).child("amount").setValue(indivBill);
                             for (Contact ct: selected_list)
                                 mDatabase.child("debts").child(key).child("debtors").child(ct.getPhone().replaceAll("\\s","")).setValue(new Contact(ct.getName(),null));
@@ -230,54 +272,137 @@ public class SplitBill extends AppCompatActivity {
                             mDatabase.child("users").child(user.getUid()).child("owedBy").child(key).setValue(true);
 
                             for (int i = 0; i<selected_list.size(); i++) {
-                                mDatabase.child("users").orderByChild("phoneNumber").equalTo((selected_list.get(i).getPhone()).replaceAll("\\s","")).addValueEventListener(new ValueEventListener() {
+                                mDatabase.child("users").orderByChild("phoneNumber").equalTo((selected_list.get(i).getPhone()).replaceAll("\\s","")).addListenerForSingleValueEvent(new ValueEventListener() {
 
                                     @Override
                                     public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                                         for (DataSnapshot ds: dataSnapshot.getChildren()) {
                                             String anotherKey = ds.getKey();
                                             mDatabase.child("users").child(anotherKey).child("owedTo").child(key).setValue(true);
+                                            DatabaseReference expenditureDateReference = mDatabase.child("users").child(anotherKey).child("Expenditures").child(monthDate);
+                                            String expKey = expenditureDateReference.push().getKey();
+                                            //Creates new Expenditure;
+                                            newExpenditure = new Expenditure(
+                                                    timestampDate,
+                                                    expenditureType,
+                                                    item,
+                                                    String.valueOf(indivBill),
+                                                    expKey);
+                                            //Puts the expenditure at /user/userID/Expenditures/YYYY/mm/
+                                            Map<String, Object> expenditureValues = newExpenditure.toMap();
+
+                                            Map<String, Object> childUpdates = new HashMap<>();
+                                            childUpdates.put("/users/" + anotherKey + "/Expenditures/" + monthDate + "/" + expKey, newExpenditure);
+                                            childUpdates.put("/users/" + anotherKey + "/ExpenditureDates/" + monthsaveDate, true);
+                                            mDatabase.updateChildren(childUpdates);
+
                                         }
                                     }
                                     @Override
                                     public void onCancelled(@NonNull DatabaseError databaseError) { }
                                 });
                             }
+
+                            if (myself.isChecked()) {
+                                //add expenditure to myself
+                                DatabaseReference expenditureDateReference = mDatabase
+                                        .child("users")
+                                        .child(user.getUid())
+                                        .child("Expenditures")
+                                        .child(monthDate);
+                                String expKey = expenditureDateReference.push().getKey();
+                                //Creates new Expenditure;
+                                newExpenditure = new Expenditure(
+                                        timestampDate,
+                                        expenditureType,
+                                        item,
+                                        String.valueOf(indivBill),
+                                        expKey);
+                                //Puts the expenditure at /user/userID/Expenditures/YYYY/mm/
+                                Map<String, Object> expenditureValues = newExpenditure.toMap();
+
+                                Map<String, Object> childUpdates = new HashMap<>();
+                                childUpdates.put("/users/" + user.getUid() + "/Expenditures/" + monthDate + "/" + expKey, newExpenditure);
+                                childUpdates.put("/users/" + user.getUid() + "/ExpenditureDates/" + monthsaveDate, true);
+                                mDatabase.updateChildren(childUpdates);
+                            }
+                            clear();
+                            mAdapter.notifyDataSetChanged();
                             break;
 
                         case R.id.btn2:
+                            if (myself.isChecked()) {
+                                DatabaseReference expenditureDateReference = mDatabase
+                                        .child("users")
+                                        .child(user.getUid())
+                                        .child("Expenditures")
+                                        .child(monthDate);
+                                String expKey = expenditureDateReference.push().getKey();
+                                //Creates new Expenditure;
+                                newExpenditure = new Expenditure(
+                                        timestampDate,
+                                        expenditureType,
+                                        item,
+                                        String.valueOf(bill_amount*(Double.parseDouble(myShare.getText().toString())/100)),
+                                        expKey);
+                                //Puts the expenditure at /user/userID/Expenditures/YYYY/mm/
+                                Map<String, Object> expenditureValues = newExpenditure.toMap();
+
+                                Map<String, Object> childUpdates = new HashMap<>();
+                                childUpdates.put("/users/" + user.getUid() + "/Expenditures/" + monthDate + "/" + expKey, newExpenditure);
+                                childUpdates.put("/users/" + user.getUid() + "/ExpenditureDates/" + monthsaveDate, true);
+                                mDatabase.updateChildren(childUpdates);
+                            }
 
                             for (Contact ct: selected_list) {
                                 final String keytwo = mDatabase.child("debts").push().getKey();
-                                mDatabase.child("debts").child(keytwo).child("date").setValue(date);
+                                mDatabase.child("debts").child(keytwo).child("date").setValue(dateToday);
                                 mDatabase.child("debts").child(keytwo).child("creditor").setValue(new Contact(myName, user.getPhoneNumber().replaceAll("\\s", "")));
                                 mDatabase.child("debts").child(keytwo).child("debtors").child(ct.getPhone().replaceAll("\\s", "")).setValue(new Contact(ct.getName(), null));
-                                Log.d("bloop", ct.getPercentage());
-                                mDatabase.child("debts").child(keytwo).child("amount").setValue(bill_amount*(Double.parseDouble(ct.getPercentage())/100));
+                                final double expenses = bill_amount*(Double.parseDouble(ct.getPercentage())/100);
+                                mDatabase.child("debts").child(keytwo).child("amount").setValue(expenses);
                                 mDatabase.child("users").child(user.getUid()).child("owedBy").child(keytwo).setValue(true);
-                                mDatabase.child("users").orderByChild("phoneNumber").equalTo((ct.getPhone()).replaceAll("\\s","")).addValueEventListener(new ValueEventListener() {
+                                mDatabase.child("users").orderByChild("phoneNumber").equalTo((ct.getPhone()).replaceAll("\\s","")).addListenerForSingleValueEvent(new ValueEventListener() {
 
                                     @Override
                                     public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                                         for (DataSnapshot ds: dataSnapshot.getChildren()) {
                                             String anotherKey = ds.getKey();
                                             mDatabase.child("users").child(anotherKey).child("owedTo").child(keytwo).setValue(true);
+                                            DatabaseReference expenditureDateReference = mDatabase.child("users").child(anotherKey).child("Expenditures").child(monthDate);
+                                            String expKey = expenditureDateReference.push().getKey();
+                                            //Creates new Expenditure;
+                                            newExpenditure = new Expenditure(
+                                                    timestampDate,
+                                                    expenditureType,
+                                                    item,
+                                                    String.valueOf(expenses),
+                                                    expKey);
+                                            //Puts the expenditure at /user/userID/Expenditures/YYYY/mm/
+                                            Map<String, Object> expenditureValues = newExpenditure.toMap();
+
+                                            Map<String, Object> childUpdates = new HashMap<>();
+                                            childUpdates.put("/users/" + anotherKey + "/Expenditures/" + monthDate + "/" + expKey, newExpenditure);
+                                            childUpdates.put("/users/" + anotherKey + "/ExpenditureDates/" + monthsaveDate, true);
+                                            mDatabase.updateChildren(childUpdates);
                                         }
                                     }
                                     @Override
                                     public void onCancelled(@NonNull DatabaseError databaseError) { }
                                 });
                             }
+                            clear();
+                            adapter.notifyDataSetChanged();
                             break;
                     }
-
-                    clear();
-                    mAdapter.notifyDataSetChanged();
-                    adapter.notifyDataSetChanged();
                     Toast.makeText(getApplicationContext(), "Debt Updated!", Toast.LENGTH_SHORT).show();
                 }
             });
         }
+    }
+
+    private void setTextView(String x) {
+        total.setText("Total Percentage: " + x + "%");
     }
 
     private void clear() {
@@ -286,11 +411,22 @@ public class SplitBill extends AppCompatActivity {
         sc.setChecked(false);
         myself.setChecked(false);
         selected_list.clear();
+        thing.setText("");
+    }
+
+    private void checkBlank() {
+        for (Contact c:selected_list) {
+            try {
+                tot = tot + Integer.parseInt(c.getPercentage());
+                filled = true;
+            } catch (NumberFormatException e) {
+                Toast.makeText(getApplicationContext(), "Please do not leave blanks", Toast.LENGTH_SHORT).show();
+                filled = false;
+            }
+        }
     }
 
     private void equal() {
-        Toast.makeText(getApplicationContext(), "1", Toast.LENGTH_SHORT).show();
-
         mAdapter = new WordListAdapter(selected_list);
 
         (findViewById(R.id.fab_AddItems)).setOnClickListener(new View.OnClickListener() {
@@ -335,8 +471,7 @@ public class SplitBill extends AppCompatActivity {
 
     public void unequal() {
 
-        Toast.makeText(getApplicationContext(), "2", Toast.LENGTH_SHORT).show();
-        adapter = new UnequalAdapter(selected_list);
+        adapter = new UnequalAdapter(selected_list, getApplicationContext());
 
         (findViewById(R.id.fab_AddItems)).setOnClickListener(new View.OnClickListener() {
             @Override
@@ -377,6 +512,39 @@ public class SplitBill extends AppCompatActivity {
             }
         });
     }
+
+    private int getIndex(Spinner sExpenditureChoices, String expenditureType) {
+        int index = 0;
+        for (int i=0; i<sExpenditureChoices.getCount(); i++){
+            if (sExpenditureChoices.getItemAtPosition(i).equals(expenditureType)){
+                index = i;
+            }
+        }
+        return index;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item){
+        switch (item.getItemId()){
+            case android.R.id.home:
+                if (flag.equals("HistoryPage")){
+                    getIntent().removeExtra("com.example.twoactivities.extra.EXPENDITURE");
+                }
+                getIntent().removeExtra("com.example.twoactivities.extra.FLAG");
+                finish();
+                return true;
+        }
+        return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+        expenditureType = parent.getItemAtPosition(position).toString();
+    }
+
+    @Override
+    public void onNothingSelected(AdapterView<?> parent) { }
+
     private void retrieveContactNumber() {
 
         Cursor cursor = getContentResolver().query(ContactsContract.Contacts.CONTENT_URI, null, null, null, null);

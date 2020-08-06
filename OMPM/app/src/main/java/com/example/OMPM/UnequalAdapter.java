@@ -1,7 +1,9 @@
 package com.example.OMPM;
 
 import android.content.Context;
+import android.content.Intent;
 import android.text.Editable;
+import android.text.InputFilter;
 import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -9,6 +11,7 @@ import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
@@ -18,9 +21,13 @@ import java.util.List;
 public class UnequalAdapter extends RecyclerView.Adapter<UnequalAdapter.ListViewHolder> {
 
     List<Contact> itemList;
+    Context context;
+    EditText et;
 
-    public UnequalAdapter(List<Contact> itemList) {
+    public UnequalAdapter(List<Contact> itemList, Context context) {
+
         this.itemList = itemList;
+        this.context = context;
     }
 
     @NonNull
@@ -49,7 +56,9 @@ public class UnequalAdapter extends RecyclerView.Adapter<UnequalAdapter.ListView
                 notifyItemRangeChanged(position,itemList.size());
             }
         });
-        EditText et= holder.percentage;
+        et= holder.percentage;
+        et.setText(item.getPercentage());
+        et.setFilters(new InputFilter[]{ new InputFilterMinMax("1", "100", context)});
         et.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) { }
@@ -63,6 +72,7 @@ public class UnequalAdapter extends RecyclerView.Adapter<UnequalAdapter.ListView
             }
         });
     }
+
 
     @Override
     public int getItemCount() {
