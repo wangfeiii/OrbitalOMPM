@@ -116,7 +116,19 @@ public class SplitBill extends AppCompatActivity implements AdapterView.OnItemSe
             findViewById(R.id.calc).setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
+
+                    if (myself.isChecked()) {
+                        if (myShare.getText().toString().isEmpty()) {
+                            Toast.makeText(getApplicationContext(), "Please do not leave blanks!",
+                                    Toast.LENGTH_SHORT).show();
+                            return;
+                        }
+                    }
                     checkBlank();
+                    tot = tot + Integer.parseInt(myShare.getText().toString());
+                    if (tot>100) {
+                        Toast.makeText(getApplicationContext(), "Total percentage cannot be more than 100!", Toast.LENGTH_SHORT).show();
+                    }
                     setTextView(String.valueOf(tot));
                 }
             });
@@ -220,7 +232,7 @@ public class SplitBill extends AppCompatActivity implements AdapterView.OnItemSe
                     myName = me.getText().toString();
                     item = thing.getText().toString();
                     amount = bill.getText().toString();
-                    checkBlank();
+
                     setTextView(String.valueOf(tot));
                     if (!filled) {
                         return;
@@ -344,6 +356,9 @@ public class SplitBill extends AppCompatActivity implements AdapterView.OnItemSe
                                     return;
                                 }
                             }
+
+                            checkBlank();
+                            tot = tot + Integer.parseInt(myShare.getText().toString());
                             if (tot>100) {
                                 Toast.makeText(getApplicationContext(), "Total percentage cannot be more than 100!", Toast.LENGTH_SHORT).show();
                                 return;
