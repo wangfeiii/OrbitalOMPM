@@ -129,7 +129,7 @@ public class SplitBill extends AppCompatActivity implements AdapterView.OnItemSe
                     }
                     checkBlank();
                     if (tot>100) {
-                        Toast.makeText(getApplicationContext(), "Total percentage cannot be more than 100!", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(getApplicationContext(), "Total percentage cannot be more than 100%!", Toast.LENGTH_SHORT).show();
                     }
                     setTextView(String.valueOf(tot));
                 }
@@ -239,7 +239,11 @@ public class SplitBill extends AppCompatActivity implements AdapterView.OnItemSe
                     if (!filled) {
                         return;
                     }
-                    if (amount.isEmpty()) {
+                    if (item.isEmpty()) {
+                        Toast.makeText(getApplicationContext(), "Please key in item!",
+                                Toast.LENGTH_SHORT).show();
+                        return;
+                    } else if (amount.isEmpty()) {
                         Toast.makeText(getApplicationContext(), "Please key in amount!",
                                 Toast.LENGTH_SHORT).show();
                         return;
@@ -561,8 +565,7 @@ public class SplitBill extends AppCompatActivity implements AdapterView.OnItemSe
             }
         }
         return index;
-    }
-
+    }git
 
     @Override
     public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
