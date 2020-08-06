@@ -482,7 +482,7 @@ public class SplitBill extends AppCompatActivity implements AdapterView.OnItemSe
 
                                 for (int i = 0; i < selected.length; i++) {
                                     if (selected[i]) {
-                                        if (!selected_list.contains(contact_list.get(i)) || contact_list.get(i).equals(user.getPhoneNumber())) {
+                                        if (!selected_list.contains(contact_list.get(i)) || contact_list.get(i).getPhone().replaceAll("\\s", "").equals(user.getPhoneNumber().replaceAll("\\s", ""))) {
                                             selected_list.add(contact_list.get(i));
                                         }
                                     }
@@ -528,7 +528,7 @@ public class SplitBill extends AppCompatActivity implements AdapterView.OnItemSe
 
                                 for (int i = 0; i < selected.length; i++) {
                                     if (selected[i]) {
-                                        if (!selected_list.contains(contact_list.get(i)) || contact_list.get(i).equals(user.getPhoneNumber())) {
+                                        if (!selected_list.contains(contact_list.get(i)) || contact_list.get(i).getPhone().replaceAll("\\s", "").equals(user.getPhoneNumber().replaceAll("\\s", ""))) {
                                             selected_list.add(contact_list.get(i));
                                         }
                                     }
